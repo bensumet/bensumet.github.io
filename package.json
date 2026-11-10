@@ -1,0 +1,32 @@
+{
+  "name": "bensumet-portfolio",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Ben Viwatmanitsakul's portfolio, built on Edge, the design system it documents.",
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @bensumet/site",
+    "build": "npm run build -w @bensumet/site",
+    "test": "npm test -w @bensumet/edge && npm test -w @bensumet/site",
+    "typecheck": "tsc -p packages/edge && tsc -p apps/site"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
+    "@types/node": "^22.20.5",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "jsdom": "^25.0.0",
+    "typescript": "~5.6.2",
+    "vite": "^5.4.8",
+    "vitest": "^2.1.1",
+    "vitest-axe": "^0.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

@@ -1,0 +1,443 @@
+<!doctype html><html lang="en"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Deep Search Filters</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+@font-face{font-family:'Poppins';src:url('fonts/poppins-latin-500-normal.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Poppins';src:url('fonts/poppins-latin-600-normal.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'Poppins';src:url('fonts/poppins-latin-700-normal.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Open Sans';src:url('fonts/open-sans-latin-wght-normal.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Open Sans';src:url('fonts/open-sans-latin-wght-normal.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Open Sans';src:url('fonts/open-sans-latin-wght-normal.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+</style>
+<style>
+/* Layout: a clickable results page on the app's real tokens. A switcher on top flips between three searches. */
+:root{
+  --page:#FAFBFD;--paper:#FFFFFF;--fg:rgba(0,0,0,.87);--fg2:rgba(0,0,0,.6);--fg3:rgba(0,0,0,.38);
+  --line:rgba(0,0,0,.12);--line2:rgba(0,0,0,.08);--line3:rgba(0,0,0,.23);
+  --primary:#005DBF;--primary-bg:rgba(0,93,191,.08);--copilot-bg:#EEF5FC;--copilot-line:#CFE0F3;
+  --info-bg:#E3EEFA;--err:#A82626;--err-bg:rgba(168,38,38,.1);--warn:#B04F07;--warn-bg:#FFF1E0;
+  --ok:#0F5C29;--ok-bg:#E3F1E7;--strong:#4A2FA0;--strong-bg:#ECE6FB;--neutral-bg:#ECEFF3;
+  --shadow:0 8px 24px rgba(0,0,0,.16);--toast:#1F2933;--toast-fg:#fff;
+  --head:'Poppins',Helvetica,Arial,sans-serif;--body:'Open Sans',Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --page:#101216;--paper:#181B20;--fg:rgba(255,255,255,.87);--fg2:rgba(255,255,255,.62);--fg3:rgba(255,255,255,.38);
+  --line:rgba(255,255,255,.14);--line2:rgba(255,255,255,.08);--line3:rgba(255,255,255,.28);
+  --primary:#7DB6F5;--primary-bg:rgba(125,182,245,.14);--copilot-bg:#17222F;--copilot-line:#27405C;
+  --info-bg:#1B2C3F;--err:#F2A3A3;--err-bg:rgba(242,163,163,.14);--warn:#F6B97F;--warn-bg:#3A2A18;
+  --ok:#8FD3A4;--ok-bg:#16301F;--strong:#C3B2F5;--strong-bg:#2A2342;--neutral-bg:#252A31;
+  --shadow:0 8px 24px rgba(0,0,0,.5);--toast:#E8ECF1;--toast-fg:#101216;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --page:#101216;--paper:#181B20;--fg:rgba(255,255,255,.87);--fg2:rgba(255,255,255,.62);--fg3:rgba(255,255,255,.38);
+  --line:rgba(255,255,255,.14);--line2:rgba(255,255,255,.08);--line3:rgba(255,255,255,.28);
+  --primary:#7DB6F5;--primary-bg:rgba(125,182,245,.14);--copilot-bg:#17222F;--copilot-line:#27405C;
+  --info-bg:#1B2C3F;--err:#F2A3A3;--err-bg:rgba(242,163,163,.14);--warn:#F6B97F;--warn-bg:#3A2A18;
+  --ok:#8FD3A4;--ok-bg:#16301F;--strong:#C3B2F5;--strong-bg:#2A2342;--neutral-bg:#252A31;
+  --shadow:0 8px 24px rgba(0,0,0,.5);--toast:#E8ECF1;--toast-fg:#101216;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--page);color:var(--fg);font-family:var(--body);font-size:14px;line-height:1.5;
+  padding-block:24px 80px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+h1,h3,.rt a,.gh .ref{font-family:var(--head);text-wrap:balance}
+button{font-family:inherit}
+a{color:var(--primary);text-decoration:none}a:hover{text-decoration:underline}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.top h1{margin:0;font-size:18px;font-weight:600}
+.top .hint{color:var(--fg2);font-size:13px}
+.sw{display:flex;gap:6px;flex-wrap:wrap}
+.sw button{height:32px;padding:0 14px;border-radius:20px;border:1px solid var(--line3);background:transparent;color:var(--fg2);font-size:13px;font-weight:500;cursor:pointer}
+.sw button[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:var(--paper)}
+.note{margin:0;max-width:90ch;color:var(--fg2);font-size:13px}
+.card{position:relative;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:24px 32px;min-width:0}
+.intent{border:1px solid var(--copilot-line);background:var(--copilot-bg);border-radius:8px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start}
+.intent svg{flex:none;color:var(--primary);margin-top:2px}
+.intent .q{font-weight:600}
+.intent .row2{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;color:var(--fg2)}
+.intent .steps{margin-left:auto;color:var(--fg2);white-space:nowrap}
+.count{margin-top:14px;font-size:16px;color:var(--fg2)}
+.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;padding-bottom:12px}
+.pw{position:relative}
+.pill{height:32px;padding:0 8px 0 16px;border-radius:20px;border:1px solid var(--line3);background:transparent;color:var(--fg2);
+  font:500 14px var(--body);display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+.pill{max-width:260px}
+.rt a,.rt span,.sub,.meta>span,.gh h3,.gh .m{overflow-wrap:anywhere}
+.menu.wide{min-width:340px}
+.pill .pl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.pill:hover{border-color:var(--fg2)}
+.pill.on{border-color:var(--primary);background:var(--primary-bg);color:var(--primary)}
+.pill svg{width:20px;height:20px}
+.sep{width:1px;height:20px;background:var(--line);margin:0 4px}
+.clear{margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-weight:500;border:0;background:none;height:32px;padding:0 8px;border-radius:20px;color:var(--primary);cursor:pointer}
+.clear:disabled{color:var(--fg3);cursor:default}
+.menu{position:absolute;left:0;top:38px;min-width:260px;max-width:calc(100vw - 32px);max-height:360px;overflow:auto;z-index:5;background:var(--paper);border:1px solid var(--line);
+  border-radius:8px;box-shadow:var(--shadow);padding:6px 0}
+.menu .lbl{padding:6px 16px 2px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--fg2)}
+.mi{display:flex;width:100%;gap:10px;align-items:baseline;padding:8px 16px;border:0;background:none;color:var(--fg);font:inherit;text-align:left;cursor:pointer}
+.mi:hover,.mi:focus-visible{background:var(--primary-bg)}
+.mi.sel{background:var(--primary-bg)}
+.mi .ck{width:16px;color:var(--primary);font-weight:600;flex:none}
+.mi .n{margin-left:auto;padding-left:16px;font-size:12px;color:var(--fg2)}
+.mi small{display:block;font-size:12px;color:var(--fg2)}
+.mi .h{color:var(--fg2);font-size:12px}
+.status{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:8px;font-size:12px;color:var(--fg2)}
+.chip{display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:20px;font-size:12px;font-weight:500;white-space:nowrap}
+.c-info{background:var(--info-bg);color:var(--primary)}.c-strong{background:var(--strong-bg);color:var(--strong)}
+.c-rel{background:var(--neutral-bg);color:var(--fg2)}.c-err{background:var(--err-bg);color:var(--err)}
+.c-warn{background:var(--warn-bg);color:var(--warn)}.c-ok{background:var(--ok-bg);color:var(--ok)}
+.res{padding:16px 0;border-bottom:1px solid var(--line2);display:flex;gap:16px;align-items:flex-start;min-width:0}
+.res>div:first-of-type{flex:1;min-width:0}
+.rt{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.rt a{font-size:20px;font-weight:600}
+.rt span{font-size:16px;color:var(--fg2)}
+.meta{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:6px;color:var(--fg2)}
+.meta .d{display:none}
+.meta{gap:4px 16px}.meta .chip{margin-right:-10px}
+.sub{margin-top:4px;color:var(--fg2)}
+.side{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.gh{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding:20px 0 8px;border-bottom:1px solid var(--line)}
+.gh h3{margin:0;font-size:16px;font-weight:600}
+.gh .ref{font-size:16px;font-weight:600}
+.gh .m,.gh .cnt{color:var(--fg2);font-size:13px}
+.gh .open{margin-left:auto;font-weight:500}
+.ico{width:20px;height:20px;flex:none;color:var(--fg2);margin-top:3px}
+.empty{padding:32px 0;text-align:center;color:var(--fg2)}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);max-width:calc(100vw - 32px);
+  background:var(--toast);color:var(--toast-fg);padding:10px 16px;border-radius:8px;font-size:13px;box-shadow:var(--shadow);z-index:20}
+.toast[hidden]{display:none}
+.r2{position:relative;display:flex;gap:14px;align-items:flex-start;padding:14px 12px;margin:0 -12px;border-bottom:1px solid var(--line2);border-radius:8px;min-width:0}
+.r2:hover{background:var(--line2)}
+.tile{width:36px;height:36px;border-radius:8px;display:grid;place-items:center;flex:none}
+.tile svg{width:22px;height:22px;fill:currentColor}
+.r2 .meta,.res .meta{font-variant-numeric:tabular-nums}
+.tile{background:var(--neutral-bg);color:var(--fg2)}
+.t-quote,.t-policy,.t-claim,.t-billing{background:var(--info-bg);color:var(--primary)}
+.r2m{flex:1;min-width:0}
+.rl{display:inline-flex;align-items:center;gap:4px}
+.rl svg{width:16px;height:16px;flex:none;fill:currentColor}
+.gh:has(.cv){cursor:pointer;margin:12px -12px 4px;padding:8px 12px;border-bottom:0;align-items:center;border-radius:8px;background:var(--neutral-bg)}
+.gh:has(.cv):hover{background:var(--primary-bg)}
+.gh a{cursor:pointer}
+.cv{border:0;background:none;color:var(--primary);width:28px;height:28px;border-radius:50%;display:grid;place-items:center;padding:0;cursor:pointer;align-self:center;margin:0 8px 0 4px;flex:none}
+.cv:hover{background:var(--primary-bg)}
+.cv svg{width:22px;height:22px}
+.lnk{border:0;background:none;color:var(--primary);font:inherit;font-size:13px;margin-left:14px;cursor:pointer;padding:0}
+.lnk:hover{text-decoration:underline}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--paper)}
+.ms{width:100%;height:32px;border:1px solid var(--line3);border-radius:8px;background:var(--paper);color:var(--fg);padding:0 10px;font:inherit}
+@media (max-width:640px){
+  .card{padding:16px}.res{flex-direction:column;gap:8px}.side{justify-content:flex-start}
+  .intent{flex-wrap:wrap}.intent .steps{margin-left:0}.clear{margin-left:0}
+  .pw{position:static}
+  .menu.wide{min-width:0}
+  .meta .d{display:none}.meta{gap:2px 12px}
+}
+@media (prefers-reduced-motion:no-preference){.menu{animation:pop .12s ease-out}@keyframes pop{from{opacity:0;transform:translateY(-4px)}}}
+</style>
+
+<div class="wrap">
+<div class="top"><h1>Deep Search Filters</h1><div class="sw" id="sw" role="group" aria-label="Sample search"></div><div class="sw" id="sv" role="group" aria-label="Row layout"></div></div>
+<p class="note" id="note"></p>
+<div class="card" id="card"></div>
+
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+(function(){
+var TODAY=new Date(2026,9,29);
+var ENT={
+ 'QT-2026-004417':{t:'Quote',ins:'Atlantic Ridge Construction, LLC',lob:'Commercial Auto',reg:'NJ'},
+ 'CA-00418872':{t:'Policy',ins:'Atlantic Ridge Construction, LLC',lob:'Commercial Auto',reg:'NJ'},
+ 'BA-7731':{t:'Billing',ins:'Atlantic Ridge Construction, LLC',lob:'Commercial Auto',reg:'NJ'},
+ 'CL-2026-003318':{t:'Claim',ins:'Atlantic Ridge Construction, LLC',lob:'Commercial Auto',reg:'NJ'},
+ '01-CA-000010022-0':{t:'Policy',ins:'Copperline Fleet Services',lob:'Commercial Auto',reg:'BC'},
+ '01-WK-000010003-0':{t:'Policy',ins:'Hudson Valley Framing, Inc.',lob:"Workers' Comp",reg:'NY'},
+ 'PCA00000520':{t:'Quote',ins:'Lakeshore Livery LLC',lob:'Commercial Auto',reg:'NJ'},
+ '02-CA-000020963-0':{t:'Policy',ins:'Atlantic Ridge Construction, LLC',lob:'Commercial Auto',reg:'NJ'},
+ '02-CA-000020949-1':{t:'Policy',ins:'Lakeshore Livery LLC',lob:'Commercial Auto',reg:'NJ'},
+ '02-CA-000020870-0':{t:'Policy',ins:'Hudson Valley Framing, Inc.',lob:'Commercial Auto',reg:'NY'},
+ '02-CA-000018837-1':{t:'Policy',ins:'Granite State Haulers',lob:'Commercial Auto',reg:'NH'},
+ 'BA-8120':{t:'Billing',ins:'Coastal Insurance Agency',lob:'Commercial Auto',reg:'NJ'}
+};
+var ME='Ben Sumet';
+function T(id,title,ref,due,pri,snip,o){return Object.assign({k:'task',id:id,title:title,ref:ref,due:due,pri:pri,snip:snip||'',asg:ME,status:'Open'},o||{});}
+var SC={
+ A:{label:'Quotes and policies',query:'Commercial Auto with Fleet',interp:['Product: Commercial Auto','Fleet: Yes'],def:'none',hide:['status'],
+  note:'Quotes and policies filter by entity type: Quote or Policy. Transaction (Create Quote, Endorse Policy, Renew Policy and so on) replaces Status. Ref No is hidden because every row is its own record. Product has one value because every result is Commercial Auto. Group by starts at None, so relevance order stays as it is today.',
+  items:[
+   {k:'quote',ref:'01-CA-000021140-0',ins:'Atlantic Ridge Construction, LLC',status:'In review',tier:'exact',prod:'Commercial Auto',eff:'Nov 15, 2026',prem:'$64,300'},
+   {k:'quote',ref:'01-CA-000020949-0',ins:'Lakeshore Livery LLC',status:'Underwriter approved',tier:'strong',prod:'Commercial Auto',eff:'Dec 1, 2026',prem:'$22,980'},
+   {k:'quote',ref:'01-CA-000020869-0',ins:'Hudson Valley Framing, Inc.',status:'In review',tier:'strong',prod:'Commercial Auto',eff:'Jan 1, 2027',prem:'$31,750'},
+   {k:'policy',ref:'02-CA-000020949-1',ins:'Lakeshore Livery LLC',status:'In force',tier:'strong',prod:'Commercial Auto',eff:'Dec 1, 2025',prem:'$22,100'},
+   {k:'quote',ref:'01-CA-000018837-0',ins:'Granite State Haulers',status:'Underwriter approved',tier:'strong',prod:'Commercial Auto',eff:'Mar 1, 2027',prem:'$41,200'},
+   {k:'policy',ref:'02-CA-000020963-0',ins:'Atlantic Ridge Construction, LLC',status:'In force',tier:'strong',prod:'Commercial Auto',eff:'Nov 15, 2025',prem:'$61,900'},
+   {k:'quote',ref:'01-CA-000018836-0',ins:'Harbor Point Partners',status:'Draft',tier:'related',prod:'Commercial Auto',eff:'Feb 1, 2027',prem:'$18,400'},
+   {k:'quote',ref:'01-CA-000018833-0',ins:'Northshore Courier Co.',status:'Draft',tier:'related',prod:'Commercial Auto',eff:'Mar 15, 2027',prem:'$27,900'}
+  ]},
+ B:{label:'Tasks, notes, emails',query:'Atlantic Ridge',interp:['Insured: Atlantic Ridge Construction, LLC','Tasks, Notes, Emails'],def:'record',
+  note:'Tasks, notes and emails hang off a record, so Ref No filters by the record reference (entityRef) and is the default grouping. The record shows once in the group header instead of on every row. Due, Assignee and Priority apply to tasks only. Assignee lists the real names, with Me and Unassigned first. Click a ref to open its quote or policy. A task opens the Tasks screen with the task in the drawer, in edit mode. A note or email opens its quote or policy with the note or email in the drawer, in edit mode.',
+  items:[
+   T('T-1041','Confirm MVR for 3 new drivers','QT-2026-004417','2026-10-31','high','Atlantic Ridge added three drivers after submission. MVRs are not yet ordered.',{tier:'strong'}),
+   {k:'note',id:'N-220',title:'Producer call: asks for 5% telematics credit',ref:'QT-2026-004417',date:'Oct 27',by:'A. Rivera',snip:'Atlantic Ridge fleet has telematics on 14 of 18 units.',tier:'related'},
+   {k:'email',id:'E-318',title:'RE: Loss runs for Atlantic Ridge',ref:'QT-2026-004417',date:'Oct 27',by:'Dana Whitfield (Producer)',snip:'Two open claims are noted on page 2.',tier:'strong'},
+   T('T-1033','Request loss runs from producer','QT-2026-004417','2026-11-12','medium','Five-year runs requested for the quote.',{tier:'related'}),
+   T('T-1029','Review non-renewal flag','CA-00418872','2026-10-26','medium','Renewal flag was raised after the latest loss run for Atlantic Ridge.',{asg:'J. Alvarez',tier:'strong'}),
+   {k:'note',id:'N-205',title:'Referral approved by Senior Underwriter',ref:'CA-00418872',date:'Oct 20',by:'M. Okafor',snip:'Approved with a 3% rate increase.',tier:'related'},
+   {k:'email',id:'E-301',title:'Certificate request: Harbor Point project',ref:'CA-00418872',date:'Oct 26',by:'Sam Ortiz (Atlantic Ridge)',snip:'Please issue a certificate naming Harbor Point Partners as holder.',tier:'related'},
+   T('T-1037','Review NSF payment','BA-7731','2026-10-29','medium','Last installment returned. Contact Atlantic Ridge accounting.',{asg:'L. Chen',tier:'strong'}),
+   {k:'note',id:'N-198',title:'Payment plan changed to quarterly',ref:'BA-7731',date:'Oct 15',by:'L. Chen',snip:'Atlantic Ridge moved from monthly to quarterly installments.',tier:'related'},
+   T('T-1044','Request adjuster report','CL-2026-003318','2026-10-28','high','Adjuster inspection finished Oct 20. The report for the Atlantic Ridge claim is not yet received.',{tier:'strong'}),
+   {k:'note',id:'N-231',title:'Insured statement recorded',ref:'CL-2026-003318',date:'Oct 24',by:'R. Patel',snip:'The Atlantic Ridge driver gave a recorded statement on the Oct 3 loss.',tier:'related'},
+   {k:'email',id:'E-340',title:'RE: Photos of the vehicle damage',ref:'CL-2026-003318',date:'Oct 25',by:'Sam Ortiz (Atlantic Ridge)',snip:'Attached are the photos taken at the scene.',tier:'strong'},
+   T('T-1046','Assign an underwriter to the quote','QT-2026-004417','2026-11-02','medium','No underwriter is assigned yet.',{asg:'',tier:'related'})
+  ]},
+ C:{label:'My open tasks',query:'My open tasks',interp:['Record type: Task','State: Open','Assigned to: Me'],def:'due',hide:['insured'],
+  note:'When every result is a task the page opens grouped by Due, so the list itself answers "what do I do first". Assignee and Status are hidden because every task here is mine and open. Insured is left out, and Match is added so the strongest hits come first. The Group by menu lists only what this response can support.',
+  items:[
+   T('T-1101','Underwriter Approved LIVERY 1','PCA00000520','2028-08-20','high','Please review the latest policy note before end of day.'),
+   T('T-1102','test task decstipion length','01-WK-000010003-0','2026-10-26','low','Task description is long enough to wrap onto a second line in the result row.'),
+   T('T-1103','Renewal check-in','01-CA-000010022-0','2026-10-23','low'),
+   T('T-1104','Test version 1752 with attchment','01-CA-000010022-0','2026-10-23','low'),
+   T('T-1105','Test version final 1318','01-CA-000010022-0','2026-10-27','low'),
+   T('T-1106','ManualSampleTemplate','01-CA-000010022-0','2026-10-29','low','Hi This is sample test manual template.'),
+   T('T-1107','Test version 1157','01-CA-000010022-0','2026-10-31','medium'),
+   T('T-1108','Test version 1728','01-CA-000010022-0','2026-10-31','low'),
+   T('T-1109','Renewal check-in','01-CA-000010022-0','2026-11-02','low'),
+   T('T-1110','Direct Test version 1750 with attachment','01-CA-000010022-0','2026-11-03','low')
+  ]},
+ D:{label:'Name search, many products',query:'Atlantic Ridge',interp:['Name contains: Atlantic Ridge','Types: Quotes, Policies'],def:'insured',hide:['status'],
+  note:'A name search returns quotes and policies for several insureds and products. Insured is the default grouping, so everything for one insured sits together. Product splits the same results by book. Insured appears only because the response has repeated insureds. The results also include a claim and a billing account. Those record pages do not exist yet, so their refs open the placeholder page for now. One billing account is agency-billed, so its name is the agency, not an insured. The Insured filter then reads Insured/Bill-to and marks that name.',
+  items:[
+   {k:'quote',ref:'01-CA-000021140-0',ins:'Atlantic Ridge Construction, LLC',status:'In review',tier:'exact',prod:'Commercial Auto',eff:'Nov 15, 2026',prem:'$64,300'},
+   {k:'policy',ref:'02-CA-000020963-0',ins:'Atlantic Ridge Construction, LLC',status:'In force',tier:'exact',prod:'Commercial Auto',eff:'Nov 15, 2025',prem:'$61,900'},
+   {k:'quote',ref:'01-GL-000021302-0',ins:'Atlantic Ridge Construction, LLC',status:'Underwriter approved',tier:'strong',prod:'General Liability',eff:'Jan 1, 2027',prem:'$12,450'},
+   {k:'policy',ref:'02-WK-000019877-0',ins:'Atlantic Ridge Construction, LLC',status:'In force',tier:'strong',prod:"Workers' Comp",eff:'Mar 1, 2026',prem:'$38,200'},
+   {k:'quote',ref:'01-WK-000021410-0',ins:'Atlantic Ridge Builders, Inc.',status:'Draft',tier:'strong',prod:"Workers' Comp",eff:'Feb 1, 2027',prem:'$29,800'},
+   {k:'policy',ref:'02-PR-000018220-0',ins:'Atlantic Ridge Builders, Inc.',status:'In force',tier:'strong',prod:'Commercial Property',eff:'Jun 1, 2026',prem:'$17,640'},
+   {k:'quote',ref:'01-CA-000019442-0',ins:'Atlantic Ridge Marine Services LLC',status:'In review',tier:'related',prod:'Commercial Auto',eff:'Dec 15, 2026',prem:'$21,300'},
+   {k:'quote',ref:'01-GL-000020711-0',ins:'Ridgeline Atlantic Partners',status:'Draft',tier:'related',prod:'General Liability',eff:'Jan 15, 2027',prem:'$9,800'},
+   {k:'claim',ref:'CL-2026-003318',ins:'Atlantic Ridge Construction, LLC',status:'Under investigation',tier:'strong',prod:'Commercial Auto',x:[['Product','Commercial Auto'],['Loss date','Oct 3, 2026'],['Incurred','$18,400']]},
+   {k:'billing',ref:'BA-7731',ins:'Atlantic Ridge Construction, LLC',bt:'direct',status:'Past due',tier:'strong',prod:'Commercial Auto',x:[['Product','Commercial Auto'],['Balance','$15,475'],['Plan','Quarterly']]},
+   {k:'billing',ref:'BA-8120',ins:'Coastal Insurance Agency',bt:'agency',status:'Current',tier:'related',prod:'Commercial Auto',x:[['Product','Commercial Auto'],['Balance','$4,210'],['Policies','3']]}
+  ]}
+};
+['exact','strong','strong','strong','related','related','related','strong','related','related'].forEach(function(t,i){SC.C.items[i].tier=t;});
+var FACETS=['type','insured','record','due','assignee','status','transaction','priority','product','match'];
+var FLABEL={type:'Type',insured:'Insured',record:'Ref No',due:'Due',assignee:'Assignee',status:'Status',transaction:'Transaction',priority:'Priority',product:'Product',match:'Match'};
+var GHINT={none:'flat, by relevance',type:'what kind of result',insured:'what else we have for this insured',record:'what is pending on this policy or quote',due:'what do I do first',assignee:'whose work is this',status:'what is still active',transaction:'what kind of change',priority:'what matters most',product:'which book',match:'how strong the match is'};
+var VLABEL={
+ due:{overdue:'Overdue',today:'Due today',week:'Next 7 days',later:'Later',none:'No due date'},
+ assignee:{me:'Me',unassigned:'Unassigned'},
+ priority:{high:'High',medium:'Medium',low:'Low',none:'No priority'},
+ match:{exact:'Exact match',strong:'Strong match',related:'Related'}
+};
+var RANK={due:{overdue:0,today:1,week:2,later:3,none:4},assignee:{me:0,unassigned:1},priority:{high:0,medium:1,low:2,none:3},match:{exact:0,strong:1,related:2},status:{'Open':0,'Reopened':1,'Under investigation':2,'In review':3,'Underwriter approved':4,'Draft':5,'In force':6,'Past due':7,'Completed':8,'Closed':9}};
+var TRN={'01-CA-000021140-0':'Create Quote','01-CA-000020949-0':'Clone Quote','01-CA-000020869-0':'Redo Quote','02-CA-000020949-1':'Endorse Policy','01-CA-000018837-0':'Convert Quote','02-CA-000020963-0':'Renew Policy','01-CA-000018836-0':'Create Quote','01-CA-000018833-0':'Revise Quote','01-GL-000021302-0':'Create Quote','02-WK-000019877-0':'Create Policy','01-WK-000021410-0':'Quote For Renewal','02-PR-000018220-0':'Endorse Policy','01-CA-000019442-0':'Clone Quote','01-GL-000020711-0':'Create Quote'};
+var TYPELBL={quote:'Quote',policy:'Policy',claim:'Claim',billing:'Billing',task:'Task',note:'Note',email:'Email'};
+var REC=['quote','policy','claim','billing'];
+var CHEV='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10l5 5 5-5z" fill="currentColor"/></svg>';
+
+function days(s){var p=s.split('-');return Math.round((new Date(+p[0],p[1]-1,+p[2])-TODAY)/864e5);}
+function bucket(it){if(it.k!=='task')return 'none';var d=days(it.due);return d<0?'overdue':d===0?'today':d<=7?'week':'later';}
+function fv(it,f){
+ var t=it.k==='task';
+ switch(f){
+  case 'type':return it.k;
+  case 'insured':return it.ins||(it.k==='task'&&ENT[it.ref]&&(ENT[it.ref].t==='Quote'||ENT[it.ref].t==='Policy')?ENT[it.ref].ins:'');
+  case 'record':return (it.k==='task'||it.k==='note'||it.k==='email')?it.ref:'';
+  case 'due':return t?bucket(it):'';
+  case 'assignee':return t?(it.asg?(it.asg===ME?'me':it.asg):'unassigned'):'';
+  case 'status':return it.status||'';
+  case 'transaction':return (it.k==='quote'||it.k==='policy')?(TRN[it.ref]||''):'';
+  case 'priority':return t?(it.pri||'none'):'';
+  case 'product':return it.prod||'';
+  case 'match':return it.tier||'';
+ }
+}
+function vlabel(f,v){
+ if(f==='type')return TYPELBL[v]||v;
+ return (VLABEL[f]&&VLABEL[f][v])||v;
+}
+var BT={agency:'Agency billing',account:'Account billing'};
+function insHint(v){var xs=items().filter(function(i){return i.ins===v;});if(!xs.length||!xs.every(function(i){return i.bt&&i.bt!=='direct';}))return '';return BT[xs[0].bt]||'';}
+function insLabel(){return items().some(function(i){return i.bt&&i.bt!=='direct';})?'Insured/Bill-to':'Insured';}
+Object.defineProperty(FLABEL,'insured',{get:function(){return insLabel();},enumerable:true,configurable:true});
+var S={sc:'A',sel:{},grp:null,open:null,q:'',ver:'2',col:{}};
+function items(){return SC[S.sc].items;}
+function facets(){
+ var out=[];
+ FACETS.forEach(function(f){
+  if((SC[S.sc].hide||[]).indexOf(f)>-1)return;
+  var m={};
+  items().forEach(function(it){var v=fv(it,f);if(v)m[v]=(m[v]||0)+1;});
+  var keys=Object.keys(m);
+  if(!keys.length||(keys.length<2&&f!=='product'))return;
+  if(f==='insured'&&!keys.some(function(k){return m[k]>1;}))return;
+  keys.sort(function(a,b){var r=RANK[f],ra=r&&r[a]!==undefined?r[a]:99,rb=r&&r[b]!==undefined?r[b]:99;return (ra-rb)||(r?0:(m[b]-m[a]))||vlabel(f,a).localeCompare(vlabel(f,b));});
+  out.push({key:f,opts:keys.map(function(v){return{v:v,n:m[v]};})});
+ });
+ return out;
+}
+function filtered(){
+ var act=Object.keys(S.sel).filter(function(f){return S.sel[f]&&S.sel[f].length;});
+ return items().filter(function(it){return act.every(function(f){return S.sel[f].indexOf(fv(it,f))>-1;});});
+}
+function groupBy(fs){
+ var ok=['none'].concat(fs.map(function(f){return f.key;}));
+ var g=S.grp&&ok.indexOf(S.grp)>-1?S.grp:(ok.indexOf(SC[S.sc].def)>-1?SC[S.sc].def:'none');
+ return {g:g,ok:ok};
+}
+function groups(list,g){
+ if(g==='none')return[{v:'all',items:list}];
+ var m={},order=[];
+ list.forEach(function(it){var v=fv(it,g);if(!(v in m)){m[v]=[];order.push(v);}m[v].push(it);});
+ var r=RANK[g];
+ function worst(v){return Math.min.apply(null,m[v].map(function(i){return RANK.due[bucket(i)];}));}
+ order.sort(function(a,b){
+  if(!a!==!b)return a?-1:1;
+  if(r){var d=(r[a]!==undefined?r[a]:99)-(r[b]!==undefined?r[b]:99);return d||vlabel(g,a).localeCompare(vlabel(g,b));}
+  if(g==='record')return worst(a)-worst(b)||m[b].length-m[a].length;
+  return m[b].length-m[a].length||vlabel(g,a).localeCompare(vlabel(g,b));
+ });
+ return order.map(function(v){return{v:v,items:m[v]};});
+}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function tone(s){return({'In force':'ok','Underwriter approved':'ok','Completed':'ok','In review':'warn','Draft':'info','Past due':'err','Reopened':'warn','Under investigation':'warn','Open':'info'})[s]||'rel';}
+function dueChip(it){
+ var d=days(it.due),b=bucket(it);
+ if(b==='overdue')return '<span class="chip c-err">Overdue '+(-d)+'d</span>';
+ if(b==='today')return '<span class="chip c-warn">Due today</span>';
+ if(d>400)return '<span class="chip c-rel">Aug 20, 2028</span>';
+ return '<span class="chip '+(d<=3?'c-warn':'c-rel')+'">Due in '+d+'d</span>';
+}
+function tierChip(it){return it.tier?'<span class="chip '+(it.tier==='exact'?'c-ok':it.tier==='strong'?'c-strong':'c-rel')+'">'+VLABEL.match[it.tier]+'</span>':'';}
+var P={"Description":"M349-250h262q12.75 0 21.38-8.68 8.62-8.67 8.62-21.5 0-12.82-8.62-21.32-8.63-8.5-21.38-8.5H349q-12.75 0-21.37 8.68-8.63 8.67-8.63 21.5 0 12.82 8.63 21.32 8.62 8.5 21.37 8.5Zm0-170h262q12.75 0 21.38-8.68 8.62-8.67 8.62-21.5 0-12.82-8.62-21.32-8.63-8.5-21.38-8.5H349q-12.75 0-21.37 8.68-8.63 8.67-8.63 21.5 0 12.82 8.63 21.32 8.62 8.5 21.37 8.5ZM220-80q-24 0-42-18t-18-42v-680q0-24 18-42t42-18h336q12.44 0 23.72 5T599-862l183 183q8 8 13 19.28 5 11.28 5 23.72v496q0 24-18 42t-42 18H220Zm331-584v-156H220v680h520v-494H581q-12.75 0-21.37-8.63Q551-651.25 551-664ZM220-820v186-186 680-680Z","Shield":"M470.12-85q-4.56-1-9.12-3-139-47-220-168.5t-81-266.61V-719q0-19.26 10.88-34.66Q181.75-769.07 199-776l260-97q11-4 21-4t21 4l260 97q17.25 6.93 28.13 22.34Q800-738.26 800-719v195.89Q800-378 719-256.5T499-88q-4.56 2-9.12 3T480-84q-5.32 0-9.88-1Zm9.88-58q115-38 187.5-143.5T740-523v-196l-260-98-260 98v196q0 131 72.5 236.5T480-143Zm0-337Z","Gavel":"M190-180h420q13 0 21.5 8.5T640-150q0 13-8.5 21.5T610-120H190q-13 0-21.5-8.5T160-150q0-13 8.5-21.5T190-180Zm150-194L202-512q-17-17-17.5-41.5T201-596l29-30 224 222-30 30q-17 17-42 17t-42-17Zm296-212L414-810l30-29q18-17 42.5-16.5T528-838l138 138q17 17 17 42t-17 42l-30 30Zm181 405L302-696l42-42 515 515q9 9 9 21t-9 21q-9 9-21 9t-21-9Z","Payments":"M540-420q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM220-280q-24.75 0-42.37-17.63Q160-315.25 160-340v-400q0-24.75 17.63-42.38Q195.25-800 220-800h640q24.75 0 42.38 17.62Q920-764.75 920-740v400q0 24.75-17.62 42.37Q884.75-280 860-280H220Zm100-60h440q0-42 29-71t71-29v-200q-42 0-71-29t-29-71H320q0 42-29 71t-71 29v200q42 0 71 29t29 71Zm450 180H100q-24.75 0-42.37-17.63Q40-195.25 40-220v-430q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v430h670q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5ZM220-340v-400 400Z","ChecklistRtl":"m659-299 158-158q9-9 21-8.5t21.39 9.5q8.61 9 8.61 21t-9 21L680-235q-9 9-21 9t-21-9L538-335q-9-9-9-21t9-21q9-9 21-8.5t21 8.5l79 78Zm0-320 158-158q9-9 21-8.5t21.39 9.5q8.61 9 8.61 21t-9 21L680-555q-9 9-21 9t-21-9L538-655q-9-9-9-21t9-21q9-9 21-8.5t21 8.5l79 78ZM110-290q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32Q97.25-350 110-350h300q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H110Zm0-320q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32Q97.25-670 110-670h300q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H110Z","StickyNote2":"M180-180h400v-170q0-12.75 8.63-21.38Q597.25-380 610-380h170v-400H180v600Zm0 60q-24.75 0-42.37-17.63Q120-155.25 120-180v-600q0-24.75 17.63-42.38Q155.25-840 180-840h600q24.75 0 42.38 17.62Q840-804.75 840-780v395q0 12.44-5 23.72T822-342L618-138q-8 8-19.28 13-11.28 5-23.72 5H180Zm260-300H330q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h110q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5Zm190-160H330q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h300q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5ZM180-180v-600 600Z","Mail":"M140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm680-525L496-473q-4 2-7.5 3.5T480-468q-5 0-8.5-1.5T464-473L140-685v465h680v-465ZM480-522l336-218H145l335 218ZM140-685v7-39.32.73V-740v23-.91V-678v-7 465-465Z","AssuredWorkload":"M212-271v-279q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v279q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63-8.5-8.62-8.5-21.37Zm242 0v-279q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v279q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63-8.5-8.62-8.5-21.37Zm400-369H103q-9.58 0-16.29-6.71Q80-653.42 80-663v-17q0-6 3.5-11.5T92-700l358-204q14.17-8 30-8t30 8l357 203q6 4 9.5 10t3.5 13.5v10.23q0 11.59-7.47 19.43Q865.05-640 854-640Zm-640-60h532L480-852 214-700ZM110-121q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32Q97.25-181 110-181h440q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H110Zm586.5-314.63Q688-444.25 688-457v-93q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v93q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63ZM640-218v-83q0-8.16 4.5-15.58T657-328l130-65q5.71-3 12.86-3 7.14 0 13.14 3l130 65q8 4 12.5 11.42T960-301v83q0 78-39.5 131T812-5q-4 2-12 2l-12-2q-69-29-108.5-82T640-218Zm139 42-45-45q-6-6-14-6t-14 6q-6 6-6 14t6 14l52 52q9 9 21 9t21-9l107-107q6-6 6-14t-6-14q-6-6-14-6t-14 6L779-176ZM214-700h532-532Z","PersonalInjury":"M480-580q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42Zm0-60q39 0 64.5-25.5T570-730q0-39-25.5-64.5T480-820q-39 0-64.5 25.5T390-730q0 39 25.5 64.5T480-640Zm.11 130q74.1 0 137 18.5Q680-473 731-450q31 14 50 41t19 65v204q0 24-18 42t-42 18H390q-41.82 0-70.91-29.13-29.09-29.13-29.09-71Q290-222 319.09-251q29.09-29 70.91-29h118l72-160q-26-5-51.5-7.5t-48.61-2.5q-72.35 0-128.62 16.5Q295-417 252-396q-14 7-23 21.25T220-344v234q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63Q160-97.25 160-110v-234q0-38 19-65t49-41.1q51-22.9 114.5-41.4T480.11-510ZM390-140h54l37-80h-91q-16 0-28 12t-12 28q0 16 12 28t28 12Zm120 0h230v-204q0-16.5-9.5-30.75T707-396q-12-6-29-13t-39-15L510-140Zm-30-590Zm0 443Z"};
+var ICONS={quote:P.Description,policy:P.Shield,claim:P.PersonalInjury,billing:P.AssuredWorkload,task:P.ChecklistRtl,note:P.StickyNote2,email:P.Mail};
+function svgI(k){return ICONS[k]?'<svg viewBox="0 -960 960 960" aria-hidden="true"><path fill="currentColor" d="'+ICONS[k]+'"/></svg>':'';}
+function tile(k){return '<span class="tile t-'+k+'" role="img" aria-label="'+TYPELBL[k]+'">'+svgI(k)+'</span>';}
+function refLink(ref){var e=ENT[ref],k=e?e.t.toLowerCase():'record';return '<a class="rl" href="#" data-open="'+k+'" data-ref="'+esc(ref)+'">'+svgI(k)+esc(ref)+'</a>';}
+function parts(it,g){
+ var qp=REC.indexOf(it.k)>-1,e=ENT[it.ref];
+ var p={open:it.k==='task'?'data-task="'+esc(it.id)+'"':'data-open="'+it.k+'" data-ref="'+esc(it.ref)+'"',title:qp?it.ref:it.title,sec:'',chips:tierChip(it),facts:[],snip:''};
+ var rec=refLink(it.ref)+(e?esc(' · '+e.ins+' · '+e.lob+' · '+e.reg):'');
+ if(qp){
+  p.sec=g==='insured'?'':it.ins;
+  p.chips+='<span class="chip c-'+tone(it.status)+'">'+esc(it.status)+'</span>';
+  p.facts=it.x?it.x.map(function(q){return q[2]==='ref'?esc(q[0]+' ')+refLink(q[1]):esc(q[0]+' '+q[1]);}):[esc('Product '+it.prod)].concat(TRN[it.ref]?[esc('Transaction '+TRN[it.ref])]:[],[esc('Effective '+it.eff),esc('Premium '+it.prem)]);
+ }else if(it.k==='task'){
+  p.snip=it.snip;
+  p.chips+=(it.pri==='high'?'<span class="chip c-warn">High</span>':it.pri==='medium'?'<span class="chip c-rel">Medium</span>':'<span class="chip c-rel">Low</span>')+dueChip(it);
+  p.facts=g!=='record'?[rec]:[];
+ }else{
+  p.snip=it.snip;
+  p.facts=[esc(it.by),esc(it.date)].concat(g!=='record'?[rec]:[]);
+ }
+ return p;
+}
+function metaLine(p){
+ return '<div class="meta">'+p.chips+p.facts.map(function(x){return '<span>'+x+'</span>';}).join('<span class="d">·</span>')+'</div>'+(p.snip?'<div class="sub">'+esc(p.snip)+'</div>':'');
+}
+function row1(it,g){
+ var p=parts(it,g);
+ return '<div class="res"><div><div class="rt"><a href="#" '+p.open+'>'+esc(p.title)+'</a>'+(p.sec?'<span>'+esc(p.sec)+'</span>':'')+'<span class="chip c-rel">'+TYPELBL[it.k]+'</span></div>'+metaLine(p)+'</div></div>';
+}
+function row2(it,g){
+ var p=parts(it,g);
+ return '<div class="r2">'+tile(it.k)+'<div class="r2m"><div class="rt"><a href="#" '+p.open+'>'+esc(p.title)+'</a>'+(p.sec?'<span>'+esc(p.sec)+'</span>':'')+'</div>'+metaLine(p)+'</div></div>';
+}
+function row(it,g){return S.ver==='1'?row1(it,g):row2(it,g);}
+function chev(g,grp){if(S.ver==='1')return '';var k=g+':'+grp.v,open=!S.col[k];return '<button class="cv" data-col="'+esc(k)+'" aria-expanded="'+open+'" aria-label="'+(open?'Collapse':'Expand')+' group"><svg viewBox="0 -960 960 960" aria-hidden="true"><path fill="currentColor" d="'+(open?'M230-450q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h500q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H230Z':'M450-450H230q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h220v-220q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v220h220q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H510v220q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63-8.5-8.62-8.5-21.37v-220Z')+'"/></svg></button>';}
+function head(g,grp){
+ var n=grp.items.length,over=grp.items.filter(function(i){return bucket(i)==='overdue';}).length;
+ var cnt=n+(n===1?' result':' results');
+ if(g==='record'){
+  var e=ENT[grp.v]||{t:'Record',ins:'',lob:'',reg:''};
+  var openable=e.t==='Quote'||e.t==='Policy'||e.t==='Billing'||e.t==='Claim';
+  return '<div class="gh">'+chev(g,grp)+(openable?refLink(grp.v).replace('class="rl"','class="ref rl"'):'<span class="ref">'+esc(grp.v)+'</span>')+'<span class="chip c-rel">'+e.t+'</span><span class="m">'+esc(e.ins)+' · '+esc(e.lob)+' · '+esc(e.reg)+'</span>'+
+   (over?'<span class="chip c-err">'+over+' overdue</span>':'')+'<span class="cnt">'+cnt+'</span>'+
+   '</div>';
+ }
+ var label=grp.v?vlabel(g,grp.v):(g==='due'?'No due date':g==='assignee'?'No assignee':'Other');
+ return '<div class="gh">'+chev(g,grp)+'<h3>'+esc(label)+'</h3>'+(g==='insured'&&insHint(grp.v)?'<span class="chip c-rel">'+insHint(grp.v)+'</span>':'')+(g==='due'&&grp.v==='overdue'?'<span class="chip c-err">'+n+'</span>':'<span class="cnt">'+cnt+'</span>')+'</div>';
+}
+function menu(f){
+ var sel=S.sel[f.key]||[];
+ var all=f.opts.reduce(function(s,o){return s+o.n;},0);
+ return '<div class="menu'+(f.key==='insured'||f.key==='record'||f.key==='assignee'?' wide':'')+'" role="menu" aria-label="'+FLABEL[f.key]+'"><div class="lbl">'+(f.key==='record'?'Ref No (entityRef)':f.key==='type'&&S.sc==='A'?'Entity type':FLABEL[f.key])+'</div>'+
+  (f.opts.length>5||f.key==='insured'||f.key==='record'||f.key==='assignee'?'<div style="padding:6px 12px"><input class="ms" data-q="1" type="search" placeholder="Search" aria-label="Search '+FLABEL[f.key]+'" value="'+esc(S.q)+'"></div>':'')+
+  '<button class="mi'+(sel.length?'':' sel')+'" role="menuitemradio" aria-checked="'+(!sel.length)+'" data-all="'+f.key+'"><span class="ck">'+(sel.length?'':'✓')+'</span><span>All</span><span class="n">'+all+'</span></button>'+
+  f.opts.filter(function(o){return !S.q||vlabel(f.key,o.v).toLowerCase().indexOf(S.q.toLowerCase())>-1;}).map(function(o){
+   var on=sel.indexOf(o.v)>-1,e=ENT[o.v];
+   return '<button class="mi'+(on?' sel':'')+'" role="menuitemcheckbox" aria-checked="'+on+'" data-toggle="'+f.key+'" data-v="'+esc(o.v)+'"><span class="ck">'+(on?'✓':'')+'</span><span>'+esc(vlabel(f.key,o.v))+
+   (f.key==='record'&&e?'<small>'+e.t+' · '+esc(e.ins)+'</small>':'')+(f.key==='insured'&&insHint(o.v)?'<small>'+insHint(o.v)+'</small>':'')+'</span><span class="n">'+o.n+'</span></button>';
+  }).join('')+'</div>';
+}
+function render(){
+ var sc=SC[S.sc],fs=facets(),gb=groupBy(fs),list=filtered(),total=items().length;
+ var anySel=Object.keys(S.sel).some(function(f){return S.sel[f]&&S.sel[f].length;});
+ document.getElementById('note').textContent=sc.note+(S.ver==='2'?' Rows use layout 2: the same chip line as the current rows, with a type icon at the left.':'');
+ document.getElementById('sv').innerHTML=[['1','Rows: current'],['2','Rows: version 2']].map(function(a){return '<button data-ver="'+a[0]+'" aria-pressed="'+(S.ver===a[0])+'">'+a[1]+'</button>';}).join('');
+ document.getElementById('sw').innerHTML=Object.keys(SC).map(function(k){return '<button data-sc="'+k+'" aria-pressed="'+(k===S.sc)+'">'+esc(SC[k].label)+'</button>';}).join('');
+ var pills=fs.map(function(f){
+  var sel=S.sel[f.key]||[],open=S.open===f.key;
+  var lab=FLABEL[f.key]+': '+(sel.length===1?vlabel(f.key,sel[0]):sel.length>1?sel.length+' selected':'All');
+  return '<div class="pw"><button class="pill'+(sel.length?' on':'')+'" data-menu="'+f.key+'" aria-haspopup="menu" aria-expanded="'+open+'" title="'+esc(lab)+'"><span class="pl">'+esc(lab)+'</span>'+CHEV+'</button>'+(open?menu(f):'')+'</div>';
+ }).join('');
+ var gopen=S.open==='group';
+ var gmenu=gopen?'<div class="menu wide" role="menu" aria-label="Group by">'+gb.ok.map(function(k){
+   return '<button class="mi'+(k===gb.g?' sel':'')+'" role="menuitemradio" aria-checked="'+(k===gb.g)+'" data-group="'+k+'"><span class="ck">'+(k===gb.g?'✓':'')+'</span><span>'+(k==='none'?'None':FLABEL[k])+' <span class="h">· '+GHINT[k]+'</span></span></button>';
+ }).join('')+'</div>':'';
+ var bar='<div class="bar">'+pills+(fs.length?'<span class="sep"></span>':'')+
+  '<div class="pw"><button class="pill'+(gb.g!=='none'?' on':'')+'" data-menu="group" aria-haspopup="menu" aria-expanded="'+gopen+'">Group by: '+(gb.g==='none'?'None':gb.g==='insured'?'Insured':FLABEL[gb.g])+CHEV+'</button>'+gmenu+'</div>'+
+  '<button class="clear" data-clear="1"'+(anySel?'':' disabled')+'><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16l-6 7v6l-4 2v-8z M3 3l18 18" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>Clear Filters</button></div>';
+ var status='';
+ if(anySel){
+  var parts=Object.keys(S.sel).filter(function(f){return S.sel[f]&&S.sel[f].length;}).map(function(f){return FLABEL[f]+' is '+S.sel[f].map(function(v){return vlabel(f,v);}).join(' or ');});
+  status='<div class="status"><span>Showing '+list.length+' of '+total+' · '+esc(parts.join(' · '))+'</span><span>'+(total-list.length)+' hidden</span></div>';
+ }
+ var body,grs=list.length?groups(list,gb.g):[],colBtn='';
+ if(S.ver==='2'&&gb.g!=='none'&&grs.length>1){var allC=grs.every(function(x){return S.col[gb.g+':'+x.v];});colBtn='<button class="lnk" data-colall="1">'+(allC?'Expand all':'Collapse all')+'</button>';}
+ if(!list.length)body='<div class="empty">No results match these filters. <a href="#" data-clear="1">Clear Filters</a></div>';
+ else body=grs.map(function(grp){var closed=S.ver==='2'&&gb.g!=='none'&&S.col[gb.g+':'+grp.v];return (gb.g==='none'?'':head(gb.g,grp))+(closed?'':grp.items.map(function(it){return row(it,gb.g);}).join(''));}).join('');
+ var recs={};items().forEach(function(i){if(i.ref&&fv(i,'record'))recs[i.ref]=1;});
+ var count=total+' matches'+(S.sc==='B'?' across '+Object.keys(recs).length+' records':'')+' · '+(gb.g==='due'?'By due date':'By relevance');
+ document.getElementById('card').innerHTML=
+  '<div class="intent"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(45 12 12)"/><ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(-45 12 12)"/></g><circle cx="12" cy="12" r="1.9" fill="currentColor"/></svg>'+
+  '<div><div class="q">'+esc(sc.query)+'</div><div class="row2">Interpreted as '+sc.interp.map(function(c){return '<span class="chip c-info">'+esc(c)+'</span>';}).join('')+'</div></div><span class="steps">3/3 steps completed</span></div>'+
+  '<div class="count">'+count+colBtn+'</div>'+bar+status+body;
+}
+function fitMenu(){var m=document.querySelector('.menu');if(!m||window.innerWidth<=640)return;m.style.left='';var r=m.getBoundingClientRect(),vw=document.documentElement.clientWidth,over=r.right-(vw-16);if(over>0){m.style.left=(Math.max(r.left-over,16)-r.left)+'px';}}
+var _render=render;render=function(){_render();fitMenu();};
+var tt;
+function toast(msg){var t=document.getElementById('toast');t.textContent=msg;t.hidden=false;clearTimeout(tt);tt=setTimeout(function(){t.hidden=true;},3200);}
+function keep(sel){render();var el=sel&&document.querySelector(sel);if(el)el.focus();}
+document.addEventListener('click',function(e){
+ var gh=e.target.closest('.gh');
+ if(gh&&!e.target.closest('a,button')&&!String(window.getSelection&&window.getSelection())){var tg=gh.querySelector('[data-col]');if(tg){tg.click();return;}}
+ var t=e.target.closest('[data-sc],[data-ver],[data-col],[data-colall],[data-menu],[data-all],[data-toggle],[data-group],[data-clear],[data-open],[data-task]');
+ if(!t){if(e.target.closest('.menu'))return;if(S.open){S.open=null;S.q='';render();}return;}
+ if(t.dataset.col){var ck=t.dataset.col;S.col[ck]=!S.col[ck];render();var cb=document.querySelector('[data-col="'+ck.replace(/"/g,'\\"')+'"]');if(cb)cb.focus();return;}
+ if(t.dataset.colall){var gbn=groupBy(facets()).g,gs=groups(filtered(),gbn),allClosed=gs.every(function(x){return S.col[gbn+':'+x.v];});S.col={};if(!allClosed)gs.forEach(function(x){S.col[gbn+':'+x.v]=true;});render();return;}
+ if(t.dataset.ver){S.ver=t.dataset.ver;render();return;}
+ if(t.dataset.sc){S.sc=t.dataset.sc;S.sel={};S.grp=null;S.open=null;S.q='';S.col={};render();return;}
+ if(t.dataset.menu){var k=t.dataset.menu;S.open=S.open===k?null:k;S.q='';keep('[data-menu="'+k+'"]');return;}
+ if(t.dataset.all){S.sel[t.dataset.all]=[];S.col={};render();var al=document.querySelector('[data-all="'+t.dataset.all+'"]');if(al)al.focus();return;}
+ if(t.dataset.toggle){var f=t.dataset.toggle,v=t.dataset.v,a=(S.sel[f]||[]).slice(),i=a.indexOf(v);
+  if(i>-1)a.splice(i,1);else a.push(v);S.sel[f]=a;S.col={};
+  render();var el=document.querySelector('[data-toggle="'+f+'"][data-v="'+v.replace(/"/g,'\\"')+'"]');if(el)el.focus();return;}
+ if(t.dataset.group){S.grp=t.dataset.group;S.col={};S.open=null;keep('[data-menu="group"]');return;}
+ if(t.dataset.clear){e.preventDefault();S.sel={};S.col={};S.open=null;render();return;}
+ if(t.dataset.open){e.preventDefault();var kind=t.dataset.open;
+  toast(kind==='note'||kind==='email'?'Opens '+t.dataset.ref+' with this '+kind+' open in the drawer, in edit mode':kind==='billing'||kind==='claim'?'Opens the '+kind+' placeholder page. There is no '+kind+' record page yet; it will open like a policy once there is.':'Opens '+(kind==='record'?'':kind+' ')+t.dataset.ref);return;}
+ if(t.dataset.task){e.preventDefault();toast('Opens the Tasks screen with this task open in the drawer, in edit mode');return;}
+});
+document.addEventListener('input',function(e){var i=e.target.closest&&e.target.closest('[data-q]');if(!i)return;S.q=i.value;var pos=i.selectionStart;render();var n=document.querySelector('[data-q]');if(n){n.focus();n.setSelectionRange(pos,pos);}});
+document.addEventListener('keydown',function(e){
+ if(e.key==='Escape'&&S.open){var k=S.open;S.open=null;keep('[data-menu="'+k+'"]');}
+});
+render();
+})();
+</script>
+
+<script>(function(){function s(){parent.postMessage({demoHeight:document.documentElement.scrollHeight,demo:location.pathname},'*')}new ResizeObserver(s).observe(document.body);addEventListener('load',s);s()})();</script></body></html>

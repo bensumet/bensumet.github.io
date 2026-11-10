@@ -1,0 +1,17 @@
+# Ben Viwatmanitsakul
+
+> Portfolio of Ben Viwatmanitsakul, a design engineer and frontend architect in Lone Tree, Colorado. The site is built with Edge, his design system, which publishes its own machine-readable rules.
+
+## Edge design system
+
+- [Edge for agents](edge/llms.txt): tokens, contrast data and component rules for building UI with Edge
+- [Rules index](edge/rules/index.json): every component's rules file, as data
+- MCP server: `node --experimental-strip-types packages/edge/mcp/server.mjs` in the repo, with tools `get_tokens`, `get_component_guidance` and `check_contrast`
+
+## Sections
+
+- [Work](https://bensumet.github.io/#/work): case studies for CoreConnect and P&C Immersive AI
+- [Designing with AI](https://bensumet.github.io/#/ai): working prototypes and measured design decisions
+- [System](https://bensumet.github.io/#/system): Edge's foundations, components, states, AI patterns, a console demo, the agent layer and evaluations
+- [Craft](https://bensumet.github.io/#/craft): book design, type, logos, wall art, paintings
+- [About](https://bensumet.github.io/#/about)

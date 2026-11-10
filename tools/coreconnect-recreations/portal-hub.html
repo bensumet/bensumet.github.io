@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Portal Hub</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1568px;height:668px;overflow:hidden}
+body{font-family:-apple-system,"Segoe UI",Roboto,"Open Sans",Helvetica,Arial,sans-serif;color:#fff;position:relative;
+ background:linear-gradient(115deg,#123447 0%,#0f2e44 35%,#06243c 60%,#03213a 100%)}
+.bg{position:absolute;inset:0;overflow:hidden;background:linear-gradient(160deg,#0d2238 0%,#0b2a3c 55%,#0e3540 100%)}
+.glow{position:absolute;left:50%;top:44%;width:900px;height:620px;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(64,150,160,.28),rgba(64,150,160,0))}
+.dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1.2px);background-size:22px 22px}
+/* soft vertical ribbing to echo original texture mood */
+.rib{position:absolute;left:0;top:0;width:1568px;height:668px;opacity:.55;
+ background:repeating-linear-gradient(90deg,rgba(70,140,150,.0) 0px,rgba(70,140,150,.18) 18px,rgba(70,140,150,0) 36px,rgba(0,0,0,.12) 52px,rgba(70,140,150,0) 66px);
+ -webkit-mask:linear-gradient(90deg,#000 0%,#000 55%,rgba(0,0,0,.35) 75%,rgba(0,0,0,.15) 100%)}
+.hline{position:absolute;left:0;right:0;top:462px;height:10px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(0,0,0,.25));opacity:.8}
+.band{position:absolute;left:770px;top:-520px;width:340px;height:1100px;border-radius:0 0 170px 170px;
+ background:linear-gradient(180deg,#5b7f62,#557a5e);opacity:.72;transform:rotate(-41deg);transform-origin:50% 100%;left:1065px;top:-745px}
+.tri{position:absolute;left:1145px;top:0;width:0;height:0;border-top:430px solid rgba(64,128,140,.55);border-left:430px solid transparent;border-right:0}
+.tri2{position:absolute;left:1145px;top:0;width:423px;height:423px;background:linear-gradient(225deg,rgba(64,128,140,.5),rgba(64,128,140,.38));clip-path:polygon(0 0,100% 0,100% 100%,0 0)}
+.c1{position:absolute;left:1460px;top:138px;width:230px;height:230px;border-radius:50%;background:#4c8f98;opacity:.85}
+.c2{position:absolute;left:1305px;top:422px;width:360px;height:360px;border-radius:50%;background:#2a5683;opacity:.75}
+.logo{position:absolute;left:10px;top:13px;font-weight:700;font-size:11px;letter-spacing:.1px}
+.out{position:absolute;right:14px;top:21px;width:22px;height:22px}
+.grid{position:absolute;left:641px;top:90px;display:grid;grid-template-columns:repeat(3,84px);column-gap:17px;row-gap:8px}
+.tile{display:flex;flex-direction:column;align-items:center;width:84px}
+.ring{width:84px;height:84px;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center}
+.ring svg{width:58px;height:58px}
+.lbl{margin-top:7px;font-size:11px;font-weight:600;letter-spacing:.2px;line-height:14px}
+.dis{opacity:.35}
+footer{position:absolute;left:0;right:0;bottom:0;height:20px;background:rgba(3,22,38,.82);border-top:1px solid rgba(255,255,255,.08);
+ font-size:10px;line-height:19px;padding-left:12px;color:#c9d6e0}
+</style></head><body>
+<div class="bg">
+ <div class="glow"></div><div class="dots"></div>
+</div>
+<div class="logo">Harbor &amp; Pine</div>
+<svg class="out" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4H5v16h9"/><path d="M14 8V4M14 16v4"/><path d="M10 12h11M17 8l4 4-4 4"/></svg>
+
+<div class="grid">
+ <div class="tile"><div class="ring"><svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+  <path d="M10 6h16l6 6v8" /><path d="M10 6v34h14"/><path d="M10 6h16v6h6" fill="none"/><rect x="11.3" y="7.3" width="13.5" height="5" fill="#4a7cb3" stroke="none"/>
+  <path d="M15 18h12M15 24h8M15 30h6"/>
+  <path d="M34 22l9 3.5v6c0 6-4 9-9 11-5-2-9-5-9-11v-6z" fill="#0f2e44"/><path d="M34 28v8M30 32h8"/></svg></div><div class="lbl">POLICY</div></div>
+
+ <div class="tile"><div class="ring"><svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+  <rect x="9" y="5" width="30" height="38" rx="2"/><rect x="10.3" y="6.3" width="27.4" height="8" fill="#4a7cb3" stroke="none"/><path d="M9 15h30M24 15v28M9 29h30"/>
+  <path d="M14 22h6M17 19v6M28 22h6M14.5 33.5l5 5M19.5 33.5l-5 5M28 34h6M28 38h6"/></svg></div><div class="lbl">RATING</div></div>
+
+ <div class="tile"><div class="ring"><svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+  <rect x="20" y="5" width="6" height="7" fill="#4a7cb3" stroke="none"/>
+  <path d="M20 26V8a3 3 0 016 0v13l9 2.5c2.5.7 4 2.8 3.6 5.4L37 41"/><path d="M20 26l-4-4a3 3 0 00-4.2 4.2l8 9 3 6"/>
+  <path d="M14 8l-3-2M13 13H9M29 5l2-2"/></svg></div><div class="lbl">CLAIMS</div></div>
+
+ <div class="tile"><div class="ring"><svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+  <circle cx="14" cy="12" r="5.5"/><circle cx="29" cy="12" r="5.5"/><path d="M4 30c0-6 4.5-10 10-10 3 0 5 1 6.5 2.5"/><path d="M22 21c2-1 4-1.5 7-1.5"/>
+  <path d="M33 23l9 3.5v6c0 6-4 9-9 11-5-2-9-5-9-11v-6z" fill="#0f2e44"/><path d="M33 29v8M29 33h8"/></svg></div><div class="lbl">AGENT</div></div>
+
+ <div class="tile"><div class="ring"><svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+  <path d="M7 7h34v17c0 10-8 16-17 19C15 40 7 34 7 24z" fill="none"/>
+  <path d="M40 8.5v15c0 9.5-7.5 15-16 18-4-1.4-8-3.5-11-6.6z" fill="#4a7cb3" stroke="none"/>
+  <path d="M7 7h34v17c0 10-8 16-17 19C15 40 7 34 7 24z"/>
+  <circle cx="24" cy="19" r="5" fill="#0f2e44"/><path d="M14 33c2-5 5.5-7 10-7s8 2 10 7"/></svg></div><div class="lbl">INSURED</div></div>
+
+ <div class="tile"><div class="ring"><svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+  <path d="M12 44V5h17l9 9v30z" fill="#4a7cb3" stroke="none" style="clip-path:polygon(0 70%,100% 30%,100% 100%,0 100%)"/>
+  <path d="M10 5h19l9 9v31H10z"/><path d="M29 5v9h9"/>
+  <path d="M21 13c-1-1.4-2.5-2-4-2-2.2 0-3.5 1.2-3.5 2.8 0 4 7.5 2.2 7.5 6.2 0 1.7-1.5 3-3.7 3-1.8 0-3.3-.8-4.3-2M17 9v2M17 23v2.5"/>
+  <path d="M24 30h9M16 36h17"/></svg></div><div class="lbl">BILLING</div></div>
+
+ <div class="tile dis"><div class="ring"><svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+  <path d="M5 34a19 19 0 0138 0v4H5z" fill="#4a7cb3" stroke="#fff"/>
+  <path d="M24 34l7-14"/><circle cx="24" cy="34" r="3" fill="#0f2e44"/><path d="M11 30l2 .6M14 22l2 1.5M21 17l.5 2.5M33 18l-1 2M38 26l-2 1"/></svg></div><div class="lbl">BI/MI</div></div>
+
+ <div class="tile"><div class="ring"><svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+  <circle cx="24" cy="25" r="13"/><path d="M24 12a13 13 0 0113 13H24z" fill="#4a7cb3" stroke="none"/><circle cx="24" cy="25" r="13"/>
+  <circle cx="24" cy="22" r="4.5" fill="#0f2e44"/><path d="M15.5 34.5c2-4 5-5.5 8.5-5.5s6.5 1.5 8.5 5.5"/>
+  <path d="M24 4v3M24 43v3M5 25H2M46 25h-3M10.5 11.5l2 2M37.5 11.5l-2 2M10.5 38.5l2-2M37.5 38.5l-2-2"/></svg></div><div class="lbl">ADMIN</div></div>
+
+ <div class="tile"><div class="ring"><svg viewBox="0 0 48 48" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+  <path d="M10 16h24l-2.5 12h-19z" fill="#4a7cb3" stroke="none" style="clip-path:polygon(0 40%,100% 0,100% 100%,0 100%)"/>
+  <path d="M3 13h5l5 18h20l5-25h5"/><path d="M8 16h28"/><path d="M12 16c0 9 4 13 10 13s10-4 12-13"/>
+  <circle cx="16" cy="39" r="3"/><circle cx="30" cy="39" r="3"/></svg></div><div class="lbl">SHOPPER</div></div>
+</div>
+<footer>© 2026 Harbor &amp; Pine. All rights reserved.</footer>
+</body></html>

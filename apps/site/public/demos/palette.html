@@ -1,0 +1,1462 @@
+<!doctype html><html lang="en"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Harbor &amp; Pine Palette Bench</title>
+<style>
+@font-face{font-family:'Archivo';src:url('fonts/archivo-latin-wght-normal.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Archivo';src:url('fonts/archivo-latin-wght-normal.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Archivo';src:url('fonts/archivo-latin-wght-normal.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'Archivo';src:url('fonts/archivo-latin-wght-normal.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('fonts/ibm-plex-mono-latin-400-normal.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('fonts/ibm-plex-mono-latin-500-normal.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'IBM Plex Mono';src:url('fonts/ibm-plex-mono-latin-600-normal.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+</style>
+<style>
+  :root {
+    --ground: #F5F7FA;
+    --surface: #FFFFFF;
+    --surface-2: #EDF1F6;
+    --ink: #151A22;
+    --slate: #5A6678;
+    --hairline: #DBE2EB;
+    --hairline-2: #C3CCD9;
+    --accent: #0B5FCA;
+    --on-accent: #FFFFFF;
+    --pass: #0E6B3D;
+    --warn: #8A5A00;
+    --fail: #A81F1A;
+    --pass-bg: #E2F1E8;
+    --warn-bg: #FAEFD7;
+    --fail-bg: #F8E3E1;
+    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    --sans: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0E1217;
+      --surface: #161B22;
+      --surface-2: #1D242E;
+      --ink: #E7ECF3;
+      --slate: #97A3B5;
+      --hairline: #262E3A;
+      --hairline-2: #35404F;
+      --accent: #6FB0F5;
+      --on-accent: #0B1018;
+      --pass: #6FD79E;
+      --warn: #F0C46A;
+      --fail: #F58F87;
+      --pass-bg: #16301F;
+      --warn-bg: #322611;
+      --fail-bg: #331715;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #0E1217;
+    --surface: #161B22;
+    --surface-2: #1D242E;
+    --ink: #E7ECF3;
+    --slate: #97A3B5;
+    --hairline: #262E3A;
+    --hairline-2: #35404F;
+    --accent: #6FB0F5;
+    --on-accent: #0B1018;
+    --pass: #6FD79E;
+    --warn: #F0C46A;
+    --fail: #F58F87;
+    --pass-bg: #16301F;
+    --warn-bg: #322611;
+    --fail-bg: #331715;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding-inline: 20px; padding-block: 0 72px; }
+
+  /* ---------- masthead ---------- */
+  header.masthead { padding-block: 40px 22px; border-bottom: 1px solid var(--hairline); }
+  .eyebrow {
+    font-family: var(--mono); font-size: 11px; font-weight: 500;
+    letter-spacing: .14em; text-transform: uppercase; color: var(--slate);
+  }
+  h1 {
+    font-size: clamp(30px, 5.2vw, 46px); font-weight: 700; letter-spacing: -.028em;
+    margin: 10px 0 12px; line-height: 1.04; text-wrap: balance;
+  }
+  .standfirst { font-size: 16px; color: var(--slate); max-width: 62ch; margin: 0; }
+  .verdicts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+  .verdict {
+    display: inline-flex; align-items: baseline; gap: 7px;
+    border: 1px solid var(--hairline-2); border-radius: 2px;
+    padding: 6px 10px; background: var(--surface);
+    font-size: 12.5px; color: var(--slate);
+  }
+  .verdict b { font-family: var(--mono); font-size: 14px; font-weight: 600; color: var(--ink); }
+  .verdict.is-bad b { color: var(--fail); }
+  .verdict.is-good b { color: var(--pass); }
+
+  /* ---------- controls ---------- */
+  .controls {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20;
+    background: color-mix(in srgb, var(--ground) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--hairline);
+    padding-block: 12px; margin-block: 0 26px;
+    display: flex; flex-wrap: wrap; gap: 18px 26px; align-items: center;
+  }
+  .ctl { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+  .ctl > span.lbl {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--slate);
+  }
+  .seg { display: inline-flex; border: 1px solid var(--hairline-2); border-radius: 2px; overflow: hidden; }
+  .seg button {
+    font-family: var(--sans); font-size: 13px; font-weight: 500;
+    padding: 7px 13px; border: 0; background: var(--surface); color: var(--slate);
+    cursor: pointer; border-right: 1px solid var(--hairline);
+  }
+  .seg button:last-child { border-right: 0; }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); font-weight: 600; }
+  .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+  h2 {
+    font-size: 13px; font-family: var(--mono); font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--slate); margin: 0 0 4px;
+  }
+  .sec-note { font-size: 14px; color: var(--slate); margin: 0 0 16px; max-width: 70ch; }
+  section { margin-block: 44px; }
+
+  /* ---------- specimen stage ---------- */
+  .stage-shell { border: 1px solid var(--hairline-2); border-radius: 3px; overflow: hidden; background: var(--surface); }
+  .stage-bar {
+    display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+    background: var(--surface-2); border-bottom: 1px solid var(--hairline);
+    font-family: var(--mono); font-size: 11px; color: var(--slate);
+  }
+  .dots { display: flex; gap: 5px; }
+  .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--hairline-2); }
+  .stage-scroll { overflow-x: auto; }
+
+  /* ===== the mock app, driven entirely by --t-* tokens ===== */
+  #stage { min-width: 840px; font-size: 12px; background: var(--t-canvas); color: var(--t-text); }
+  #stage .app { display: flex; min-height: 430px; }
+  #stage .rail {
+    width: 62px; flex: 0 0 62px; background: var(--t-appBar);
+    border-right: 1px solid var(--t-divider); padding-top: 8px;
+  }
+  #stage .rail div {
+    padding: 9px 4px; text-align: center; font-size: 8.5px; color: var(--t-text2);
+    display: flex; flex-direction: column; align-items: center; gap: 3px;
+  }
+  #stage .rail div { border-left: var(--t-railBar) solid transparent; transition: none; }
+  #stage .rail div.on {
+    background: var(--t-rowHover); color: var(--t-primaryFg); font-weight: 600;
+    border-left-color: var(--t-primaryFg);
+  }
+  #stage .rail s { display: block; width: 15px; height: 15px; border: 1.5px solid currentColor; border-radius: 3px; opacity: .8; }
+  #stage .main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+  #stage .topbar {
+    display: flex; align-items: center; gap: 12px; padding: 7px 14px;
+    background: var(--t-appBar); border-bottom: 1px solid var(--t-divider);
+    position: relative; z-index: 30;
+  }
+  #stage .brand { font-weight: 700; font-size: 12px; color: var(--t-text); }
+  #stage .search {
+    flex: 1; max-width: 460px; height: 24px; border-radius: 3px;
+    border: 1px solid var(--t-ctrlBorder); background: var(--t-paper);
+    display: flex; align-items: center; padding: 0 9px; color: var(--t-text2, var(--t-text)); font-size: 11px;
+  }
+  #stage .body { flex: 1; padding: 14px; background: var(--t-canvas); }
+
+  #stage .pagehead {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 0 10px; border-bottom: 1px solid var(--t-divider); margin-bottom: 14px;
+  }
+  #stage .pagehead h3 { margin: 0; font-size: 14px; font-weight: 600; color: var(--t-text); }
+  #stage .sectitle {
+    font-size: 11.5px; font-weight: 600; color: var(--t-text); margin: 16px 0 7px;
+  }
+  #stage .sectitle:first-child { margin-top: 0; }
+
+  /* Content cards are variant="outlined" in this codebase 139 times over, so
+     they are flat + bordered here. Shadow is reserved for things that float. */
+  #stage .card {
+    background: var(--t-cardBg); border: 1px solid var(--t-cardBorder);
+    border-radius: 4px; padding: 10px 11px;
+  }
+  #stage .card.raised { box-shadow: var(--t-cardShadow); }
+  /* --- intake: drawer, accordion, collapse, stepper --- */
+  #stage .wsnav {
+    width: 158px; flex: 0 0 158px; background: var(--t-wsNav);
+    border-right: 1px solid var(--t-cardBorder); padding: 8px 0; font-size: 9.5px;
+  }
+  #stage .wsnav .grp { padding: 5px 10px 3px; color: var(--t-text2); font-weight: 600; letter-spacing: .04em; }
+  #stage .wsnav a {
+    display: flex; align-items: center; gap: 6px; padding: 4px 10px;
+    color: var(--t-text); text-decoration: none;
+  }
+  #stage .wsnav a {
+    border-left: 4px solid transparent;
+    border-radius: var(--t-navRadius);
+    margin: 0 6px; gap: 6px;
+  }
+  #stage .wsnav a.hov { background: var(--t-neutralHover); }
+  /* Error COUNT: quantity only. Neutral in every state -- the red glyph on the
+     left already says "error", and repeating it here says one fact twice. */
+  #stage .wsnav b.cnt {
+    margin-left: auto; width: 13px; height: 13px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 7.5px; font-weight: 700; flex: 0 0 13px;
+    background: var(--t-neutralHover); color: var(--t-text2);
+  }
+  #stage .wsnav a.on b.cnt { background: var(--t-neutralHover); color: var(--t-text2); }
+  #stage .wsnav a.on {
+    background: var(--t-navFill); color: var(--t-primaryFg); font-weight: 600;
+    border-left-color: var(--t-navBar);
+  }
+  #stage .wsnav a.dotright { flex-direction: row-reverse; justify-content: flex-end; }
+  #stage .wsnav a.dotright i.dot { margin-left: auto; }
+  /* Status is carried by the ICON SHAPE, as the product does it -- ErrorIcon,
+     SyncProblemIcon, CheckCircleFilled, CircleFilled, CheckCircle,
+     RadioButtonUnchecked -- not by a coloured dot. */
+  /* CheckCircle / CircleFilled / RadioButtonUnchecked / Error are all circular
+     glyphs, inside a borderRadius:50% box -- so the ring is part of the icon. */
+  #stage .wsnav i.dot {
+    width: 12px; height: 12px; flex: 0 0 12px; font-style: normal;
+    font-size: 8px; line-height: 10px; text-align: center; font-weight: 700;
+    border: 1px solid currentColor; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  #stage .wsnav i.dot.filled { background: currentColor; }
+  #stage .stepper { display: flex; align-items: center; gap: 0; margin-bottom: 12px; }
+  #stage .stepper .stp { display: flex; align-items: center; gap: 5px; font-size: 9.5px; color: var(--t-text2); }
+  #stage .stepper .stp.on { color: var(--t-text); font-weight: 600; }
+  #stage .stepper .num {
+    width: 17px; height: 17px; border-radius: 50%; display: grid; place-items: center;
+    font-size: 8.5px; font-weight: 700; background: var(--t-ctrlBorder); color: var(--t-cardBg);
+  }
+  #stage .stepper .stp.on .num { background: var(--t-primary); color: var(--t-onPrimary); }
+  #stage .stepper .bar { flex: 1; height: 1px; background: var(--t-divider); margin: 0 9px; }
+  #stage .acc {
+    background: var(--t-cardBg); border: 1px solid var(--t-cardBorder); border-radius: 4px;
+    margin-bottom: 8px; overflow: hidden;
+  }
+  #stage .acc > .sum {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 8px 11px; font-size: 11px; font-weight: 600; color: var(--t-text);
+    background: var(--t-cardBg);
+  }
+  #stage .acc > .det { padding: 4px 11px 11px; border-top: 1px solid var(--t-divider); }
+  #stage .caret { color: var(--t-text2); font-size: 9px; }
+  #stage .drawer {
+    width: 210px; flex: 0 0 210px; background: var(--t-cardBg);
+    border-left: 1px solid var(--t-cardBorder); box-shadow: var(--t-drawerShadow);
+    padding: 10px; font-size: 9.5px; z-index: 2; position: relative;
+  }
+  #stage .drawer .grip { left: -3px; right: auto; }
+  #stage .drawer .tabs { display: flex; gap: 3px; margin-bottom: 9px; }
+  #stage .drawer .tabs span {
+    flex: 1; text-align: center; padding: 3px 0; font-size: 8px; border-radius: 3px;
+    color: var(--t-text2); border: 1px solid transparent;
+  }
+  #stage .drawer .tabs span.on {
+    background: var(--t-rowHover); color: var(--t-primaryFg); font-weight: 700;
+    border-color: var(--t-cardBorder);
+  }
+  #stage .drawer h4 { margin: 0 0 8px; font-size: 10.5px; color: var(--t-text); }
+  #stage .drawer .ow {
+    border: 1px solid var(--t-cardBorder); border-radius: 3px; padding: 7px 8px;
+    margin-bottom: 6px; background: var(--t-cardBg);
+  }
+  #stage .fgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px 10px; }
+  /* SecondaryHeader paints background.PAPER -- it is a content
+     surface, not part of the grey chrome. */
+  #stage .sechead {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 6px 14px; background: var(--t-cardBg);
+    border-bottom: 1px solid var(--t-divider);
+  }
+  #stage .toggles { display: flex; gap: 4px; }
+  #stage .tg {
+    display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px;
+    font-size: 9px; border-radius: 3px; color: var(--t-text2);
+    border: 1px solid transparent;
+  }
+  #stage .tg.on {
+    background: var(--t-rowHover); color: var(--t-primaryFg);
+    border-color: var(--t-cardBorder); font-weight: 700;
+  }
+  #stage .ldrawer {
+    width: 150px; flex: 0 0 150px; background: var(--t-cardBg);
+    border-right: 1px solid var(--t-cardBorder); box-shadow: var(--t-drawerShadow);
+    padding: 9px 9px 9px 9px; font-size: 9.5px; position: relative; z-index: 2;
+  }
+  #stage .ldrawer .tabs { display: flex; gap: 3px; margin-bottom: 8px; }
+  #stage .ldrawer .tabs span {
+    flex: 1; text-align: center; padding: 3px 0; font-size: 8px; border-radius: 3px;
+    color: var(--t-text2); border: 1px solid transparent;
+  }
+  #stage .ldrawer .tabs span.on {
+    background: var(--t-rowHover); color: var(--t-primaryFg); font-weight: 700;
+    border-color: var(--t-cardBorder);
+  }
+  #stage .ldrawer .msg, #stage .drawer .msg {
+    border: 1px solid var(--t-cardBorder); border-radius: 3px; padding: 6px 7px;
+    margin: 0 0 6px 0; background: var(--t-canvas);
+  }
+  /* The left drawer is drag-resizable in the product, so the grip is part of
+     its identity, not decoration. */
+  #stage .grip {
+    position: absolute; top: 0; bottom: 0; right: -3px; width: 6px; cursor: col-resize;
+    display: flex; align-items: center; justify-content: center;
+  }
+  #stage .grip i {
+    width: 2px; height: 26px; border-radius: 2px; background: var(--t-ctrlBorder); display: block;
+  }
+  #stage .searchbox {
+    flex: 1; max-width: 520px; margin: 0 auto; position: relative;
+  }
+  #stage .searchbox .sinput {
+    height: 26px; border: 1px solid var(--t-ctrlBorder); border-bottom: none;
+    border-radius: 4px 4px 0 0; background: var(--t-paper);
+    display: flex; align-items: center; padding: 0 9px; font-size: 11px; color: var(--t-text);
+  }
+  /* The real panel is marginTop:0, borderTop:none, top radii 0 -- it butts
+     flush against the input and completes the focus ring. */
+  /* MUI Popper: portalled to document.body at zIndex 1300, so it OVERLAYS the
+     page rather than taking part in the header's layout. Absolutely positioned
+     against the input, matching the real ResizeObserver-driven width. */
+  #stage .menu {
+    position: absolute; top: 100%; left: 0; right: 0; z-index: 30;
+    background: var(--t-menuBg); border: 1px solid var(--t-ctrlBorder); border-top: none;
+    border-radius: 0 0 4px 4px; box-shadow: var(--t-menuShadow); overflow: hidden;
+  }
+  #stage .menu .split { display: grid; grid-template-columns: 148px 1fr; }
+  #stage .menu .recent { border-right: 1px solid var(--t-divider); padding: 7px 0; }
+  #stage .menu .cols { display: grid; grid-template-columns: repeat(2, 1fr); }
+  #stage .menu .col { padding: 7px 0; border-right: 1px solid var(--t-divider); }
+  #stage .menu .col:last-child { border-right: 0; }
+  #stage .menu .colhead {
+    font-size: 8px; font-weight: 700; letter-spacing: .09em; color: var(--t-text2);
+    padding: 0 10px 5px;
+  }
+  #stage .menu .mi {
+    position: relative; padding: 4px 10px 4px 12px; font-size: 9.5px; color: var(--t-text);
+    border-radius: 0 var(--t-rowRadius) var(--t-rowRadius) 0; margin-right: var(--t-rowGap);
+  }
+  /* One selection-indicator width everywhere: the sidebar ships 3px, the
+     search row ships 5px. Both become 4px so the device reads as one idea. */
+  #stage .menu .mi::before {
+    content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: var(--t-rowBar);
+    background: transparent;
+  }
+  /* hover = neutral, keyboard cursor = primary tint + the bar. Today both
+     share one rule ('&:hover, &:focus-visible'), so they are indistinguishable. */
+  #stage .menu .mi.hov { background: var(--t-neutralHover); }
+  #stage .menu .mi.sel { background: var(--t-rowHover); }
+  #stage .menu .mi.sel::before { background: var(--t-primaryFg); }
+  #stage .menu .mi.sel b { color: var(--t-primaryFg); }
+  #stage .menu .mi b { font-weight: 600; color: var(--t-text); }
+  #stage .menu .mi span { display: block; color: var(--t-text2); font-size: 8px; }
+  #stage .row { display: flex; gap: 9px; }
+  #stage .row > * { flex: 1; min-width: 0; }
+  #stage .kpi-l { font-size: 9.5px; color: var(--t-text2); margin-bottom: 4px; }
+  #stage .kpi-v { font-size: 19px; font-weight: 700; letter-spacing: -.02em; color: var(--t-text); }
+  #stage .kpi-s { font-size: 9px; color: var(--t-text3); margin-top: 3px; }
+  #stage .kpi-v.risk { color: var(--t-warnFg); }
+  #stage .link { color: var(--t-primaryFg); font-size: 9.5px; text-decoration: none; }
+  #stage .muted { color: var(--t-text2); }
+
+  #stage .btn {
+    display: inline-flex; align-items: center; border-radius: 3px; padding: 5px 12px;
+    font-size: 11px; font-weight: 600; border: 1px solid transparent; cursor: default;
+  }
+  #stage .btn.filled { background: var(--t-primary); color: var(--t-onPrimary); }
+  #stage .btn.outline { background: transparent; color: var(--t-primaryFg); border-color: var(--t-ctrlBorder); font-weight: 500; }
+  #stage .btn.warn { background: var(--t-warnFill); color: var(--t-onWarn); }
+
+  #stage .chip {
+    display: inline-flex; align-items: center; gap: 4px; border-radius: 999px;
+    padding: 2.5px 9px; font-size: 9.5px; font-weight: 600; white-space: nowrap;
+  }
+  #stage .chip.ghost { background: transparent; border: 1px solid var(--t-ctrlBorder); color: var(--t-text); font-weight: 500; }
+
+  #stage .banner {
+    display: flex; gap: 9px; padding: 8px 11px; border-radius: 4px; margin-bottom: 12px;
+    background: var(--t-alertInfoBg); color: var(--t-alertInfoFg); border: 1px solid var(--t-alertInfoBd);
+  }
+  #stage .banner b { font-size: 10.5px; }
+  #stage .banner p { margin: 2px 0 0; font-size: 9.5px; opacity: .95; }
+
+  /* grid */
+  #stage table { width: 100%; border-collapse: collapse; font-size: 10px; background: var(--t-gridBg); }
+  #stage thead th {
+    background: var(--t-gridHeader); color: var(--t-text); text-align: left;
+    font-size: 9.5px; font-weight: 600; padding: 7px 8px;
+    border-bottom: 1px solid var(--t-gridLine); border-right: 1px solid var(--t-gridLine);
+    white-space: nowrap;
+  }
+  #stage tbody td {
+    padding: 6px 8px; color: var(--t-text); border-bottom: 1px solid var(--t-gridLine);
+    border-right: 1px solid var(--t-gridLine); white-space: nowrap;
+  }
+  #stage tbody tr:nth-child(even) td { background: var(--t-zebra); }
+  #stage thead th:last-child, #stage tbody td:last-child { border-right: 0; }
+  #stage .gridbox { border: 1px solid var(--t-gridOuter); border-radius: 4px; overflow: hidden; }
+  #stage td a { color: var(--t-primaryFg); text-decoration: none; font-weight: 500; }
+  #stage .num { font-variant-numeric: tabular-nums; }
+
+  #stage .ring {
+    width: 42px; height: 42px; border-radius: 50%; flex: 0 0 42px;
+    display: grid; place-items: center; font-size: 12px; font-weight: 700; color: var(--t-text);
+    background: conic-gradient(var(--t-primary) 0 72%, var(--t-sunken) 72% 100%);
+    position: relative;
+  }
+  #stage .ring::after {
+    content: ""; position: absolute; inset: 5px; border-radius: 50%; background: var(--t-cardBg);
+  }
+  #stage .ring span { position: relative; z-index: 1; }
+  #stage .field {
+    height: 25px; border: 1px solid var(--t-ctrlBorder); border-radius: 3px;
+    background: var(--t-paper); display: flex; align-items: center; padding: 0 8px;
+    font-size: 10px; color: var(--t-text);
+  }
+  #stage .helper { font-size: 9px; color: var(--t-errorFg); margin-top: 3px; display: block; }
+  #stage .flabel { font-size: 9px; color: var(--t-text2); margin-bottom: 3px; display: block; }
+
+  /* ---------- tone strip ---------- */
+  .tonestrip { display: flex; flex-wrap: wrap; gap: 10px; }
+  .tonecell {
+    display: flex; flex-direction: column; gap: 6px; align-items: flex-start;
+    border: 1px solid var(--hairline); border-radius: 3px; padding: 10px 12px;
+    background: var(--surface); min-width: 132px; flex: 1 1 132px;
+  }
+  .chip-demo {
+    display: inline-flex; align-items: center; border-radius: 999px;
+    padding: 3px 11px; font-size: 12px; font-weight: 600; white-space: nowrap;
+  }
+  .tonemeta { font-family: var(--mono); font-size: 10.5px; color: var(--slate); line-height: 1.5; }
+  .tintread { font-family: var(--mono); font-size: 11px; color: var(--slate); }
+  .deread {
+    font-family: var(--mono); font-size: 12px; color: var(--slate);
+    margin-top: 12px; padding: 9px 12px; background: var(--surface);
+    border: 1px solid var(--hairline); border-radius: 3px;
+  }
+  .deread b { color: var(--ink); }
+
+  /* ---------- tables ---------- */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--hairline-2); border-radius: 3px; background: var(--surface); }
+  table.data { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 620px; }
+  table.data th, table.data td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--hairline); }
+  table.data thead th {
+    background: var(--surface-2); font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--slate); font-weight: 600;
+    position: sticky; top: 0;
+  }
+  table.data tbody tr:last-child td { border-bottom: 0; }
+  table.data td.pair { color: var(--ink); }
+  table.data td.pair small { display: block; color: var(--slate); font-size: 11.5px; font-family: var(--mono); }
+  .ratio { font-family: var(--mono); font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .ratio i { font-style: normal; font-size: 10px; margin-left: 5px; padding: 1px 5px; border-radius: 2px; font-weight: 600; }
+  .ratio.p i { background: var(--pass-bg); color: var(--pass); }
+  .ratio.f i { background: var(--fail-bg); color: var(--fail); }
+  .ratio.n i { background: var(--warn-bg); color: var(--warn); }
+  .delta { font-family: var(--mono); font-size: 11px; color: var(--slate); }
+
+  .swatchrow { display: flex; align-items: center; gap: 8px; }
+  .sw { width: 17px; height: 17px; border-radius: 3px; border: 1px solid var(--hairline-2); flex: 0 0 17px; }
+  code.hex { font-family: var(--mono); font-size: 12px; color: var(--ink); }
+
+  /* ---------- findings ---------- */
+  .finding {
+    border-left: 3px solid var(--hairline-2); padding: 0 0 0 16px; margin-block: 22px;
+  }
+  .finding.sev-high { border-left-color: var(--fail); }
+  .finding.sev-med { border-left-color: var(--warn); }
+  .finding.sev-good { border-left-color: var(--pass); }
+  .finding h3 { margin: 0 0 3px; font-size: 16px; font-weight: 600; letter-spacing: -.01em; }
+  .finding .tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--slate); display: block; margin-bottom: 5px;
+  }
+  .finding p { margin: 0 0 8px; color: var(--slate); font-size: 14.5px; max-width: 74ch; }
+  .finding p strong { color: var(--ink); font-weight: 600; }
+  .finding .num { font-family: var(--mono); color: var(--ink); font-weight: 600; }
+  .fix {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 3px;
+    padding: 9px 12px; font-size: 13.5px; color: var(--ink); max-width: 74ch;
+  }
+  .fix b { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--slate); display: block; margin-bottom: 3px; }
+
+  footer { border-top: 1px solid var(--hairline); padding-top: 18px; color: var(--slate); font-size: 13px; }
+  footer code { font-family: var(--mono); font-size: 12px; }
+  @media (max-width: 620px) {
+    .controls { gap: 12px 16px; }
+    .seg button { padding: 6px 10px; font-size: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">Revision 1 · theme package · light &amp; dark</div>
+    <h1>Harbor &amp; Pine Palette Bench</h1>
+    <p class="standfirst">Three palettes rendered onto the same three Harbor &amp; Pine screens, with every contrast ratio computed live from the built <code>lightMuiTheme</code> / <code>darkMuiTheme</code> values — not from the revision description.</p>
+    <div class="verdicts" id="verdicts"></div>
+  </header>
+
+  <section style="margin-top:22px">
+    <div class="deread">
+      <b>Where this page stands against the branch.</b> The proposal panels now carry the values that
+      actually shipped in Revision 1, not the ones first drawn here. Four moved after measurement:
+      light <code>warning.dark</code> <span class="delta">#B45309 &rarr; #B04F07</span> (4.49:1 on the chrome),
+      dark <code>error.main</code> <span class="delta">#EF5350 &rarr; #F4655F</span> (4.30:1 on the chrome),
+      the dark chrome <span class="delta">#101317 &rarr; #22272F</span> (it is the shared raised fill, which must
+      lighten in dark), and the card shadow one step down now the surfaces carry the lift. All three colour
+      moves have the same cause: adding the chrome as a plane changed what had to pass on it.
+      <b>Still undecided, not implemented:</b> the dark primary split
+      (<code>main #2170CE</code> + <code>light #7FB8F5</code>) and the tone sets.
+    </div>
+  </section>
+
+  <div class="controls">
+    <div class="ctl">
+      <span class="lbl">Palette</span>
+      <div class="seg" id="segPalette" role="group" aria-label="Palette">
+        <button data-v="current" aria-pressed="false">Current</button>
+        <button data-v="pr523" aria-pressed="false">Revision&nbsp;1</button>
+        <button data-v="propA" aria-pressed="true">A &middot; Safe</button>
+        <button data-v="propB" aria-pressed="false">B &middot; Tonal</button>
+        <button data-v="propC" aria-pressed="false">C &middot; Branded</button>
+        <button data-v="shipped" aria-pressed="false">As implemented</button>
+        
+        
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="lbl">Mode</span>
+      <div class="seg" id="segMode" role="group" aria-label="Mode">
+        <button data-v="light" aria-pressed="false">Light</button>
+        <button data-v="dark" aria-pressed="false">Dark</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="lbl">Body tint</span>
+      <div class="seg" id="segTint" role="group" aria-label="Body tint">
+        <button data-v="lightest" aria-pressed="true">Lightest</button>
+        <button data-v="light" aria-pressed="true">Light</button>
+        <button data-v="mid" aria-pressed="false">Mid</button>
+        <button data-v="deep" aria-pressed="false">Deep</button>
+      </div>
+      <span class="tintread" id="tintRead"></span>
+      <span class="tintread" id="chromeRead"></span>
+    </div>
+    <div class="ctl">
+      <span class="lbl">Workspace nav</span>
+      <div class="seg" id="segNav" role="group" aria-label="Workspace nav fill">
+        <button data-v="rail" aria-pressed="false">Match rail</button>
+        <button data-v="paper" aria-pressed="true">Paper</button>
+        <button data-v="body" aria-pressed="false">Body</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="lbl">Selected fill</span>
+      <div class="seg" id="segHover" role="group" aria-label="Row hover fill">
+        <button data-v="grey" aria-pressed="false">Neutral (MUI stock)</button>
+        <button data-v="blue" aria-pressed="true">Primary tint (your token)</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="lbl">Result row</span>
+      <div class="seg" id="segShape" role="group" aria-label="Row shape">
+        <button data-v="pill" aria-pressed="false">Pill</button>
+        <button data-v="flush" aria-pressed="true">Flush</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="lbl">Page nav</span>
+      <div class="seg" id="segPageNav" role="group" aria-label="Page nav selected treatment">
+        <button data-v="pill" aria-pressed="true">Pill only</button>
+        <button data-v="bar" aria-pressed="false">Bar + dot right</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="lbl">Sidebar bar</span>
+      <div class="seg" id="segRailW" role="group" aria-label="Sidebar indicator width">
+        <button data-v="3" aria-pressed="false">3px (today)</button>
+        <button data-v="4" aria-pressed="true">4px</button>
+        <button data-v="5" aria-pressed="false">5px</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="lbl">Search bar</span>
+      <div class="seg" id="segBarW" role="group" aria-label="Search row indicator width">
+        <button data-v="3" aria-pressed="true">3px</button>
+        <button data-v="4" aria-pressed="false">4px</button>
+        <button data-v="5" aria-pressed="false">5px (today)</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <span class="lbl">Screen</span>
+      <div class="seg" id="segScreen" role="group" aria-label="Screen">
+        <button data-v="quote" aria-pressed="true">Quote summary</button>
+        <button data-v="grid" aria-pressed="false">Policies</button>
+        <button data-v="home" aria-pressed="false">Home</button>
+        <button data-v="intake" aria-pressed="false">Quote intake</button>
+        <button data-v="search" aria-pressed="false">Search menu</button>
+      </div>
+    </div>
+  </div>
+
+  <section style="margin-top:0">
+    <div class="stage-shell">
+      <div class="stage-bar">
+        <div class="dots"><i></i><i></i><i></i></div>
+        <span id="stageUrl">/policy/quotes/…/summary</span>
+      </div>
+      <div class="stage-scroll"><div id="stage"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>The ten tones, side by side</h2>
+    <p class="sec-note">Measured, not eyeballed: the readout under the strip gives the closest pair in the set by CIE-Lab distance across all 36 pairs. In <strong>light</strong>, Revision&nbsp;1 bottoms out at <strong>&Delta;E&nbsp;4.8</strong> (<em>Insights</em> vs <em>Renewal</em>) and the proposal reaches <strong>15.2</strong>. In <strong>dark</strong> the shipped set bottoms out at <strong>9.5</strong> (<em>Insights</em> vs <em>Draft</em>) and the proposal reaches <strong>18.1</strong>. Switch between them in light mode and watch <em>Insights</em>. Revision 1 deepened success, error, warning and assistant to solid 100–200 fills but left <code>info</code> on an 8%-alpha brand tint and the three accents on 50-level pastels — so the set now reads as two families rather than one. Before the revision they were all pale, and consistent.</p>
+    <div class="tonestrip" id="toneStrip"></div>
+    <div class="deread" id="deRead"></div>
+  </section>
+
+  <section>
+    <h2>Shadow budget</h2>
+    <p class="sec-note">You asked whether we use too much drop shadow. Counted across <code>apps/</code> and <code>packages/</code>, the answer is the opposite — the app is about four-fifths flat already, and the risk is that shadows are rare enough to be applied inconsistently rather than that there are too many.</p>
+    <div class="tablewrap" tabindex="0" role="region" aria-label="Scrollable table">
+      <table class="data">
+        <thead><tr><th>How the surface is declared</th><th>Count</th><th>Carries a shadow?</th></tr></thead>
+        <tbody>
+          <tr><td class="pair"><code class="hex">variant="outlined"</code><small>the default for content cards and panels</small></td><td class="ratio">139</td><td><span class="ratio p">no<i>flat</i></span></td></tr>
+          <tr><td class="pair"><code class="hex">elevation={0}</code><small>explicitly flattened</small></td><td class="ratio">10</td><td><span class="ratio p">no<i>flat</i></span></td></tr>
+          <tr><td class="pair">bare <code class="hex">&lt;Paper&gt;</code> / <code class="hex">&lt;Card&gt;</code><small>falls through to elevation 1</small></td><td class="ratio">22</td><td><span class="ratio n">yes<i>default</i></span></td></tr>
+          <tr><td class="pair"><code class="hex">elevation={1..3}</code><small>deliberate lift</small></td><td class="ratio">14</td><td><span class="ratio n">yes<i>explicit</i></span></td></tr>
+          <tr><td class="pair">hand-rolled <code class="hex">boxShadow</code> in <code class="hex">sx</code><small>bypasses the theme entirely — GlobalSearch, DailyBriefSection, SemanticSearchPage, EmailRecipientInput, TimelineItemBase</small></td><td class="ratio">6</td><td><span class="ratio f">yes<i>off-token</i></span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="deread" style="margin-top:14px"><b>The rule that fits what the code already does:</b> a shadow means &ldquo;this floats above the page and can be dismissed&rdquo;. Drawers, menus, popovers, dialogs and snackbars get one. Anything that lives <em>in</em> the page — cards, panels, accordions, the grid, and the search dropdown, which is mounted flush to the input — gets a border and a surface step instead. That keeps the drawer&rsquo;s shadow meaningful, which is the one you said you liked.</div>
+  </section>
+
+  <section>
+    <h2>Contrast audit</h2>
+    <p class="sec-note">Every row is computed in the browser from the palette values themselves, compositing alpha over its real backdrop. <strong>AA</strong> = 4.5:1 for body text, 3:1 for non-text boundaries that identify a control (WCAG 1.4.11). Surface-separation rows have no legal minimum — they measure whether one plane is distinguishable from another at all.</p>
+    <div class="tablewrap" tabindex="0" role="region" aria-label="Scrollable table">
+      <table class="data">
+        <thead><tr><th>Pair</th><th>Needs</th><th>Current</th><th>Revision 1</th><th id="propColHead">Proposal B</th></tr></thead>
+        <tbody id="auditBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>What Revision 1 actually changed</h2>
+    <p class="sec-note">Eight palette values moved, plus a component-token sweep. Everything else — primary, error (light), warning, info, success, all text tokens, both backgrounds, divider — is byte-identical to before.</p>
+    <div class="tablewrap" tabindex="0" role="region" aria-label="Scrollable table">
+      <table class="data">
+        <thead><tr><th>Token</th><th>Before</th><th>After</th><th>Effect</th></tr></thead>
+        <tbody id="diffBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Findings</h2>
+    <p class="sec-note">Ordered by how much each one costs the product, not by how hard it is to fix.</p>
+    <div id="findings"></div>
+  </section>
+
+  <footer>
+    <p><strong>Not verified:</strong> the quote workspace page renders <code>Pass 0 — 0 of 0 screens</code> on both the Revision 1 lane and the baseline lane, because it needs the live policy-system door (the full local stack), not just more remotes. Every other screen here was driven on a local build.</p>
+    <p>Values extracted by building the theme package before and after the change and reading the resolved MUI theme objects. Ratios use the WCAG 2.x relative-luminance formula with alpha composited over the stated backdrop.</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- color math ---------- */
+  function parse(c) {
+    if (typeof c !== "string") return null;
+    c = c.trim();
+    if (c === "transparent") return { r: 0, g: 0, b: 0, a: 0 };
+    if (c[0] === "#") {
+      var h = c.slice(1);
+      if (h.length === 3) h = h.split("").map(function (x) { return x + x; }).join("");
+      return { r: parseInt(h.slice(0, 2), 16), g: parseInt(h.slice(2, 4), 16), b: parseInt(h.slice(4, 6), 16), a: 1 };
+    }
+    var m = c.match(/rgba?\(([^)]+)\)/);
+    if (!m) return null;
+    var p = m[1].split(/[\s,\/]+/).filter(Boolean).map(Number);
+    return { r: p[0], g: p[1], b: p[2], a: p.length > 3 ? p[3] : 1 };
+  }
+  function over(f, b) {
+    return { r: f.r * f.a + b.r * (1 - f.a), g: f.g * f.a + b.g * (1 - f.a), b: f.b * f.a + b.b * (1 - f.a), a: 1 };
+  }
+  function lum(c) {
+    function f(v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }
+    return 0.2126 * f(c.r) + 0.7152 * f(c.g) + 0.0722 * f(c.b);
+  }
+  function cr(fgS, bgS, baseS) {
+    var fg = parse(fgS), bg = parse(bgS);
+    if (!fg || !bg) return null;
+    var base = parse(baseS) || { r: 255, g: 255, b: 255, a: 1 };
+    var bgF = bg.a < 1 ? over(bg, base) : bg;
+    var fgF = fg.a < 1 ? over(fg, bgF) : fg;
+    var L1 = lum(fgF), L2 = lum(bgF);
+    return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+  }
+
+  /* ---------- palettes (real values) ---------- */
+  var TONES_L_OLD = {
+    ok:{bg:"#EDF7ED",fg:"#004718"}, err:{bg:"#FDEDED",fg:"#851C1C"}, warn:{bg:"#FFF4E5",fg:"#663C00"},
+    info:{bg:"rgba(0,93,191,0.08)",fg:"#0050A6"}, copilot:{bg:"#E5F6FD",fg:"#01579B"},
+    neutral:{bg:"#CFD8DC",fg:"#37474F"}, accent1:{bg:"#F1FAFA",fg:"#1C5358"},
+    accent2:{bg:"#EDE7F6",fg:"#5229BC"}, accent3:{bg:"#FFE6F0",fg:"#D21B77"}
+  };
+  var TONES_L_NEW = {
+    ok:{bg:"#C8E6C9",fg:"#004718"}, err:{bg:"#FFCDD2",fg:"#851C1C"}, warn:{bg:"#FFE0B2",fg:"#663C00"},
+    info:{bg:"rgba(0,93,191,0.08)",fg:"#0050A6"}, copilot:{bg:"#B3E5FC",fg:"#01579B"},
+    neutral:{bg:"#CFD8DC",fg:"#37474F"}, accent1:{bg:"#F1FAFA",fg:"#005F66"},
+    accent2:{bg:"#EDE7F6",fg:"#5229BC"}, accent3:{bg:"#FFE6F0",fg:"#A5125C"}
+  };
+  // Proposal set, chosen by maximising the MINIMUM pairwise CIE-Lab distance
+  // across all 36 pairs, under a >=4.5:1 label-contrast gate. Min dE 15.2
+  // (Revision 1's set bottoms out at 4.8 — info vs accent1 — and an earlier evened
+  // set of mine put error vs accent3 at 10.4, which is the collision Ben
+  // caught between "Exceptions" and "Endorsed").
+  var TONES_L_V3 = {
+    ok:{bg:"#B9E4BB",fg:"#004718"}, err:{bg:"#FFBDC4",fg:"#851C1C"}, warn:{bg:"#FFE8C4",fg:"#663C00"},
+    info:{bg:"#90CAF9",fg:"#0D3C78"}, copilot:{bg:"#D1D6F5",fg:"#283593"},
+    neutral:{bg:"#DDE3E6",fg:"#37474F"}, accent1:{bg:"#9FD8D3",fg:"#00504B"},
+    accent2:{bg:"#C7B4E6",fg:"#4527A0"}, accent3:{bg:"#F6CBE8",fg:"#7B1150"}
+  };
+  // Dark proposal set, same method as the light one: maximise the MINIMUM
+  // pairwise CIE-Lab distance under a >=4.5:1 label gate, measured on the
+  // proposed dark paper (#1B1F26). Min dE 18.1. The shipped dark set bottoms
+  // out at 9.5 (info vs neutral), which is inside confusable range.
+  var TONES_D_V2 = {
+    ok:{bg:"#176B37",fg:"#E3F7EA"}, err:{bg:"#8E2530",fg:"#FCD9D9"}, warn:{bg:"#6F4410",fg:"#FEEDCD"},
+    info:{bg:"#153F73",fg:"#CFE4FF"}, copilot:{bg:"#413099",fg:"#E4E2FB"},
+    neutral:{bg:"#333F47",fg:"#ECEFF1"}, accent1:{bg:"#12595F",fg:"#D6F1F2"},
+    accent2:{bg:"#5A2C76",fg:"#F0E4F8"}, accent3:{bg:"#7A2547",fg:"#FFE0EE"}
+  };
+  var TONES_D = {
+    ok:{bg:"#0F5C29",fg:"#E3F7EA"}, err:{bg:"#851C1C",fg:"#FCD9D9"}, warn:{bg:"#6A3E01",fg:"#FEEDCD"},
+    info:{bg:"rgba(183,218,255,0.16)",fg:"#B7DAFF"}, copilot:{bg:"#0044BC",fg:"#E9F2FF"},
+    neutral:{bg:"#37474F",fg:"#ECEFF1"}, accent1:{bg:"#1C5358",fg:"#D6F1F2"},
+    accent2:{bg:"#5229BC",fg:"#F2EDFB"}, accent3:{bg:"#6E2749",fg:"#FFE6F0"}
+  };
+
+  var P = {
+    current: {
+      light: {
+        canvas: "#FFFFFF", paper: "#FFFFFF", cardBg: "#FFFFFF", sunken: "#F2F2F2", appBar: "#F2F2F2",
+        cardBorder: "rgba(0,0,0,0.12)", ctrlBorder: "rgba(0,0,0,0.23)", divider: "rgba(0,0,0,0.12)",
+        text: "rgba(0,0,0,0.87)", text2: "rgba(0,0,0,0.6)", text3: "rgba(0,0,0,0.6)",
+        primary: "#005DBF", primaryFg: "#005DBF", onPrimary: "#FFFFFF", secondary: "#2E767D",
+        error: "#A82626", errorFg: "#A82626", warnFill: "#FF6F00", warnFg: "#FF6F00", onWarn: "#FFFFFF",
+        info: "#0277BD", success: "#0F5C29",
+        gridHeader: "#F2F2F2", gridBg: "#FFFFFF", gridLine: "#BFBFBF", gridOuter: "#BFBFBF", zebra: "transparent",
+        hover: "rgba(0,0,0,0.04)", selected: "rgba(0,0,0,0.05)",
+        alertInfoBg: "#E5F6FD", alertInfoFg: "#014361", alertInfoBd: "transparent",
+        tones: TONES_L_OLD,
+        primarySelected: "rgba(0, 93, 191, 0.08)", menuShadow: "none", menuBg: "#FFFFFF", cardShadow: "0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)", drawerShadow: "0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)"
+      },
+      dark: {
+        canvas: "#212121", paper: "#121212", cardBg: "#1E1E1E", sunken: "#272727", appBar: "#272727",
+        cardBorder: "rgba(255,255,255,0.12)", ctrlBorder: "rgba(255,255,255,0.23)", divider: "rgba(255,255,255,0.12)",
+        text: "#FFFFFF", text2: "rgba(255,255,255,0.7)", text3: "rgba(255,255,255,0.7)",
+        primary: "#B7DAFF", primaryFg: "#B7DAFF", onPrimary: "rgba(0,0,0,0.87)", secondary: "#BCE7E9",
+        error: "#E03C3C", errorFg: "#E03C3C", warnFill: "#FFCA28", warnFg: "#FFCA28", onWarn: "rgba(0,0,0,0.87)",
+        info: "#29B6F6", success: "#72E9AD",
+        gridHeader: "#272727", gridBg: "#121212", gridLine: "#515151", gridOuter: "#515151", zebra: "transparent",
+        hover: "rgba(255,255,255,0.08)", selected: "rgba(255,255,255,0.16)",
+        alertInfoBg: "#071318", alertInfoFg: "#B8E7FB", alertInfoBd: "transparent",
+        tones: TONES_D,
+        primarySelected: "rgba(183, 218, 255, 0.16)", menuShadow: "none", menuBg: "#121212", cardShadow: "0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12)", drawerShadow: "0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)"
+      }
+    },
+    pr523: {
+      light: {
+        canvas: "#FFFFFF", paper: "#FFFFFF", cardBg: "#FEFEFE", sunken: "#EEF1F4", appBar: "#EEF1F4",
+        cardBorder: "#78828C", ctrlBorder: "rgba(0,0,0,0.46)", divider: "rgba(0,0,0,0.12)",
+        text: "rgba(0,0,0,0.87)", text2: "rgba(0,0,0,0.6)", text3: "rgba(0,0,0,0.6)",
+        primary: "#005DBF", primaryFg: "#005DBF", onPrimary: "#FFFFFF", secondary: "#00747D",
+        error: "#A82626", errorFg: "#A82626", warnFill: "#FF6F00", warnFg: "#FF6F00", onWarn: "rgba(0,0,0,0.87)",
+        info: "#0277BD", success: "#0F5C29",
+        gridHeader: "#EEF1F4", gridBg: "#FFFFFF", gridLine: "#78828C", gridOuter: "#78828C", zebra: "transparent",
+        hover: "rgba(0,0,0,0.05)", selected: "rgba(0,0,0,0.1)",
+        alertInfoBg: "#B3E5FC", alertInfoFg: "#014361", alertInfoBd: "transparent",
+        tones: TONES_L_NEW,
+        primarySelected: "rgba(0, 93, 191, 0.08)", menuShadow: "none", menuBg: "#FFFFFF", cardShadow: "0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12), 0 2px 8px rgba(0, 93, 191, 0.04)", drawerShadow: "0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)"
+      },
+      dark: {
+        canvas: "#212121", paper: "#121212", cardBg: "#1E1E1E", sunken: "#1A1D20", appBar: "#1A1D20",
+        cardBorder: "#707C88", ctrlBorder: "rgba(255,255,255,0.38)", divider: "rgba(255,255,255,0.12)",
+        text: "#FFFFFF", text2: "rgba(255,255,255,0.7)", text3: "rgba(255,255,255,0.7)",
+        primary: "#B7DAFF", primaryFg: "#B7DAFF", onPrimary: "rgba(0,0,0,0.87)", secondary: "#A6EDF2",
+        error: "#C93232", errorFg: "#C93232", warnFill: "#FFCA28", warnFg: "#FFCA28", onWarn: "rgba(0,0,0,0.87)",
+        info: "#29B6F6", success: "#72E9AD",
+        gridHeader: "#272727", gridBg: "#121212", gridLine: "#707C88", gridOuter: "#707C88", zebra: "transparent",
+        hover: "rgba(255,255,255,0.09)", selected: "rgba(255,255,255,0.19)",
+        alertInfoBg: "#11242C", alertInfoFg: "#B8E7FB", alertInfoBd: "#29B6F6",
+        tones: TONES_D,
+        primarySelected: "rgba(183, 218, 255, 0.16)", menuShadow: "none", menuBg: "#121212", cardShadow: "0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12), 0 2px 8px rgba(183, 218, 255, 0.04)", drawerShadow: "0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)"
+      }
+    }
+  };
+
+  // Shared proposal base. All three options keep a GREY header + sidebar —
+  // the designer's chrome intent — and differ only in how far the chrome,
+  // page and card planes separate from one another.
+  var PROP_L = {
+    paper: "#FFFFFF", cardBg: "#FFFFFF",
+    cardBorder: "#D4DAE3", ctrlBorder: "#78828C", divider: "#E2E7EE",
+    text: "rgba(0,0,0,0.87)", text2: "rgba(0,0,0,0.6)", text3: "rgba(0,0,0,0.6)",
+    primary: "#005DBF", primaryFg: "#00468F", onPrimary: "#FFFFFF", secondary: "#00747D",
+    error: "#A82626", errorFg: "#A82626", warnFill: "#FF6F00", warnFg: "#B04F07", onWarn: "rgba(0,0,0,0.87)",
+    info: "#0277BD", success: "#0F5C29",
+    gridBg: "#FFFFFF", gridOuter: "#78828C",
+    hover: "rgba(0,93,191,0.06)", selected: "rgba(0,93,191,0.12)",
+    alertInfoBg: "#DCEBF9", alertInfoFg: "#0B4B70", alertInfoBd: "#7FB1D8",
+    tones: TONES_L_V3,
+    primarySelected: "rgba(0, 93, 191, 0.10)", menuShadow: "0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12)", menuBg: "#FFFFFF", cardShadow: "0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12), 0 1px 5px rgba(0, 93, 191, 0.03)", drawerShadow: "0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)"
+  };
+  var PROP_D = {
+    canvas: "#14171C", paper: "#1B1F26", cardBg: "#20252D", sunken: "#22272F",
+    cardBorder: "#2E3540", ctrlBorder: "#707C88", divider: "#2E3540",
+    text: "#FFFFFF", text2: "rgba(255,255,255,0.7)", text3: "rgba(255,255,255,0.7)",
+    primary: "#2170CE", primaryFg: "#7FB8F5", onPrimary: "#FFFFFF", secondary: "#5FD6DF",
+    error: "#F4655F", errorFg: "#F4655F", warnFill: "#FFCA28", warnFg: "#FFCA28", onWarn: "rgba(0,0,0,0.87)",
+    info: "#29B6F6", success: "#5CD99A",
+    gridHeader: "#232931", gridBg: "#1B1F26", gridLine: "#2E3540", gridOuter: "#3E4753", zebra: "#1E232B",
+    hover: "rgba(127,184,245,0.08)", selected: "rgba(127,184,245,0.16)",
+    alertInfoBg: "#11242E", alertInfoFg: "#9AD8F7", alertInfoBd: "#2F6C8C",
+    tones: TONES_D_V2,
+    primarySelected: "rgba(127, 184, 245, 0.18)", menuShadow: "0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12)", menuBg: "#252B34", cardShadow: "0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12), 0 1px 5px rgba(127, 184, 245, 0.05)", drawerShadow: "0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12)"
+  };
+  function mk(base, extra) {
+    var o = {}, k;
+    for (k in base) o[k] = base[k];
+    for (k in extra) o[k] = extra[k];
+    return o;
+  }
+  P.propA = {
+    light: mk(PROP_L, { canvas: "#F7F8FA", appBar: "#F2F2F2", sunken: "#F2F2F2",
+      gridHeader: "#F2F2F2", gridLine: "#E3E6EA", zebra: "#FBFBFC" }),
+    dark: mk(PROP_D, { appBar: "#22272F" })
+  };
+  P.propB = {
+    light: mk(PROP_L, { canvas: "#F4F6FA", appBar: "#E9EDF3", sunken: "#E9EDF3",
+      gridHeader: "#E9EDF3", gridLine: "#E0E5EC", zebra: "#FAFBFD" }),
+    dark: mk(PROP_D, { appBar: "#22272F" })
+  };
+  // What actually landed in Revision 1 -- A's body tint, and the chrome left exactly
+  // where Revision 1 had it, because background.grey cannot move on its own.
+  P.shipped = {
+    light: mk(PROP_L, { canvas: "#FAFBFD", appBar: "#EEF1F4", sunken: "#EEF1F4",
+      gridHeader: "#EEF1F4", gridLine: "#E3E6EA", zebra: "#FBFBFC" }),
+    dark: mk(PROP_D, { appBar: "#22272F" })
+  };
+  P.propC = {
+    light: mk(PROP_L, { canvas: "#F5F7FB", appBar: "#E3EAF4", sunken: "#E8EDF5",
+      gridHeader: "#E8EDF5", gridLine: "#DFE5EE", zebra: "#FAFCFE",
+      selected: "rgba(0,93,191,0.14)" }),
+    dark: mk(PROP_D, { appBar: "#22272F" })
+  };
+
+  /* ---------- state ---------- */
+  var state = { palette: "propA", mode: "light", screen: "quote", tint: "lightest", nav: "paper", hover: "blue", shape: "flush", pageNav: "pill", barW: "3", railW: "4" };
+  var TINTS = { lightest: "#FAFBFD", light: "#F7F8FB", mid: "#F4F6FA", deep: "#F0F3F8" };
+  function tk() {
+    var t = P[state.palette][state.mode];
+    // Body tint only applies to the proposals, and only in light mode — the
+    // whole point of the control is dialling how grey the main body sits
+    // against a fixed #F2F2F2 chrome.
+    if (state.palette.indexOf("prop") === 0 && state.mode === "light") {
+      var o = {}, k;
+      for (k in t) o[k] = t[k];
+      o.canvas = TINTS[state.tint];
+      o.wsNav = state.nav === "rail" ? o.appBar : state.nav === "body" ? o.canvas : o.cardBg;
+      o.rowHover = state.hover === "grey" ? "rgba(0,0,0,0.08)" : o.primarySelected;
+      o.rowRadius = state.shape === "pill" ? "999px" : "0px";
+      o.rowGap = state.shape === "pill" ? "6px" : "0px";
+      o.navRadius = state.pageNav === "bar" ? "0px" : "999px";
+      o.navGap = state.pageNav === "bar" ? "0px" : "8px";
+      o.navFill = o.rowHover;
+      o.navBar = state.pageNav === "bar" ? o.primaryFg : "transparent";
+      o.railBar = state.railW + "px";
+      o.rowBar = state.barW + "px";
+      o.neutralHover = "rgba(0,0,0,0.04)";
+      return o;
+    }
+    var q = {}, k2;
+    for (k2 in t) q[k2] = t[k2];
+    q.wsNav = state.nav === "rail" ? t.appBar : state.nav === "body" ? t.canvas : t.cardBg;
+    // MUI stock neutral, so the comparison is real: the proposals' own
+    // action.selected is already primary-tinted, which made this a no-op.
+    q.rowHover = state.hover === "grey"
+      ? (state.mode === "dark" ? "rgba(255,255,255,0.16)" : "rgba(0,0,0,0.08)")
+      : t.primarySelected;
+    q.rowRadius = state.shape === "pill" ? "999px" : "0px";
+    q.rowGap = state.shape === "pill" ? "6px" : "0px";
+    q.navRadius = state.pageNav === "bar" ? "0px" : "999px";
+    q.navGap = state.pageNav === "bar" ? "0px" : "8px";
+    q.navFill = state.pageNav === "bar" ? t.rowHoverFallback || q.rowHover : q.rowHover;
+    q.navBar = state.pageNav === "bar" ? q.primaryFg : "transparent";
+    q.railBar = state.railW + "px";
+    q.rowBar = state.barW + "px";
+    q.neutralHover = state.mode === "dark" ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.04)";
+    return q;
+  }
+
+  /* ---------- screens ---------- */
+  function railHtml(active) {
+    var items = ["Home", "Policies", "Tasks", "Quotes", "Insureds"];
+    return '<div class="rail">' + items.map(function (n) {
+      return '<div class="' + (n === active ? "on" : "") + '"><s></s>' + n + "</div>";
+    }).join("") + "</div>";
+  }
+  function topbar(searchText) {
+    return '<div class="topbar"><span class="brand">Harbor &amp; Pine</span>' +
+      '<div class="search">' + searchText + "</div>" +
+      '<span class="chip" style="background:var(--t-warnFill);color:var(--t-onWarn)">MOCKS</span></div>';
+  }
+  function toneChip(t, label) {
+    var x = tk().tones[t];
+    return '<span class="chip" style="background:' + x.bg + ";color:" + x.fg + '">' + label + "</span>";
+  }
+
+  function screenQuote() {
+    return '<div class="app">' + railHtml("Quotes") + '<div class="main">' + topbar("Search or ask anything: quote, policy, insured, claim…") +
+      '<div class="body">' +
+        '<div class="pagehead"><h3>Quote details</h3><div style="display:flex;gap:6px">' + toneChip("info", "Revision 4") + toneChip("ok", "In good standing") + "</div></div>" +
+        '<div class="banner"><b>◆</b><div><b>Quote briefing</b><p>Atlantic Ridge Construction’s Commercial Auto policy is in good standing. AI recommends reviewing the open collision claim before processing the upcoming renewal.</p></div></div>' +
+        '<div class="sectitle">At a glance</div>' +
+        '<div class="row">' +
+          '<div class="card"><div class="kpi-l">System risk</div><div class="kpi-v risk">Medium</div><div class="kpi-s">100% confidence · no referral required</div></div>' +
+          '<div class="card"><div class="kpi-l">Transaction premium</div><div class="kpi-v num">$1,200</div><div class="kpi-s">Endt #4 · booked Apr 15</div></div>' +
+          '<div class="card"><div class="kpi-l">Commission</div><div class="kpi-v num">$1,868</div><div class="kpi-s">Producer: Liberty Group</div><a class="link" href="#">View details</a></div>' +
+          '<div class="card"><div class="kpi-l">Billing</div><div class="kpi-v num">$1,200</div><div class="kpi-s">Last paid 6/10 · $0 past due</div><a class="link" href="#">View installments</a></div>' +
+          '<div class="card"><div class="kpi-l">Claims</div><div class="kpi-v num">2 open</div><div class="kpi-s">$5,400 incurred</div><a class="link" href="#">View open claims</a></div>' +
+        "</div>" +
+        '<div class="sectitle">Do next</div>' +
+        '<div style="display:flex;gap:6px;flex-wrap:wrap">' +
+          '<span class="btn outline">Cancellation</span><span class="btn outline">Change Commission</span>' +
+          '<span class="btn outline">Change Expiration</span><span class="btn outline">Change Underwriter</span>' +
+          '<span class="btn filled">Rate quote</span>' +
+        "</div>" +
+        '<div class="sectitle">Vehicle 1 — garaging</div>' +
+        '<div class="row" style="max-width:520px">' +
+          '<div><span class="flabel">Garaging ZIP</span><div class="field">07960</div></div>' +
+          '<div><span class="flabel">Rated state</span><div class="field" style="border-color:var(--t-errorFg)">—</div><span class="helper">Rated state is required before rating.</span></div>' +
+          '<div><span class="flabel">Class code</span><div class="field">7219</div></div>' +
+        "</div>" +
+        '<div class="sectitle">Quote lifecycle</div>' +
+        '<div style="display:flex;gap:6px;flex-wrap:wrap">' +
+          '<span class="chip" style="background:var(--t-primary);color:var(--t-onPrimary)">All</span>' +
+          '<span class="chip ghost">Policy</span><span class="chip ghost">Billing</span><span class="chip ghost">Claim</span>' +
+          toneChip("err", "3 exceptions") + toneChip("warn", "2 pending") + toneChip("neutral", "Draft") +
+        "</div>" +
+      "</div></div></div>";
+  }
+
+  function screenGrid() {
+    var rows = [
+      ["01-CA-000223336-0", "09/25/2025", "Atlantic Ridge Construction", "Keystone Commercial", "David Martinez", "$19,057.36", "ok", "In force"],
+      ["01-BP-000190001-3", "09/29/2025", "Blue Harbor Logistics Inc.", "Keystone Agency", "Robert Henderson", "$2,135.33", "warn", "Pending"],
+      ["01-UL-000190002-2", "10/10/2025", "Maple Grove Property Mgmt", "Summit Outdoor Equip.", "Amanda Brooks", "$555.12", "ok", "In force"],
+      ["01-GL-000190003-5", "09/24/2025", "Keystone Commercial Realty", "Evergreen Food Dist.", "Amanda Brooks", "$11,247.06", "err", "Lapsed"],
+      ["01-WC-000190004-2", "10/10/2025", "Horizon Fleet Services, LLC", "Evergreen Risk", "Jennifer Collins", "$546.74", "ok", "In force"],
+      ["01-CA-000190005-2", "10/09/2025", "Silverline Manufacturing Co.", "Summit Risk", "Laura Kim", "$1,337.47", "info", "Renewing"],
+      ["01-CA-000190006-1", "09/17/2025", "Northshore Medical Group", "Blue Harbor Logistics", "Amanda Brooks", "$2,190.42", "ok", "In force"],
+      ["01-BP-000190007-5", "09/24/2025", "Red Oak Hospitality Group", "Harborview Agency", "Robert Henderson", "$3,939.51", "warn", "Pending"]
+    ];
+    return '<div class="app">' + railHtml("Policies") + '<div class="main">' + topbar("Search or ask anything: quote, policy, insured, claim…") +
+      '<div class="body">' +
+        '<div class="pagehead"><h3>Policies</h3><div style="display:flex;gap:6px;align-items:center">' +
+          '<span class="chip ghost">Status: In Force</span><span class="btn filled">New quote</span></div></div>' +
+        '<div class="gridbox"><table><thead><tr>' +
+          "<th>Policy #</th><th>Effective</th><th>Insured</th><th>Agency</th><th>Underwriter</th><th>TWP</th><th>Status</th>" +
+        "</tr></thead><tbody>" +
+        rows.map(function (r) {
+          return "<tr><td><a href=\"#\">" + r[0] + "</a></td><td class=\"num\">" + r[1] + "</td><td>" + r[2] +
+            "</td><td>" + r[3] + "</td><td>" + r[4] + '</td><td class="num">' + r[5] + "</td><td>" + toneChip(r[6], r[7]) + "</td></tr>";
+        }).join("") +
+        "</tbody></table></div>" +
+        '<div style="margin-top:8px;font-size:9.5px" class="muted">Total rows: 50</div>' +
+      "</div></div></div>";
+  }
+
+  function screenHome() {
+    return '<div class="app">' + railHtml("Home") + '<div class="main">' + topbar("Search or ask anything: quote, policy, insured, claim…") +
+      '<div class="body">' +
+        '<div class="pagehead"><h3>Good afternoon, admin</h3><span class="btn filled">+ New Quote</span></div>' +
+        '<div class="row">' +
+          '<div class="card" style="flex:1.1"><div class="kpi-l">Daily brief</div>' +
+            '<div style="display:flex;gap:10px;align-items:center;margin-top:6px">' +
+            '<div class="ring"><span>72</span></div>' +
+            '<div style="font-size:9.5px;line-height:1.45" class="muted">Your book is running at a 94.2% combined ratio — 2.6 points better than Q2 — on $8.4M written, up 11%. Today, one pricing exception and five referrals hold $812K of premium at stake.</div></div></div>' +
+          '<div class="card" style="flex:1.2"><div class="kpi-l">Overnight activity</div>' +
+            '<div style="margin-top:6px;font-size:9.5px;line-height:1.7">' +
+            '<div><span class="muted">11:42 pm</span> · Kestrel Mechanical issued straight-through</div>' +
+            '<div><span class="muted">7:15 am</span> · Harbor Line’s broker replied requesting a revised payment schedule</div>' +
+            '<div><span class="muted">3:00 am</span> · Two new quotes cleared appetite and entered the pipeline</div></div></div>' +
+          '<div class="card" style="flex:1"><div class="kpi-l">Needs attention</div>' +
+            '<div style="margin-top:6px;font-size:9.5px;line-height:1.8">' +
+            '<div><a class="link" href="#">5 referrals aging (2 over 48h)</a></div>' +
+            '<div><a class="link" href="#">Stale loss runs on 3 quotes</a></div>' +
+            '<div><a class="link" href="#">1 pricing exception open</a></div></div>' +
+            '<div style="margin-top:8px"><span class="btn filled">Review 5 referrals</span></div></div>' +
+        "</div>" +
+        '<div class="sectitle">Where your attention is needed</div>' +
+        '<div class="row">' +
+          '<div class="card raised"><div style="display:flex;justify-content:space-between;align-items:start;gap:8px"><b style="font-size:10.5px">Atlantic Ridge Construction, LLC</b>' + toneChip("err", "Exceptions") + "</div>" +
+            '<div class="kpi-s">6:02 am · 3d ago · Rating engine</div>' +
+            '<div style="font-size:10px;font-weight:600;margin-top:5px">Pricing exception — modifier exceeds authority</div>' +
+            '<div style="font-size:9.5px;margin-top:3px" class="muted">$412,000 premium · decide by 5:00 PM today</div>' +
+            '<div style="margin-top:6px"><a class="link" href="#">Review exceptions</a></div></div>' +
+          '<div class="card raised"><div style="display:flex;justify-content:space-between;align-items:start;gap:8px"><b style="font-size:10.5px">Harbor Line Logistics Co.</b>' + toneChip("ok", "Recommendation") + "</div>" +
+            '<div class="kpi-s">7:15 am · 3d ago · Pricing model</div>' +
+            '<div style="font-size:10px;font-weight:600;margin-top:5px">Counter at $184,500 to keep the bind likely</div>' +
+            '<div style="font-size:9.5px;margin-top:3px" class="muted">$189,000 premium · broker waiting 3 days</div>' +
+            '<div style="margin-top:6px"><a class="link" href="#">Apply counter</a></div></div>' +
+          '<div class="card raised"><div style="display:flex;justify-content:space-between;align-items:start;gap:8px"><b style="font-size:10.5px">Beacon Food Distributing</b>' + toneChip("info", "Insights") + "</div>" +
+            '<div class="kpi-s">6:02 am · 3d ago · Data quality</div>' +
+            '<div style="font-size:10px;font-weight:600;margin-top:5px">Loss runs are 14 months stale</div>' +
+            '<div style="font-size:9.5px;margin-top:3px" class="muted">$96,400 indicated · rate before Thursday</div>' +
+            '<div style="margin-top:6px"><a class="link" href="#">Request loss runs</a></div></div>' +
+        "</div>" +
+        '<div class="sectitle">Key metrics</div>' +
+        '<div class="row">' +
+          '<div class="card raised"><div class="kpi-l">Quotes in flight</div><div class="kpi-v num">24</div><div class="kpi-s">+3 this week · $1.94M indicated</div></div>' +
+          '<div class="card raised"><div class="kpi-l">Bind ratio (MTD)</div><div class="kpi-v num">41%</div><div class="kpi-s">+4 pts compared to July</div></div>' +
+          '<div class="card raised"><div class="kpi-l">Premium bound (MTD)</div><div class="kpi-v num">$2.86m</div><div class="kpi-s">78% of plan</div></div>' +
+          '<div class="card raised"><div class="kpi-l">Quotes aging</div><div class="kpi-v num">24</div><div class="kpi-s">2 aging over 48h · $812K at stake</div></div>' +
+        "</div>" +
+      "</div></div></div>";
+  }
+
+  function screenIntake() {
+    var t = tk();
+    // glyph mirrors the real per-status icon, colour comes from the tone LABEL
+    // (the readable one), not the chip fill.
+    var GLYPH = { err: "\u2715", warn: "\u21bb", ok: "\u2713", neutral: "\u25cb" };
+    function nav(label, tone, on, cnt, hov) {
+      var c = t.tones[tone] ? t.tones[tone].fg : "currentColor";
+      var glyph = GLYPH[tone] || "\u25cb";
+      var cls = (on ? "on " : hov ? "hov " : "") + (state.pageNav === "bar" ? "dotright" : "");
+      return '<a href="#" class="' + cls.trim() + '"><i class="dot" style="color:' + c + '">' + glyph + "</i>" +
+        label + (cnt ? '<b class="cnt">' + cnt + "</b>" : "") + "</a>";
+    }
+    function field(label, value, err) {
+      return '<div><span class="flabel">' + label + "</span>" +
+        '<div class="field"' + (err ? ' style="border-color:var(--t-errorFg)"' : "") + ">" + value + "</div>" +
+        (err ? '<span class="helper">' + err + "</span>" : "") + "</div>";
+    }
+    return '<div class="app">' + railHtml("Quotes") + '<div class="main">' + topbar("Search or ask anything...") +
+      '<div class="sechead">' +
+        '<span style="font-size:10.5px;font-weight:600">Quote 01-CA-000100005-3</span>' +
+        '<div class="toggles">' +
+          '<span class="tg">Filter</span><span class="tg">Parties</span>' +
+          '<span class="tg">Notes</span><span class="tg">Email</span>' +
+          '<span class="tg">Tasks</span><span class="tg on">Assistant</span>' +
+        "</div>" +
+      "</div>" +
+      '<div class="body" style="display:flex;gap:0;padding:0">' +
+        '<div class="ldrawer">' +
+          '<h4>Activity</h4>' +
+          '<div class="msg"><b style="font-size:9px">Rate run completed</b>' +
+            '<div class="muted" style="margin-top:3px">7:42 am \u00b7 rating engine</div></div>' +
+          '<div class="msg"><b style="font-size:9px">Vehicle 2 added</b>' +
+            '<div class="muted" style="margin-top:3px">7:15 am \u00b7 D. Martinez</div></div>' +
+          '<div class="msg"><b style="font-size:9px">Quote opened for edit</b>' +
+            '<div class="muted" style="margin-top:3px">6:02 am \u00b7 D. Martinez</div></div>' +
+        "</div>" +
+        '<div class="wsnav">' +
+          nav("Policy Info", "ok", false) + nav("Locations", "ok", false) +
+          nav("Vehicles", "err", true, 2) + nav("Drivers", "warn", false, 1, true) +
+          nav("Commercial Auto", "ok", false) + nav("Garage Liability", "neutral", false) +
+          nav("Schedule Rating", "warn", false, 3) + nav("Premium", "neutral", false) +
+        "</div>" +
+        '<div style="flex:1;min-width:0;padding:14px">' +
+          '<div class="pagehead"><h3>Vehicles</h3><div style="display:flex;gap:6px">' +
+            '<span class="btn outline">Cancel</span><span class="btn filled">Rate</span></div></div>' +
+          '<div class="stepper">' +
+            '<div class="stp"><span class="num">✓</span>Intake</div><div class="bar"></div>' +
+            '<div class="stp on"><span class="num">2</span>Vehicles</div><div class="bar"></div>' +
+            '<div class="stp"><span class="num">3</span>Coverage</div><div class="bar"></div>' +
+            '<div class="stp"><span class="num">4</span>Rate</div>' +
+          "</div>" +
+          '<div class="acc"><div class="sum"><span>Vehicle 1 - 2021 Freightliner M2</span>' +
+            '<span style="display:flex;gap:6px;align-items:center">' + toneChip("err", "2 issues") +
+            '<span class="caret">▾</span></span></div>' +
+            '<div class="det"><div class="fgrid">' +
+              field("VIN", "1FVACWDT4MHM12345") + field("Garaging ZIP", "07960") +
+              field("Rated state", "-", "Rated state is required before rating.") +
+              field("Class code", "7219") + field("Radius", "51-200 mi") + field("Cost new", "$142,500") +
+            "</div></div></div>" +
+          '<div class="acc"><div class="sum"><span>Vehicle 2 - 2019 Isuzu NPR</span>' +
+            '<span style="display:flex;gap:6px;align-items:center">' + toneChip("ok", "Complete") +
+            '<span class="caret">▸</span></span></div></div>' +
+          '<div class="acc"><div class="sum"><span>Vehicle 3 - 2022 Ford Transit</span>' +
+            '<span style="display:flex;gap:6px;align-items:center">' + toneChip("warn", "Pending") +
+            '<span class="caret">▸</span></span></div></div>' +
+          '<div class="banner" style="margin-top:12px"><b>◆</b><div><b>Medical Payments gap</b>' +
+            "<p>Med Pay is not selected on Vehicle 1. Acknowledge or resolve before rating.</p></div></div>" +
+        "</div>" +
+        '<div class="drawer">' +
+          '<div class="grip"><i></i></div>' +
+          '<h4>Ask Assistant</h4>' +
+          '<div class="msg"><div class="muted">Why is Vehicle 1 missing a rated state?</div></div>' +
+          '<div class="msg"><div class="muted">Rated state derives from the garaging ZIP. 07960 resolves to NJ, but the field was cleared on the last edit. Setting it will clear the blocking issue on Vehicle 1.</div></div>' +
+          '<div class="ow"><div style="display:flex;justify-content:space-between;gap:6px">' +
+            '<b style="font-size:9.5px">Rated state</b>' + toneChip("err", "Error") + "</div>" +
+            '<div class="muted" style="margin-top:3px">Vehicle 1 - required</div>' +
+            '<a class="link" href="#">Resolve</a></div>' +
+        "</div>" +
+      "</div></div></div>";
+  }
+
+  function screenSearch() {
+    function mi(title, sub, sel, hov) {
+      return '<div class="mi' + (sel ? " sel" : hov ? " hov" : "") + '"><b>' + title + "</b>" +
+        (sub ? "<span>" + sub + "</span>" : "") + "</div>";
+    }
+    function col(head, rows) {
+      return '<div class="col"><div class="colhead">' + head + "</div>" +
+        rows.map(function (r) { return mi(r[0], r[1], false); }).join("") + "</div>";
+    }
+    return '<div class="app">' + railHtml("Policies") + '<div class="main">' +
+      '<div class="topbar" style="padding-bottom:0;border-bottom:none">' +
+        '<span class="brand">Harbor &amp; Pine</span>' +
+        '<div class="searchbox">' +
+          '<div class="sinput">atlantic</div>' +
+          '<div class="menu"><div class="split">' +
+            '<div class="recent">' +
+              '<div class="colhead">RECENT</div>' +
+              mi("atlantic ridge", "", true) + mi("open referrals", "", false, true) + mi("wc renewals", "", false) +
+              '<div class="colhead" style="padding-top:7px">SUGGESTED</div>' +
+              mi("quotes aging over 48h", "", false) + mi("pricing exceptions", "", false) +
+            "</div>" +
+            '<div class="cols">' +
+              col("INSUREDS", [["Atlantic Ridge Construction, LLC", "business"],
+                               ["Atlantic Ridge Development Group", "business"]]) +
+              col("POLICIES", [["01-CA-000223336-0", "Atlantic Ridge \u00b7 commercial"],
+                               ["01-UL-000190014-6", "Atlantic Ridge \u00b7 umbrella"]]) +
+            "</div>" +
+          "</div></div>" +
+        "</div>" +
+        '<span class="chip" style="background:var(--t-warnFill);color:var(--t-onWarn)">MOCKS</span>' +
+      "</div>" +
+      '<div class="body">' +
+        '<div class="pagehead"><h3>Policies</h3><span class="chip ghost">Status: In Force</span></div>' +
+        '<div class="gridbox"><table><thead><tr><th>Policy #</th><th>Effective</th><th>Insured</th><th>Underwriter</th><th>TWP</th></tr></thead><tbody>' +
+        '<tr><td><a href="#">01-CA-000223336-0</a></td><td class="num">09/25/2025</td><td>Atlantic Ridge Construction</td><td>David Martinez</td><td class="num">$19,057.36</td></tr>' +
+        '<tr><td><a href="#">01-BP-000190001-3</a></td><td class="num">09/29/2025</td><td>Blue Harbor Logistics Inc.</td><td>Robert Henderson</td><td class="num">$2,135.33</td></tr>' +
+        '<tr><td><a href="#">01-UL-000190002-2</a></td><td class="num">10/10/2025</td><td>Maple Grove Property Mgmt</td><td>Amanda Brooks</td><td class="num">$555.12</td></tr>' +
+        '<tr><td><a href="#">01-GL-000190003-5</a></td><td class="num">09/24/2025</td><td>Keystone Commercial Realty</td><td>Amanda Brooks</td><td class="num">$11,247.06</td></tr>' +
+        "</tbody></table></div></div>" +
+      "</div></div>";
+  }
+
+  var SCREENS = { quote: screenQuote, grid: screenGrid, home: screenHome, intake: screenIntake, search: screenSearch };
+  var URLS = {
+    quote: "/policy/quotes/…/summary",
+    grid: "/policy/policies",
+    home: "/policy",
+    intake: "/policy/quotes/.../workspace",
+    search: "/policy/policies \u2014 global search open"
+  };
+
+  /* ---------- audit rows ---------- */
+  var AUDIT = [
+    { l: "Body text on the page", d: "text.primary → background.default", req: 4.5, f: "text", b: "canvas" },
+    { l: "Body text on a card", d: "text.primary → card surface", req: 4.5, f: "text", b: "cardBg" },
+    { l: "Secondary text on a card", d: "text.secondary → card surface", req: 4.5, f: "text2", b: "cardBg" },
+    { l: "Link / primary on a card", d: "primary (fg role) → card surface", req: 4.5, f: "primaryFg", b: "cardBg" },
+    { l: "Primary button label", d: "contrastText → primary.main", req: 4.5, f: "onPrimary", b: "primary" },
+    { l: "Inline error text", d: "error.main → card surface", req: 4.5, f: "errorFg", b: "cardBg", note: "FormHelperText, error icons" },
+    { l: "Warning text / icon", d: "warning (fg role) → card surface", req: 4.5, f: "warnFg", b: "cardBg", note: "“Medium” risk, warning glyphs" },
+    { l: "Warning button label", d: "warning.contrastText → warning.main", req: 4.5, f: "onWarn", b: "warnFill" },
+    { l: "Success text", d: "success.main → card surface", req: 4.5, f: "success", b: "cardBg" },
+    { l: "Info text", d: "info.main → card surface", req: 4.5, f: "info", b: "cardBg" },
+    { l: "Card vs page", d: "surface separation — no legal floor", req: null, f: "cardBg", b: "canvas", sep: true },
+    { l: "Grid header vs grid body", d: "surface separation", req: null, f: "gridHeader", b: "gridBg", sep: true },
+    { l: "Input border", d: "resting outlined border → surface (1.4.11)", req: 3, f: "ctrlBorder", b: "paper" },
+    { l: "Grid outer boundary", d: "grid edge → page (1.4.11)", req: 3, f: "gridOuter", b: "canvas" },
+    { l: "Card border", d: "card edge → page", req: null, f: "cardBorder", b: "canvas", sep: true, note: "only load-bearing when surfaces match" },
+    { l: "Grid row separator", d: "row line \u2192 grid body", req: null, f: "gridLine", b: "gridBg", sep: true, note: "decorative: rows are not controls" },
+    { l: "Search menu vs page", d: "dropdown surface \u2192 page behind it", req: null, f: "menuBg", b: "canvas", sep: true, note: "a floating menu must read as above, not below" },
+    { l: "Workspace nav vs rail", d: "quote nav \u2192 app rail", req: null, f: "wsNav", b: "appBar", sep: true, note: "global chrome vs record-scoped nav" }
+  ];
+
+  function fmt(v, req, sep) {
+    if (v == null) return '<span class="ratio n">—</span>';
+    var s = v.toFixed(2);
+    if (sep) {
+      var ok = v >= 1.05;
+      return '<span class="ratio ' + (ok ? "p" : "f") + '">' + s + "<i>" + (ok ? "visible" : "flat") + "</i></span>";
+    }
+    var pass = v >= req;
+    return '<span class="ratio ' + (pass ? "p" : "f") + '">' + s + "<i>" + (pass ? "AA" : "fail") + "</i></span>";
+  }
+
+  function renderAudit() {
+    var tb = document.getElementById("auditBody");
+    tb.innerHTML = AUDIT.map(function (r) {
+      var sel = state.palette.indexOf("prop") === 0 ? state.palette : "propB";
+      var cells = ["current", "pr523", sel].map(function (p) {
+        var t = P[p][state.mode];
+        var v = cr(t[r.f], t[r.b], t.canvas);
+        return "<td>" + fmt(v, r.req, r.sep) + "</td>";
+      }).join("");
+      var need = r.sep ? "—" : r.req + ":1";
+      return '<tr><td class="pair">' + r.l + "<small>" + r.d + (r.note ? " · " + r.note : "") + "</small></td>" +
+        '<td class="delta">' + need + "</td>" + cells + "</tr>";
+    }).join("");
+    var sel = state.palette.indexOf("prop") === 0 ? state.palette : "propB";
+    document.getElementById("propColHead").textContent =
+      { propA: "A · Designer-safe", propB: "B · Tonal", propC: "C · Branded" }[sel];
+  }
+
+  /* ---------- tone strip ---------- */
+  var TONE_KEYS = [["ok", "Bound"], ["err", "Exceptions"], ["warn", "Pending"],
+                   ["info", "Insights"], ["copilot", "AI draft"], ["neutral", "Draft"],
+                   ["accent1", "Renewal"], ["accent2", "Audit"], ["accent3", "Endorsed"]];
+  // CIE-Lab distance, for "can a user tell these two chips apart at a glance".
+  function toLab(c) {
+    var p = parse(c); if (!p) return null;
+    if (p.a < 1) p = over(p, parse(tk().cardBg) || { r: 255, g: 255, b: 255, a: 1 });
+    function f(v) { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }
+    var R = f(p.r), G = f(p.g), B = f(p.b);
+    var X = (R * 0.4124 + G * 0.3576 + B * 0.1805) / 0.95047;
+    var Y = (R * 0.2126 + G * 0.7152 + B * 0.0722);
+    var Z = (R * 0.0193 + G * 0.1192 + B * 0.9505) / 1.08883;
+    function g2(t) { return t > 0.008856 ? Math.cbrt(t) : (7.787 * t) + 16 / 116; }
+    X = g2(X); Y = g2(Y); Z = g2(Z);
+    return [116 * Y - 16, 500 * (X - Y), 200 * (Y - Z)];
+  }
+  function dE(a, b) {
+    var A = toLab(a), B = toLab(b); if (!A || !B) return null;
+    return Math.sqrt(Math.pow(A[0] - B[0], 2) + Math.pow(A[1] - B[1], 2) + Math.pow(A[2] - B[2], 2));
+  }
+  function renderTones() {
+    var t = tk();
+    document.getElementById("toneStrip").innerHTML = TONE_KEYS.map(function (k) {
+      var x = t.tones[k[0]];
+      var bg = x.bg, base = t.cardBg;
+      var v = cr(x.fg, bg, base);
+      var flat = cr(bg, base);
+      return '<div class="tonecell">' +
+        '<span class="chip-demo" style="background:' + bg + ";color:" + x.fg + '">' + k[1] + "</span>" +
+        '<span class="tonemeta">label ' + v.toFixed(2) + ':1<br>fill vs card ' + flat.toFixed(2) + ":1</span></div>";
+    }).join("");
+    // worst pair in this set
+    var ks = TONE_KEYS.map(function (k) { return k[0]; }), worst = null;
+    for (var i = 0; i < ks.length; i++) {
+      for (var j = i + 1; j < ks.length; j++) {
+        var d = dE(t.tones[ks[i]].bg, t.tones[ks[j]].bg);
+        if (d != null && (!worst || d < worst.d)) worst = { d: d, a: ks[i], b: ks[j] };
+      }
+    }
+    var lbl = {}; TONE_KEYS.forEach(function (k) { lbl[k[0]] = k[1]; });
+    document.getElementById("deRead").innerHTML = worst
+      ? 'Closest pair in this set: <b>' + lbl[worst.a] + "</b> vs <b>" + lbl[worst.b] +
+        '</b> at <b>&Delta;E ' + worst.d.toFixed(1) + "</b>. Below ~10 two chips are easily confused at chip size; " +
+        "12-15 is comfortable. This is measured across all 36 pairs, not just the two shown."
+      : "";
+  }
+
+  /* ---------- diff table ---------- */
+  var DIFF = [
+    ["secondary.main (light)", "#2E767D", "#00747D", "Deeper, cleaner teal. 5.25 → 5.53:1. Real but small."],
+    ["secondary.main (dark)", "#BCE7E9", "#A6EDF2", "Slightly brighter pastel. Still a tint, not a brand colour."],
+    ["error.main (dark)", "#E03C3C", "#C93232", "Fixes contained buttons (4.30 → 5.27). Breaks error TEXT: 3.84 → 3.14:1."],
+    ["warning.contrastText (light)", "#FFFFFF", "rgba(0,0,0,.87)", "Genuine AA fix for the contained warning button: 2.79 → 6.66:1."],
+    ["background.grey (light)", "#F2F2F2", "#EEF1F4", "Neutral grey → faintly blue grey. Barely perceptible."],
+    ["action.selected (light)", "4% black", "10% black", "Selection is finally distinct from hover. Good."],
+    ["action.hover / focus", "4% / 12%", "5% / 14%", "Marginal."],
+    ["paper.elevations 1–4 (light)", "#FFFFFF", "#FEFEFE → #FCFCFC", "A 1–3/255 step. 1.01:1 against paper — invisible, and it darkens."],
+    ["structural borders", "#A6A6A6 / #BFBFBF", "#78828C", "2.43 → 3.91:1. The strongest single change in the revision."],
+    ["outlined input border", "rgba(0,0,0,.23)", "rgba(0,0,0,.46)", "1.74 → 3.47:1. Clears 1.4.11. Correct."],
+    ["chip & alert tints", "#FDEDED / #EDF7ED …", "#FFCDD2 / #C8E6C9 …", "The only change with real visual punch. Chips and alerts now share one fill."]
+  ];
+  function renderDiff() {
+    document.getElementById("diffBody").innerHTML = DIFF.map(function (d) {
+      return '<tr><td class="pair"><code class="hex">' + d[0] + "</code></td>" +
+        '<td><div class="swatchrow"><span class="sw" style="background:' + (d[1][0] === "#" ? d[1] : "transparent") + '"></span><code class="hex">' + d[1] + "</code></div></td>" +
+        '<td><div class="swatchrow"><span class="sw" style="background:' + (d[2][0] === "#" ? d[2] : "transparent") + '"></span><code class="hex">' + d[2] + "</code></div></td>" +
+        '<td style="color:var(--slate);font-size:13px">' + d[3] + "</td></tr>";
+    }).join("");
+  }
+
+  /* ---------- findings ---------- */
+  var FINDINGS = [
+    { sev: "high", tag: "Light theme · hierarchy", h: "Every plane in light mode is the same white",
+      p: "<code>background.default</code> and <code>background.paper</code> are both <span class='num'>#FFFFFF</span>, giving a card-to-page separation of <span class='num'>1.00:1</span>. The only thing telling a card from the page behind it is a <span class='num'>1.32:1</span> hairline. Revision 1 addressed this with an elevation ramp that puts elevation&nbsp;1 at <span class='num'>#FEFEFE</span> — one step in 255, <span class='num'>1.01:1</span>. It is not perceptible, and it runs the wrong way: in Material light mode elevation gets <em>lighter</em>, and there is nothing above white, so the ramp darkens the card instead of lifting it.",
+      fix: "Move the page to a cool grey (<span class='num'>#F4F6FA</span>) and leave cards white. Separation goes to <span class='num'>1.08:1</span> without touching a single component, and the hairline stops carrying the whole structure." },
+    { sev: "high", tag: "Dark theme · hierarchy", h: "Dark elevation runs backwards",
+      p: "<code>background.paper</code> is <span class='num'>#121212</span> — <em>darker</em> than <code>background.default</code> at <span class='num'>#212121</span>. Cards, dialogs and menus sink into the page instead of rising off it. The elevation ramp then climbs <span class='num'>#1E1E1E → #272727</span>, straddling the page colour, so a raised surface is sometimes darker than its own background and sometimes lighter.",
+      fix: "Invert the stack: page <span class='num'>#14171C</span>, paper <span class='num'>#1B1F26</span>, elevation 1/2/4 at <span class='num'>#20252D / #252B34 / #2B323C</span>. Each step is a real, monotonic lift." },
+    { sev: "high", tag: "Dark theme · brand", h: "There is no blue in dark mode",
+      p: "<code>primary.main</code> in dark is <span class='num'>#B7DAFF</span>, a 92%-lightness tint, and <code>contrastText</code> is near-black. Every filled primary button — <em>New Quote</em>, <em>Review 5 referrals</em>, <em>Rate quote</em> — renders as a near-white pill with dark text. The product's own colour disappears the moment a user switches to dark. <code>secondary</code> <span class='num'>#A6EDF2</span> and <code>success</code> <span class='num'>#72E9AD</span> have the same problem.",
+      fix: "Split the role, which MUI already supports: <code>primary.main #1E6FC7</code> is the <em>fill</em> and carries white text at <span class='num'>5.06:1</span>; <code>primary.light #7FB8F5</code> is the <em>foreground</em> for links and icons at <span class='num'>7.93:1</span>. One token cannot be both a background for white text and a foreground on a dark surface — that is the tension the pastel was avoiding, and splitting it is the standard resolution." },
+    { sev: "high", tag: "Regression", h: "The dark error change made inline validation worse",
+      p: "<code>error.main</code> moved <span class='num'>#E03C3C → #C93232</span>. Against the dark card surface that is <span class='num'>3.84 → 3.14:1</span> — it now fails AA as a foreground. MUI uses <code>error.main</code> for <code>FormHelperText</code>, error icons, and outlined/text error buttons, so this is the colour of almost every validation message in the workspace. The revision reports it as an improvement because it was measured as a button fill, where it genuinely did improve (<span class='num'>4.30 → 5.27:1</span>).",
+      fix: "<span class='num'>#EF5350</span> reads <span class='num'>4.74:1</span> as text and takes near-black at <span class='num'>5.43:1</span> as a fill — it satisfies both roles at once." },
+    { sev: "med", tag: "Not fixed", h: "Warning still fails as a foreground in light mode",
+      p: "<code>warning.main #FF6F00</code> on white is <span class='num'>2.79:1</span>. The revision fixed only the contained-button case by flipping <code>contrastText</code> to near-black. Warning used as <em>text or an icon</em> — which is how the Quote summary renders the <em>Medium</em> system-risk value — is untouched and still fails. <code>warning.dark</code> is currently set to <span class='num'>#FF6F00</span> too, so there is no darker variant to fall back to.",
+      fix: "Point <code>warning.dark</code> at <span class='num'>#B45309</span> (<span class='num'>5.02:1</span> on white, <span class='num'>4.64:1</span> on a grey page) and use it for text and icons. The bright orange stays exactly as it is for chips and fills. No new token." },
+    { sev: "med", tag: "Over-applied", h: "3:1 on every line will make the grid look like a spreadsheet",
+      p: "WCAG 1.4.11 asks for 3:1 on boundaries needed to <em>identify a control</em> — an input's edge, a grid's outer boundary, a checkbox. It does not ask for it on decorative row separators. Revision 1 raises the DataGrid border to <span class='num'>#78828C</span> (<span class='num'>3.91:1</span>) and MUI X paints that on every cell and row line, so a fifty-row grid becomes a hard grey lattice. Switch the specimen to <strong>Policies</strong> and compare Revision 1 with Proposed to see it.",
+      fix: "Keep <span class='num'>#78828C</span> for input borders, chip outlines and the grid's outer edge. Give row separators a light <span class='num'>#E2E7EE</span> and let a tinted header plus optional zebra do the column tracking." },
+    { sev: "high", tag: "Browser-found · light", h: "The ten chip tones are no longer one family",
+      p: "Found by driving the branch, not by reading it. Revision 1 deepened <code>success</code>, <code>error</code>, <code>warning</code> and <code>assistant</code> to solid Material 100–200 fills, but left <code>info</code> at <code>rgba(0,93,191,0.08)</code> and <code>accent1/2/3</code> on 50-level pastels. On the Home screen the <em>Exceptions</em> and <em>Recommendation</em> chips now read as saturated status, while <em>Insights</em> sitting beside them is almost white. Before the revision all ten were pale, so the set was at least <em>consistent</em>. The change made four tones better and the set as a whole worse.",
+      fix: "Bring the remaining six up to the same fill family — <code>info #BBDEFB</code>, <code>accent3 #F8BBD0</code> and so on. The tone strip above shows the evened set under any proposal option, with each label ratio computed live." },
+    { sev: "high", tag: "Caught by Ben · my error", h: "The chrome grey in this bench was not the chrome grey in the product",
+      p: "Ben spotted the mock’s grey not matching what he saw on screen, and he was right. I had drawn the header and sidebar as <span class='num'>#F2F2F2</span> and treated “chrome” as a token I could move on its own. It is not. <code>Sidebar</code> and <code>Header</code> both paint <code>background.grey</code> — <span class='num'>#EEF1F4</span> on this branch — and that same token is the shared raised-fill for 27 other consumers, including fills that sit on white cards. <code>components.appBar.defaultFill</code>, which I had assumed was the chrome token, is read only by the two communication composer pages. I also painted the <strong>secondary header</strong> grey; <code>SecondaryHeader</code> paints <code>background.paper</code>, because it is a content surface rather than chrome. All three are corrected above.",
+      fix: "This collapses the A / B / C choice, which rested on a false premise: the three differed only in a chrome value that cannot move without dragging 27 raised fills with it. There is one proposal, and it changes <strong>no chrome token at all</strong> — <code>background.grey</code> stays exactly where Revision 1 put it. The only surface change is <code>background.default</code> <span class='num'>#FFFFFF → #FAFBFD</span>, which is also why <em>lightest</em> was the right pick: at <span class='num'>#F4F6FA</span> the chrome falls to <span class='num'>1.048</span> against the page and merges into it, while at <span class='num'>#FAFBFD</span> it still reads at <span class='num'>1.095</span>. The Body tint control is real; the chrome options were not." },
+    { sev: "high", tag: "Caught by Ben \u00b7 my regression", h: "Two chips can pass contrast and still be indistinguishable",
+      p: "Ben spotted that <em>Exceptions</em> and <em>Endorsed</em> looked almost identical in my first proposal, and that Revision 1 kept them apart. He was right and it was my defect: I had saturated <code>accent3</code> to <span class='num'>#F8BBD0</span> to match the evened family, which sits <span class='num'>\u0394E&nbsp;10.4</span> from <code>error</code>'s <span class='num'>#FFCDD2</span> \u2014 close enough to confuse at chip size. Every one of those chips passed its 4.5:1 label check. <strong>Contrast ratio says nothing about whether two fills are telling you different things</strong>, and that is a gap in how this token set has been reviewed all along.",
+      fix: "I searched the tone space for the set that maximises the MINIMUM pairwise \u0394E under a \u22654.5:1 label gate. Result: min <span class='num'>15.2</span>, with <code>error</code> vs <code>accent3</code> out at <span class='num'>15.6</span>. The measurement also found Revision 1's own worst pairs, which nobody had looked at: <em>Insights</em> vs <em>Renewal</em> at <span class='num'>4.8</span>, <em>Insights</em> vs <em>Audit</em> at <span class='num'>6.5</span>, <em>Audit</em> vs <em>Endorsed</em> at <span class='num'>7.3</span>. Four pairs under 10." },
+    { sev: "med", tag: "Elevation \u00b7 Revision 1", h: "Elevation 4 gets the background but loses the brand glow",
+      p: "Revision 1 overrides <code>MuiPaper</code> elevations 1\u20133 with <code>theme.shadows[n]</code> plus a low-alpha primary wash \u2014 <span class='num'>0 2px 8px rgba(0,93,191,0.04)</span> and up. <code>elevation4</code> sets only <code>backgroundColor: #FCFCFC</code> with no <code>boxShadow</code>, so it silently falls back to MUI's untinted default while its neighbours carry the glow. Whatever renders at elevation 4 will not match elevations 1\u20133.",
+      fix: "Either extend the pattern to 4 or stop at 3 deliberately. The specimens above now render the real values \u2014 <code>shadows[2]</code> plus the primary wash for Revision 1, <code>shadows[1]</code> for the current theme \u2014 so the difference is visible rather than described." },
+    { sev: "good", tag: "Browser-found · dark", h: "The heavier border reads better in dark than in light",
+      p: "On <code>:5600</code> the <span class='num'>#707C88</span> grid border gives the dark Policies grid the column definition it was completely missing — that one is a clear win. The same change in light mode (<span class='num'>#78828C</span> on white, painted on every cell edge by MUI X) turns the grid into a hard lattice. The token is doing two different jobs in the two themes and only deserves the same weight in one of them.",
+      fix: "Keep the strong border in dark. In light, reserve it for the grid's outer edge, inputs and chip outlines, and drop row/cell separators to <span class='num'>#E2E7EE</span>." },
+    { sev: "med", tag: "Coverage \u00b7 intake", h: "The elements that actually stress a palette are on the intake page",
+      p: "KPI cards and a grid are the easy cases. The quote workspace intake screen is where a theme gets tested: a nav tree carrying per-section status, a stepper, stacked accordions in open and closed states, an Open Work drawer with its own elevation, inline field errors, and a soft-alert banner \u2014 all on one page. <code>Accordion</code>, <code>Drawer</code>, <code>Collapse</code>, <code>Stepper</code>, <code>Card</code> and <code>Paper</code> are all in <code>apps/policy/src/pages/quoteWorkspace</code>, so this is the real component mix, not a guess.",
+      fix: "The <strong>Quote intake</strong> specimen above carries all of them. Note what the drawer does in each palette: it is a <code>Paper</code> with <code>shadows[6]</code>, so in the current dark theme it has neither a visible border nor a usable shadow and its edge disappears entirely \u2014 the same failure you spotted on cards, but on a surface that is supposed to float above the page. <strong>Not verified in the browser:</strong> this page needs the live policy-system door, so the layout here is modelled from the component source, not from a screenshot." },
+    { sev: "high", tag: "Dark \u00b7 measured", h: "Dark tones have one confusable pair too",
+      p: "Running the same \u0394E pass on dark: the shipped set's closest pair is <em>Insights</em> vs <em>Draft</em> at <span class='num'>9.5</span>, with <em>Draft</em> vs <em>Renewal</em> at <span class='num'>12.3</span>. Better than light's 4.8, still inside the range where two chips are hard to separate at chip size. Dark was never touched by Revision 1 \u2014 the tone fills are identical before and after \u2014 so this is pre-existing, not a regression.",
+      fix: "A dark set chosen the same way reaches <strong>min \u0394E 18.1</strong> with every label at or above <span class='num'>5.87:1</span>: <code>info #153F73</code>, <code>neutral #333F47</code>, <code>accent1 #12595F</code> and so on. Switch the specimen to Dark with a proposal selected to compare." },
+    { sev: "high", tag: "Answering your question \u00b7 nav", h: "The workspace nav should not share the app rail's fill",
+      p: "They are different kinds of navigation. The left rail is <em>global chrome</em> \u2014 it is the same on every screen in the product and never changes with the record. The workspace nav is <em>record-scoped</em>: it lists this quote's sections and its contents change per quote. Painting both the same grey fuses them into one continuous chrome band with no seam, so the eye cannot tell where the product ends and this quote begins. It also spends the chrome grey twice while the content area gets none of it.",
+      fix: "Put the workspace nav on the <strong>paper</strong> plane with a border, so it reads as a content panel sitting inside the page rather than more chrome. The stack then goes rail <span class='num'>#F2F2F2</span> \u2192 body <span class='num'>#FAFBFD</span> \u2192 nav and cards <span class='num'>#FFFFFF</span>, and the selected nav item can carry the brand tint without competing with the rail's own selected state. Use the <strong>Workspace nav</strong> control to compare all three." },
+    { sev: "high", tag: "Corrected \u00b7 search menu", h: "It is a Popper, and my mock had it in the layout flow",
+      p: "Right on both counts. <code>GlobalSearch</code> renders a <code>&lt;Popper&gt;</code> at <code>zIndex: 1300</code>, and the source comment notes it portals to <code>document.body</code> \u2014 so it overlays the page and takes part in no one's layout. My specimen had it inline in the header, which pushed everything below it down. It now renders absolutely positioned against the input, over a real grid, so you can see it cover content rather than displace it. (It is a Popper, not a Popover \u2014 no backdrop and no focus trap, which is why the keyboard handling in that file is hand-rolled.)",
+      fix: "Also corrected: the panel is mounted flush \u2014 <code>marginTop: 0</code>, <code>borderTop: 'none'</code>, zero top radii \u2014 so it and the input read as one shape, and on focus a <code>2px solid primary.main</code> border wraps both. Its width is driven by a <code>ResizeObserver</code> on the anchor. It sets <code>boxShadow: 'none'</code> today, so the shadow you liked is an addition; on a panel sharing an edge with the input a full <code>shadows[8]</code> halo darkens that seam, so the proposals use it only on the three free edges' worth of spread and leave the join clean." },
+    { sev: "med", tag: "Answering your question \u00b7 row shape", h: "Keep the pill in navigation, go flush in the results panel",
+      p: "The pill is what ships today \u2014 <code>borderTopRightRadius: borderRadiusPill</code> with square left corners \u2014 and it is doing something real: square-left plus rounded-right reads as a tab pulled off the left edge, which reinforces the 5px accent bar sitting in exactly that spot. That idiom is right for a <em>navigation</em> item, and Material 3 uses it for precisely that. My reservation is about where it is being used, not whether it is good.",
+      fix: "In the results panel the columns are separated by 1px dividers, so a pill plus its right margin leaves a sliver of un-highlighted space between the highlight and the column line \u2014 the row reads as drifting away from its own column rather than filling it, and it stops aligning with the grid rows elsewhere in the product. A results row is a <em>data</em> row in a bounded column, not a nav target in a padded container. So: <strong>pill in the left rail and the workspace nav, flush in the dropdown and the grid.</strong> The 5px bar already carries the left-anchored signal, so nothing is lost. Use the <strong>Row shape</strong> control to judge it \u2014 switch to Flush and watch the highlight meet the divider." },
+    { sev: "high", tag: "Corrected \u00b7 row state", h: "The 5px left accent bar is real and I had dropped it",
+      p: "There is an <code>&amp;::before</code> on each result row \u2014 <code>left: 0; top: 0; bottom: 0; width: 5px</code>, transparent until hover \u2014 and the source comment describes the hover treatment as \u201cgrey background, blue accent bar, blue text\u201d. The rows also carry <code>borderTopRightRadius: pill</code> with square left corners, so the fill reads as a tab pulled off the left edge. My first pass replaced all of that with a plain blue block. It is back." },
+    { sev: "med", tag: "Answering your question \u00b7 MUI standard", h: "Grey is MUI's default; blue is already your own token",
+      p: "Measured rather than argued. Stock MUI is neutral: <code>action.hover</code> <span class='num'>rgba(0,0,0,0.04)</span>, <code>action.selected</code> <span class='num'>rgba(0,0,0,0.08)</span> \u2014 so grey is the MUI standard. But this theme <em>already ships</em> primary-tinted state tokens straight from the Figma export: <code>primary.states.hover</code> <span class='num'>rgba(0,93,191,0.04)</span>, <code>primary.states.selected</code> <span class='num'>rgba(0,93,191,0.08)</span>, plus focus and focusVisible. Blue states are not a departure from your design system; they are a part of it that is currently going unused while components fall back to the neutral <code>action.*</code> tokens.",
+      fix: "Split them, which is where most design systems land and what Material 3 does: <strong>hover stays neutral grey</strong> \u2014 it fires constantly and tinting it makes the whole UI feel twitchy \u2014 and <strong>selected/active uses the primary tint</strong>, which is exactly the distinction Revision 1 was reaching for when it pushed <code>action.selected</code> from 4% to 10%. Use the <strong>Row state</strong> control to compare; the 5px bar stays blue in both." },
+    { sev: "good", tag: "Answering your question \u00b7 shadows", h: "You are not overusing shadow \u2014 you are underusing it inconsistently",
+      p: "Counted across the app: <span class='num'>139</span> <code>variant=\"outlined\"</code> plus <span class='num'>10</span> <code>elevation={0}</code> against <span class='num'>22</span> bare <code>&lt;Paper&gt;/&lt;Card&gt;</code> (which silently take elevation 1) and <span class='num'>14</span> explicit <code>elevation={1..3}</code>. That is roughly four-fifths flat. The problem is not volume, it is that the 22 bare ones get a shadow by accident rather than by decision, and <span class='num'>6</span> places hand-roll <code>boxShadow</code> in <code>sx</code> outside the theme \u2014 including <code>GlobalSearch</code> itself, which is also a coding-guideline violation.",
+      fix: "Adopt the rule in the Shadow budget table above and the specimens follow it: cards, accordions, the grid and the flush dropdown are bordered and flat; the two drawers keep <code>shadows[6]</code>. That is why the drawer shadow reads as meaningful here rather than ambient." },
+    { sev: "med", tag: "Corrected \u00b7 drawers", h: "Four adjustable drawers on the right, two panels on the left",
+      p: "Corrected from your note and confirmed in the shell: <code>AssistantDrawer</code>, <code>notesDrawer</code>, <code>emailsDrawer</code> and <code>tasksDrawer</code> are the four on the right, and <code>ActivityPanel</code> / <code>FavoritesPanel</code> are the two on the left. The resize grip belongs on the right group, on its inboard edge. The specimen now shows a four-tab right drawer with the grip and a two-tab left panel.",
+      fix: "Both are <code>Paper</code> surfaces that genuinely float, so both keep <code>shadows[6]</code> \u2014 they are the case the shadow budget is <em>for</em>. Check them in dark: today both sit at <code>background.paper</code> <span class='num'>#121212</span> against a <span class='num'>#212121</span> page with a <span class='num'>1.39:1</span> border and a black shadow, so the two surfaces whose whole job is to float have no lift at all, and the resize grip \u2014 a 2px bar on that border \u2014 disappears with them." },
+    { sev: "med", tag: "Revised \u00b7 indicator width", h: "One width was the wrong call \u2014 the rows are half the height",
+      p: "I argued for a single 4px everywhere on the grounds that one width means one idea. Your question made me go and measure the hosts, and the argument does not survive it. A sidebar nav button is <strong>72px</strong> tall (<span class='num'>45px</span> compact, <code>sidebarMetrics</code>); a search result row is <code>padding: spacing(1, 2)</code> around ~14px text, so about <strong>34px</strong>. The same 4px bar is a restrained accent against 72px and a chunky slab against 34px. Consistency of <em>meaning</em> does not require identical pixels when the hosts differ by half.",
+      fix: "<strong>4px on the sidebar, 3px on the search row.</strong> The sidebar gets the extra weight you asked for (it ships 3px today at <code>Sidebar</code>), the search row comes down from its current 5px, and the ordering stays right \u2014 the persistent \u201cyou are here\u201d reads heavier than the transient keyboard cursor, which is the relationship that was inverted before. Use the <strong>Search bar width</strong> control to compare 3 / 4 / 5 against the sidebar\u2019s fixed 4." },
+    { sev: "med", tag: "Corrected \u00b7 drawer triggers", h: "The drawers open from the secondary header, not from tabs inside them",
+      p: "My specimen invented a tab strip inside the drawer. It does not exist. <code>SecondaryHeader</code> renders <code>HeaderToggleButton</code>s \u2014 Filter, Parties, Notes, Email, Tasks, Ask Assistant \u2014 wired to <code>togglePartiesDrawer</code>, <code>toggleAskAssistantDrawer</code>, <code>openTasksDrawer</code> and friends, and each opens its own drawer. The specimen now shows that row with Assistant toggled on and the Assistant drawer open, which is the real shape.",
+      fix: "Worth stating plainly since you asked: <strong>nothing in this proposal changes component structure, layout or behaviour.</strong> It is palette, elevation and state-fill only. Where a specimen differs from the product it is my drawing being wrong, not a redesign \u2014 this one and the detached dropdown were both that, and both are corrected." },
+    { sev: "good", tag: "Keep", h: "Three changes in the revision are straightforwardly right",
+      p: "The <strong>input border</strong> going <span class='num'>1.74 → 3.47:1</span> is a real accessibility fix and will visibly firm up every form. <strong><code>action.selected</code></strong> at 10% is finally distinguishable from hover at 5%, which matters on nav and grid rows. And the <strong>chip and alert tints</strong> moving to the saturated fills (<span class='num'>#FDEDED → #FFCDD2</span>) are the one change in the revision with genuine visual presence — status now reads at a glance. All three should survive into whatever ships.",
+      fix: "Carry these forward unchanged. The proposed palette here keeps all three." },
+    { sev: "med", tag: "Dark theme · edges", h: "Cards in dark mode lose their border and their shadow at the same time",
+      p: "You spotted this directly. In dark, a card's border is <code>rgba(255,255,255,.12)</code> — <span class='num'>1.39:1</span> against the surface — and the box-shadow that supplements it in light mode is black on near-black, so it contributes nothing. Both edge cues vanish together, which is why lines that read fine in light mode disappear in dark. The same hairline in light is <span class='num'>1.32:1</span> but still legible, because a dark line on a light ground is far easier to resolve than the reverse.",
+      fix: "Stop asking borders to do it. With a real elevation stack, a dark card is separated by its <em>surface</em> (<span class='num'>1.07:1</span> lift, plus the page behind it) and the border becomes a refinement rather than the only signal." }
+  ];
+  function renderFindings() {
+    document.getElementById("findings").innerHTML = FINDINGS.map(function (f) {
+      return '<div class="finding sev-' + f.sev + '"><span class="tag">' + f.tag + "</span><h3>" + f.h + "</h3><p>" + f.p + '</p><div class="fix"><b>Proposal</b>' + f.fix + "</div></div>";
+    }).join("");
+  }
+
+  /* ---------- verdict chips ---------- */
+  function renderVerdicts() {
+    var items = [
+      { n: "8", l: "palette values changed", c: "" },
+      { n: "1.01:1", l: "the new light elevation step", c: "is-bad" },
+      { n: "3.14:1", l: "dark error text, was 3.84", c: "is-bad" },
+      { n: "2.79:1", l: "light warning text, unfixed", c: "is-bad" },
+      { n: "3.47:1", l: "input border, was 1.74", c: "is-good" },
+      { n: "2 of 10", l: "tone families after the revision, was 1", c: "is-bad" },
+      { n: "\u0394E 4.8", l: "closest tone pair in Revision 1; 15.2 proposed", c: "is-bad" },
+      { n: "1.00:1", l: "search menu vs page, light", c: "is-bad" }
+    ];
+    document.getElementById("verdicts").innerHTML = items.map(function (i) {
+      return '<span class="verdict ' + i.c + '"><b>' + i.n + "</b>" + i.l + "</span>";
+    }).join("");
+  }
+
+  /* ---------- paint ---------- */
+  function paint() {
+    var t = tk(), stage = document.getElementById("stage");
+    Object.keys(t).forEach(function (k) {
+      if (k === "tones") return;
+      stage.style.setProperty("--t-" + k, t[k]);
+    });
+    stage.innerHTML = SCREENS[state.screen]();
+    document.getElementById("stageUrl").textContent = URLS[state.screen];
+    renderAudit();
+    renderTones();
+    var isProp = state.palette.indexOf("prop") === 0 && state.mode === "light";
+    document.getElementById("tintRead").textContent = isProp
+      ? t.canvas + " - card separation " + cr(t.cardBg, t.canvas).toFixed(2) + ":1"
+      : "proposals, light mode only";
+    var cr2 = document.getElementById("chromeRead");
+    cr2.textContent =
+      state.mode === "light"
+        ? "chrome here " + t.appBar + (t.appBar.toUpperCase() === "#EEF1F4"
+            ? " (= background.grey, what the product paints)"
+            : " — product paints #EEF1F4 (background.grey)")
+        : "";
+  }
+
+  function wire(id, key) {
+    var el = document.getElementById(id);
+    el.addEventListener("click", function (e) {
+      var b = e.target.closest("button");
+      if (!b) return;
+      state[key] = b.dataset.v;
+      Array.prototype.forEach.call(el.querySelectorAll("button"), function (x) {
+        x.setAttribute("aria-pressed", String(x === b));
+      });
+      paint();
+    });
+  }
+  // Show the starting choice in every control (the markup had Mode unset and two Body tints pressed).
+  [["segPalette","palette"],["segMode","mode"],["segTint","tint"],["segNav","nav"],["segHover","hover"],["segShape","shape"],["segPageNav","pageNav"],["segRailW","railW"],["segBarW","barW"],["segScreen","screen"]].forEach(function (pair) {
+    var el = document.getElementById(pair[0]); if (!el) return;
+    Array.prototype.forEach.call(el.querySelectorAll("button"), function (x) { x.setAttribute("aria-pressed", String(x.dataset.v === String(state[pair[1]]))); });
+  });
+  wire("segPalette", "palette");
+  wire("segMode", "mode");
+  wire("segScreen", "screen");
+  wire("segTint", "tint");
+  wire("segNav", "nav");
+  wire("segHover", "hover");
+  wire("segShape", "shape");
+  wire("segPageNav", "pageNav");
+  wire("segBarW", "barW");
+  wire("segRailW", "railW");
+
+  renderVerdicts();
+  renderDiff();
+  renderFindings();
+  paint();
+})();
+</script>
+
+<script>(function(){function s(){parent.postMessage({demoHeight:document.documentElement.scrollHeight,demo:location.pathname},'*')}new ResizeObserver(s).observe(document.body);addEventListener('load',s);s()})();</script></body></html>

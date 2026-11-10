@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>Theme Preview</title>
+<style>*{box-sizing:border-box;margin:0;padding:0}html,body{width:1002px;height:582px;overflow:hidden;background:#fff}
+.pv{position:relative;width:1002px;height:582px;overflow:hidden;background:var(--bg1);font-family:-apple-system,"Segoe UI",Roboto,"Open Sans",Helvetica,Arial,sans-serif;color:#1f1f1f}
+.pv[data-theme=botanico]{--primary:#112f36;--accent:#018880;--accent2:#7b9b96;--accent3:#005a55;--bg1:#dfe2de;--bg2:#d7d7d7;--bg3:#f2f2f2;--crumb:#ffffff;
+  --banner:linear-gradient(100deg,#0b0f0e 0%,#1a2523 22%,#0d1211 41%,#22302d 63%,#0b100f 82%,#1b2624 100%);
+  --link:#017a73;--link-cur:#016e68;--sep:#7f8c8a;--head:#0f6a65;--icon:#2f8f86;--tabbg:#e6e9e8;--row:#ebebeb;--summary:#f0f0f0;--inp:#e3e5e2;--tabdot:#94b5b1}
+.pv[data-theme=autunno]{--primary:#014e51;--accent:#bf5e26;--accent2:#9f6631;--accent3:#591202;--bg1:#f5f3ea;--bg2:#e5e6d9;--bg3:#eceee6;--crumb:#fbfbf6;
+  --banner:linear-gradient(90deg,#0e3d40 0%,#14595a 18%,#3d6a62 40%,#6d6e55 58%,#a8662c 78%,#c0672a 90%,#8e4a1f 100%);
+  --link:#a8521f;--link-cur:#591202;--sep:#8f7a6a;--head:#6a1a06;--icon:#c4632a;--tabbg:#eef0ea;--row:#f1f2ed;--summary:#e9eae4;--inp:#f0efe8;--tabdot:#b39a8e}
+.pv[data-theme=cielo]{--primary:#07508e;--accent:#e97117;--accent2:#f7a86d;--accent3:#036fca;--bg1:#eaeaea;--bg2:#f2f2f2;--bg3:#f3f3f3;--crumb:#ffffff;
+  --banner:#0a4e8d;
+  --link:#b35409;--link-cur:#07508e;--sep:#9a8f88;--head:#1c74bf;--icon:#e97117;--tabbg:#e7eff8;--row:#e9f0fa;--summary:#f3f3f3;--inp:#ececec;--tabdot:#8ebdd7}
+.pv .a{position:absolute}
+.pv .banner{left:0;top:0;width:1002px;height:25px;background:var(--banner)}
+.pv[data-theme=botanico] .banner::after{content:"";position:absolute;inset:0;background:
+  linear-gradient(148deg,transparent 0 46%,rgba(120,150,140,.18) 46% 47%,transparent 47%),
+  linear-gradient(32deg,transparent 0 61%,rgba(120,150,140,.14) 61% 62%,transparent 62%),
+  linear-gradient(160deg,transparent 0 78%,rgba(120,150,140,.16) 78% 79%,transparent 79%),
+  linear-gradient(20deg,transparent 0 22%,rgba(120,150,140,.14) 22% 23%,transparent 23%)}
+.pv[data-theme=autunno] .banner::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 14px,rgba(0,0,0,.05) 14px 28px)}
+.pv .logo{left:12px;top:7px;color:#fff;font-weight:700;font-size:7.6px;z-index:1}
+.pv .kebab{left:962px;top:6px;z-index:1}
+.pv .crumb{left:0;top:25px;width:1002px;height:32px;background:var(--crumb)}
+.pv .bc{left:6px;top:33px;font-size:11px;display:flex;align-items:center;gap:0}
+.pv .bc a{color:var(--link);text-decoration:underline;text-underline-offset:2px}
+.pv .bc a.cur{color:var(--link-cur)}
+.pv .bc svg{width:14px;height:12px;stroke:var(--sep);fill:none;stroke-width:1.1;margin:0 3px 0 4px}
+.pv .sum{left:0;top:57px;width:852px;height:111px;background:var(--summary)}
+.pv .sl{font-size:8px;font-weight:700;color:#1f1f1f}
+.pv .sv{font-size:11px;color:#222;line-height:17px}
+.pv .prem{left:852px;top:57px;width:150px;height:111px;background:var(--primary);color:#fff;text-align:center}
+.pv .prem .t{position:absolute;left:0;right:0;top:33px;font-size:8.5px;font-weight:700}
+.pv .prem .v{position:absolute;left:0;right:0;top:51px;font-size:14.5px;letter-spacing:.2px}
+.pv .tabs{left:6px;top:179px;width:145px;height:89px;background:var(--tabbg);border-radius:4px}
+.pv .tb{position:absolute;left:0;width:139px;height:20px;font-size:8.5px;color:#3a3a3a;line-height:20px;padding-left:22px}
+.pv .tb::before{content:"";position:absolute;left:8px;top:8.5px;width:3px;height:3px;border-radius:50%;background:var(--tabdot)}
+.pv .tb.on{background:var(--primary);color:#fff;border-radius:3px}
+.pv .card{left:163px;top:178px;width:816px;height:430px;background:#fcfcfc;border-radius:6px}
+.pv .h1{font-size:14.5px;color:var(--head);font-weight:400}
+.pv .th{font-size:11.5px;color:#2a2a2a}
+.pv .row{left:179px;width:785px;height:34px;background:var(--row);border-radius:4px}
+.pv .td{font-size:11.5px;color:#222}
+.pv .ic{width:12px;height:12px;stroke:var(--icon);fill:none;stroke-width:1.3}
+.pv .fl{font-size:8px;font-weight:700;color:#1f1f1f}
+.pv .fv{font-size:11px;color:#222}
+.pv .hr{left:179px;top:483px;width:785px;height:1px;background:#ececec}
+.pv .in{height:25px;background:var(--inp);border:1px solid #c9cbc8;border-radius:3px}
+</style></head>
+<body>
+<div class="pv" data-theme="botanico">
+<div class="a banner"></div>
+<div class="a logo">Harbor &amp; Pine</div>
+<svg class="a kebab" width="22" height="13" viewBox="0 0 22 13"><g fill="#fff"><circle cx="6" cy="2" r="1.3"/><circle cx="6" cy="6.5" r="1.3"/><circle cx="6" cy="11" r="1.3"/></g><path d="M12 5.5l2 2 2-2" stroke="#fff" fill="none" stroke-width="1"/></svg>
+<div class="a crumb"></div>
+<div class="a bc"><a>Home</a><svg viewBox="0 0 14 12"><path d="M5 2l4 4-4 4"/></svg><a>Page</a><svg viewBox="0 0 14 12"><path d="M5 2l4 4-4 4"/></svg><a class="cur">Current Page</a></div>
+<div class="a sum"></div>
+<div class="a sl" style="left:12px;top:71px">Policy Number</div><div class="a sv" style="left:12px;top:83px">12345678</div>
+<div class="a sl" style="left:152px;top:71px">Effective Period</div><div class="a sv" style="left:152px;top:83px">02/03/2025 -<br>02/03/2026</div>
+<div class="a sl" style="left:292px;top:71px">Product</div><div class="a sv" style="left:292px;top:83px">General</div>
+<div class="a sl" style="left:432px;top:71px">Term</div><div class="a sv" style="left:432px;top:83px">Current Policy (1)</div>
+<div class="a sl" style="left:572px;top:71px">Insured</div><div class="a sv" style="left:572px;top:83px">Company</div>
+<div class="a sl" style="left:712px;top:71px">Status</div><div class="a sv" style="left:712px;top:83px">Issued</div>
+<div class="a sl" style="left:12px;top:127px">UW Company</div><div class="a sv" style="left:12px;top:139px">Company X</div>
+<div class="a sl" style="left:152px;top:127px">Risk Location</div><div class="a sv" style="left:152px;top:139px">Maine</div>
+<div class="a prem"><svg style="position:absolute;left:123px;top:9px" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.8" stroke="#fff" fill="none" stroke-width="1"/><path d="M4.4 8.2L7 5.6l2.6 2.6" stroke="#fff" fill="none" stroke-width="1.1"/></svg><div class="t">Total Premium</div><div class="v">$1000.00</div></div>
+<div class="a tabs"><div class="tb on" style="top:8px">Tab 1</div><div class="tb" style="top:35.5px">Tab 2</div><div class="tb" style="top:63px">Tab 3</div></div>
+<div class="a card"></div>
+<div class="a h1" style="left:179px;top:193px">Heading Level 1</div>
+<div class="a th" style="left:189px;top:243px">Table Heading</div>
+<div class="a th" style="left:601px;top:243px">Table Heading 2</div>
+<div class="a th" style="left:870px;top:243px">Action</div>
+<div class="a row" style="top:273px"></div>
+<div class="a td" style="left:189px;top:282px">Named Insured</div>
+<div class="a td" style="left:601px;top:282px">Alder, June</div>
+<div class="a" style="left:895px;top:281px"><svg class="ic" viewBox="0 0 12 12"><path d="M6 2H2v8h8V6"/><path d="M5 7l.4-1.8L10 .9 11.1 2 6.8 6.6z"/></svg></div><div class="a" style="left:917px;top:281px"><svg class="ic" viewBox="0 0 12 12"><path d="M1.5 3h9M4.5 3V1.5h3V3M2.5 3l.7 7.5h5.6L9.5 3M5 5v4M7 5v4"/></svg></div>
+<div class="a row" style="top:315px"></div>
+<div class="a td" style="left:189px;top:324px">Secondary Named Insured</div>
+<div class="a td" style="left:601px;top:324px">Alder, Ray</div>
+<div class="a" style="left:895px;top:323px"><svg class="ic" viewBox="0 0 12 12"><path d="M6 2H2v8h8V6"/><path d="M5 7l.4-1.8L10 .9 11.1 2 6.8 6.6z"/></svg></div><div class="a" style="left:917px;top:323px"><svg class="ic" viewBox="0 0 12 12"><path d="M1.5 3h9M4.5 3V1.5h3V3M2.5 3l.7 7.5h5.6L9.5 3M5 5v4M7 5v4"/></svg></div>
+<div class="a h1" style="left:179px;top:378px">Heading Level 1</div>
+<div class="a fl" style="left:179px;top:414px">Street</div><div class="a fv" style="left:296px;top:411px">18 Wharf Street</div>
+<div class="a fl" style="left:179px;top:437px">Zipcode</div><div class="a fv" style="left:296px;top:434px">04101</div>
+<div class="a fl" style="left:179px;top:460px">State</div><div class="a fv" style="left:296px;top:457px">ME</div>
+<div class="a hr"></div>
+<div class="a fl" style="left:183px;top:503px">Input Label</div>
+<div class="a in" style="left:340px;top:495px;width:164px"></div>
+<div class="a fl" style="left:183px;top:538px">Select Label</div>
+<div class="a in" style="left:340px;top:530px;width:91px"></div>
+<svg class="a" style="left:417px;top:540px" width="7" height="5" viewBox="0 0 7 5"><path d="M0.5 0.8h6L3.5 4.3z" fill="#333"/></svg>
+<div class="a in" style="left:340px;top:566px;width:99px"></div>
+</div>
+<script>
+(function(){var t=(new URLSearchParams(location.search).get('theme')||'botanico').toLowerCase();
+if(['botanico','autunno','cielo'].indexOf(t)<0)t='botanico';
+document.querySelector('.pv').setAttribute('data-theme',t);
+document.title='Theme Preview - '+t.charAt(0).toUpperCase()+t.slice(1);})();
+</script>
+</body></html>

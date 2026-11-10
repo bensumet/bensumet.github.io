@@ -1,0 +1,783 @@
+<!doctype html><html lang="en"><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Harbor &amp; Pine Admin Portal</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+@font-face{font-family:'Open Sans';src:url('fonts/open-sans-latin-wght-normal.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Open Sans';src:url('fonts/open-sans-latin-wght-normal.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:'Poppins';src:url('fonts/poppins-latin-500-normal.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Poppins';src:url('fonts/poppins-latin-600-normal.woff2') format('woff2');font-weight:600;font-style:normal;font-display:swap}
+</style>
+<style>
+/* Layout: Harbor & Pine shell (header + icon rail) with a second, expandable vertical menu beside the page.
+   Tokens mirror @harbor/theme (light colors / dark colors / MUI theme shape + spacing). */
+:root {
+  --primary: #005DBF; --primary-dark: #0050A6; --on-primary: #FFFFFF;
+  --primary-sel: rgba(0, 93, 191, 0.08); --primary-hover: rgba(0, 93, 191, 0.04); --primary-focus: rgba(0, 93, 191, 0.12); --hover-neutral: rgba(0, 0, 0, 0.05); --chip-fill: rgba(0, 0, 0, 0.08);
+  --bg: #FAFBFD; --paper: #FFFFFF; --grey: #F2F2F2;
+  --text: rgba(0, 0, 0, 0.87); --text-2: rgba(0, 0, 0, 0.6); --text-dis: rgba(0, 0, 0, 0.38);
+  --divider: rgba(0, 0, 0, 0.12); --search-border: rgba(0, 0, 0, 0.38);
+  --ok-bg: #C8E6C9; --ok-fg: #1B5E20; --warn-bg: #FFE0B2; --warn-fg: #7A4100; --info-bg: #B3E5FC; --info-fg: #01579B;
+  --font-head: "Poppins", "Helvetica", "Arial", sans-serif;
+  --font-body: "Open Sans", "Helvetica", "Arial", sans-serif;
+  --r-xs: 4px; --r-sm: 8px; --r-md: 12px; --r-pill: 20px;
+  --s1: 8px; --s2: 16px; --s3: 24px;
+  --rail-w: 90px; --rail-btn: 72px; --row-h: 40px; --head-h: 56px; --fs: 0.875rem; --fs-sm: 0.75rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --primary: #B7DAFF; --primary-dark: #308EF2; --on-primary: #00315F;
+    --primary-sel: rgba(183, 218, 255, 0.16); --primary-hover: rgba(183, 218, 255, 0.08); --primary-focus: rgba(183, 218, 255, 0.2); --hover-neutral: rgba(255, 255, 255, 0.09); --chip-fill: rgba(255, 255, 255, 0.16);
+    --bg: #14171C; --paper: #1B1F26; --grey: #22272F;
+    --text: rgba(255, 255, 255, 0.87); --text-2: rgba(255, 255, 255, 0.6); --text-dis: rgba(255, 255, 255, 0.38);
+    --divider: #2E3540; --search-border: #8A93A0;
+    --ok-bg: #112C20; --ok-fg: #CCE8CD; --warn-bg: #2C2411; --warn-fg: #FFE2B7; --info-bg: #11242C; --info-fg: #B8E7FB;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --primary: #B7DAFF; --primary-dark: #308EF2; --on-primary: #00315F;
+  --primary-sel: rgba(183, 218, 255, 0.16); --primary-hover: rgba(183, 218, 255, 0.08); --primary-focus: rgba(183, 218, 255, 0.2); --hover-neutral: rgba(255, 255, 255, 0.09); --chip-fill: rgba(255, 255, 255, 0.16);
+  --bg: #14171C; --paper: #1B1F26; --grey: #22272F;
+  --text: rgba(255, 255, 255, 0.87); --text-2: rgba(255, 255, 255, 0.6); --text-dis: rgba(255, 255, 255, 0.38);
+  --divider: #2E3540; --search-border: #8A93A0;
+  --ok-bg: #112C20; --ok-fg: #CCE8CD; --warn-bg: #2C2411; --warn-fg: #FFE2B7; --info-bg: #11242C; --info-fg: #B8E7FB;
+  color-scheme: dark;
+}
+:root[data-density="compact"] { --rail-w: 70px; --rail-btn: 45px; --row-h: 32px; --head-h: 48px; --fs: 0.8125rem; --fs-sm: 0.6875rem; --s2: 12px; --s3: 16px; }
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: var(--fs); line-height: 1.5; padding-block: 0; padding-left: max(0px, env(safe-area-inset-left, 0px)); padding-right: max(0px, env(safe-area-inset-right, 0px)); }
+button, select, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.ms { display: inline-block; width: 1em; height: 1em; font-size: 24px; line-height: 0; flex: none; overflow: hidden; user-select: none; }
+.ms:not([data-i]) { visibility: hidden; }
+.ms svg { display: block; width: 1em; height: 1em; fill: currentColor; }
+.icon-btn[aria-label="Add new"] .ms { font-size: 1.375rem; }
+.icon-btn[aria-label="Settings"] .ms { font-size: 1.5rem; }
+
+.app.rail-off { grid-template-columns: 0 minmax(0, 1fr); }
+.app.rail-off .rail { display: none; }
+.app { display: grid; grid-template-columns: var(--rail-w) minmax(0, 1fr); grid-template-rows: var(--head-h) minmax(0, 1fr); height: 100vh; min-height: 560px; }
+.head { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; background: var(--grey); border-bottom: 1px solid var(--divider); padding-inline: max(var(--s2), env(safe-area-inset-left, 0px)) max(var(--s2), env(safe-area-inset-right, 0px)); position: relative; z-index: 5; }
+.logo { display: flex; align-items: center; }
+.logo img { width: 28px; height: 28px; }
+.switcher { position: relative; }
+.sw-btn { display: flex; align-items: center; gap: 4px; padding: 4px 4px 4px 0; border: 0; background: none; border-radius: var(--r-xs); }
+.sw-label { font-family: var(--font-body); font-weight: 600; font-size: 1.25rem; line-height: 1.2; color: var(--text-2); white-space: nowrap; }
+.sw-caret { font-size: 2rem; color: var(--text-2); }
+.sw-menu { position: absolute; top: calc(100% + 4px); left: 0; min-width: 200px; background: var(--paper); border-radius: var(--r-xs); box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12); padding: 8px 0; }
+.sw-menu button { display: flex; align-items: center; gap: 12px; width: 100%; border: 0; background: none; padding: 6px 16px; min-height: 36px; text-align: left; font-size: 1rem; }
+.sw-menu button:hover { background: var(--primary-hover); }
+.sw-menu button[aria-current="true"] { background: var(--primary-sel); }
+.sw-menu hr { border: 0; border-top: 1px solid var(--divider); margin: 8px 0; }
+.navarrows { display: flex; margin-left: auto; }
+.search { flex: 1; max-width: 1200px; display: flex; align-items: center; gap: var(--s1); min-height: 40px; padding: 4px 4px 4px 12px; background: var(--paper); border: 1px solid var(--search-border); border-radius: var(--r-sm); color: var(--text-2); font-size: 1rem; }
+.search .ms { font-size: 1.5rem; }
+.spacer { margin-right: auto; }
+.tools { display: flex; align-items: center; gap: var(--s1); flex-shrink: 0; }
+.icon-btn { width: 32px; height: 32px; border: 0; background: none; border-radius: 50%; display: grid; place-items: center; color: var(--text-2); padding: 0; }
+.icon-btn .ms { font-size: 1.25rem; }
+.icon-btn.lg { width: 36px; height: 36px; border-radius: var(--r-sm); }
+.icon-btn.lg .ms { font-size: 2rem; }
+.icon-btn:hover:not(:disabled) { background: var(--primary-hover); }
+.icon-btn:disabled { color: var(--text-dis); cursor: default; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--primary-sel); color: var(--primary); display: grid; place-items: center; font-weight: 600; font-size: 1rem; }
+.mock { position: fixed; right: max(12px, env(safe-area-inset-right, 0px)); bottom: max(12px, env(safe-area-inset-bottom, 0px)); z-index: 20; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 8px 12px; background: var(--paper); border: 1px dashed var(--text-dis); border-radius: var(--r-md); box-shadow: 0 4px 16px rgba(0,0,0,.16); font-size: var(--fs-sm); max-width: calc(100vw - 24px); }
+.mock-t { font-weight: 600; color: var(--text-2); text-transform: uppercase; letter-spacing: .06em; }
+.mock select { min-height: 32px; border: 1px solid var(--divider); background: var(--bg); border-radius: var(--r-xs); padding: 0 6px; }
+.mock-b { display: inline-flex; align-items: center; gap: 4px; min-height: 32px; padding: 0 10px; border: 1px solid var(--divider); background: var(--bg); border-radius: var(--r-xs); }
+.mock-b .ms { font-size: 18px; }
+
+.rail { background: var(--grey); border-right: 1px solid var(--divider); overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
+.rail-nav { flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; padding-top: var(--s1); }
+.rail-bottom { flex: none; border-top: 1px solid var(--divider); }
+.rail-bottom button, .rail-nav button { width: 100%; }
+.rail .more { height: 48px; }
+.rail-bottom button { line-height: 1.15; text-align: center; }
+.pop { position: fixed; z-index: 30; min-width: 180px; background: var(--paper); border-radius: var(--r-xs); padding: 8px 0; box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12); }
+.pop[hidden] { display: none; }
+.dlg-back { position: fixed; inset: 0; z-index: 40; background: rgba(0,0,0,.5); display: grid; place-items: center; padding: var(--s2); }
+.dlg-back[hidden] { display: none; }
+.dlg { width: min(520px, 100%); max-height: 92vh; display: flex; flex-direction: column; background: var(--paper); border-radius: var(--r-lg, 16px); box-shadow: 0 11px 15px -7px rgba(0,0,0,.2), 0 24px 38px 3px rgba(0,0,0,.14); overflow: hidden; }
+.dlg-head { display: flex; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--divider); }
+.dlg-grip { font-size: 22px; color: var(--text-2); }
+.dlg-vr { width: 1px; height: 28px; background: var(--divider); }
+.dlg-head h2 { margin: 0; flex: 1; font-family: var(--font-head); font-weight: 600; font-size: 1.25rem; }
+.dlg-x { border: 0; background: none; color: var(--primary); width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; }
+.dlg-x:hover { background: var(--primary-hover); }
+.dlg-p { margin: 0; padding: 16px 20px 8px; color: var(--text-2); }
+.dlg-list { padding: 0 20px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+.dlg-row { display: flex; align-items: center; gap: 12px; min-height: 52px; padding: 0 16px 0 12px; border: 1px solid var(--divider); border-radius: var(--r-md); background: var(--paper); }
+.dlg-row.drag-over { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+.dlg-row.dragging { opacity: .45; }
+.dlg-row.off .dlg-l, .dlg-row.off .dlg-ic { color: var(--text-dis); }
+.dlg-row.fixed { padding-left: 16px; }
+.dlg-handle { border: 0; background: none; color: var(--text-2); cursor: grab; display: grid; place-items: center; width: 20px; height: 32px; padding: 0; }
+.dlg-handle .ms { font-size: 20px; }
+.dlg-ic { font-size: 24px; color: var(--text); }
+.dlg-l { flex: 1; font-size: 1.0625rem; }
+.dlg-eye { border: 0; background: none; color: var(--primary); width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; }
+.dlg-eye .ms { font-size: 26px; }
+.dlg-eye:hover { background: var(--primary-hover); }
+.dlg-act { display: flex; justify-content: flex-end; align-items: center; gap: 16px; padding: 16px 20px; border-top: 1px solid var(--divider); }
+.dlg-cancel { border: 0; background: none; color: var(--primary); font-family: var(--font-head); font-weight: 600; font-size: 1rem; padding: 0 16px; min-height: 44px; }
+.dlg-save { min-height: 44px; padding: 0 24px; font-family: var(--font-head); font-size: 1rem; }
+.soon { background: var(--paper); border: 1px solid var(--divider); border-radius: var(--r-sm); padding: 32px; text-align: center; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; margin-bottom: var(--s3); }
+.soon-ic { font-size: 48px; color: var(--text-2); }
+.soon-t { margin: 0; font-family: var(--font-head); font-weight: 500; font-size: 1.5rem; line-height: 1.3; color: var(--text-2); }
+.soon-d { margin: 0; max-width: 400px; color: var(--text-2); font-size: 1rem; }
+.notes { border-top: 1px dashed var(--text-dis); padding-top: var(--s2); }
+.notes summary { cursor: pointer; font-weight: 600; color: var(--text-2); margin-bottom: var(--s2); }
+.notes summary span { font-weight: 400; margin-left: 8px; font-size: var(--fs-sm); }
+.ov { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: var(--s2); }
+.ov-card { text-align: left; padding: var(--s2); display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--divider); border-radius: var(--r-md); background: var(--paper); min-width: 0; }
+.ov-card:hover { border-color: var(--primary); }
+.ov-top { display: flex; align-items: flex-start; gap: 12px; }
+.ov-top .ms { font-size: 24px; color: var(--primary); }
+.ov-top strong { font-family: var(--font-head); font-weight: 500; font-size: 1rem; flex: 1; }
+.ov-list { color: var(--text-2); margin: 0; }
+.ov-meta { display: flex; gap: 8px; align-items: center; color: var(--text-2); font-size: var(--fs-sm); }
+.ov-h { font-family: var(--font-head); font-weight: 500; font-size: 1rem; margin: var(--s3) 0 var(--s1); }
+.pop button { display: flex; align-items: center; gap: 12px; width: 100%; border: 0; background: none; padding: 6px 16px; min-height: 36px; text-align: left; font-size: 1rem; }
+.pop button .ms { font-size: 20px; color: var(--text-2); }
+.pop button:hover { background: var(--primary-hover); }
+.pop button[aria-current="true"] { background: var(--primary-sel); }
+.rail button { height: var(--rail-btn); flex: none; border: 0; border-left: 4px solid transparent; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text-2); font-size: 0.75rem; line-height: 1.2; padding: 0 2px; }
+.rail button .pill { display: grid; place-items: center; width: 24px; height: 24px; color: var(--text); }
+.rail button .ms { font-size: 24px; }
+.rail button:hover { background: var(--primary-hover); }
+.rail button[aria-current="true"] { border-left-color: var(--primary); background: var(--primary-sel); }
+.rail button[aria-current="true"], .rail button[aria-current="true"] .pill { color: var(--primary); }
+.rail .sep { height: 1px; background: var(--divider); margin: 6px 14px; flex: none; }
+
+.body { display: grid; grid-template-columns: auto minmax(0, 1fr); min-height: 0; grid-column: 2; }
+.app.rail-off .body { grid-column: 1 / -1; }
+.panel { width: 288px; background: var(--paper); border-right: 1px solid var(--divider); display: flex; flex-direction: column; min-height: 0; }
+.panel[hidden] { display: none; }
+.panel-head { display: flex; align-items: center; justify-content: space-between; padding: var(--s2) var(--s2) var(--s1) var(--s2); }
+.panel-head h2 { margin: 0; font-family: var(--font-head); font-weight: 500; font-size: 1.25rem; line-height: 1.3; }
+.panel-filter { margin: 0 var(--s2) var(--s1); display: flex; align-items: center; gap: var(--s1); min-height: 36px; padding: 0 10px; border: 1px solid var(--divider); border-radius: var(--r-sm); background: var(--bg); }
+.panel-filter .ms { font-size: 18px; color: var(--text-2); }
+.panel-filter input { border: 0; background: none; outline: 0; width: 100%; min-width: 0; }
+.panel-filter:focus-within { border-color: var(--primary); box-shadow: 0 0 0 1px var(--primary); }
+.menu { overflow-y: auto; padding: 0 var(--s1) var(--s3); flex: 1; }
+.sec-btn { border-radius: 999px; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--s1); border: 0; background: none; text-align: left; padding: 0 var(--s1) 0 12px; min-height: calc(var(--row-h) + 4px); margin-top: 4px; font-weight: 600; font-size: 0.9375rem; border-radius: var(--r-sm); }
+.sec-btn:hover { background: var(--hover-neutral); }
+.cnt { margin-left: auto; display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 12px; background: var(--chip-fill); color: var(--text); font-size: 0.8125rem; font-weight: 400; line-height: 1; }
+.sec-btn .ms { font-size: 22px; color: var(--text-2); transition: transform 0.15s; }
+.sec-btn[aria-expanded="false"] .ms { transform: rotate(-90deg); }
+.row { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--s1); min-height: var(--row-h); border: 0; background: none; text-align: left; padding: 4px var(--s1) 4px 24px; border-radius: 999px; font-size: 0.9375rem; }
+.row .lbl { min-width: 0; }
+.row small { display: block; color: var(--text-2); font-size: var(--fs-sm); line-height: 1.2; }
+.row:hover { background: var(--hover-neutral); color: var(--primary); }
+.row:hover .ms { color: var(--primary); }
+.row[aria-current="true"]:hover { background: var(--primary-sel); }
+.row[aria-current="true"] { background: var(--primary-sel); color: var(--primary); font-weight: 600; }
+.row.flat { padding-left: 12px; }
+.row.nested { padding-left: 40px; }
+.row.sub { padding-left: 56px; }
+.row.nested.f { padding-left: 28px; }
+.row.sub.f { padding-left: 44px; }
+.subhead { padding: 6px 12px 2px 40px; font-size: var(--fs-sm); font-weight: 600; color: var(--text-2); }
+.row.parent { font-weight: 600; }
+.row .ms { font-size: 20px; color: var(--text-2); transition: transform 0.15s; }
+.row[aria-expanded="true"] .ms { transform: rotate(90deg); }
+.row .row-ic { font-size: 22px; color: var(--text-2); transform: none; flex: none; }
+.row:has(.row-ic) { justify-content: flex-start; gap: 12px; }
+.row[aria-current="true"] .row-ic { color: var(--primary); }
+.row.lock { color: var(--text-dis); cursor: default; }
+.empty { padding: var(--s2); color: var(--text-2); }
+
+.panel { grid-column: 1; }
+.main { grid-column: 2; overflow-y: auto; padding: var(--s3); padding-right: max(var(--s3), env(safe-area-inset-right, 0px)); min-width: 0; }
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; color: var(--text-2); font-size: var(--fs-sm); margin-bottom: var(--s1); }
+.crumbs .ms { font-size: 16px; }
+.titlebar { display: flex; align-items: flex-start; gap: var(--s2); flex-wrap: wrap; margin-bottom: var(--s2); }
+.titlebar h1 { margin: 0; font-family: var(--font-head); font-weight: 600; font-size: 1.5rem; line-height: 1.3; text-wrap: balance; }
+.chips { display: flex; gap: var(--s1); flex-wrap: wrap; align-items: center; }
+.chip { display: inline-flex; align-items: center; height: 24px; padding: 0 10px; border-radius: var(--r-pill); font-size: var(--fs-sm); font-weight: 600; white-space: nowrap; }
+.chip.live { background: var(--ok-bg); color: var(--ok-fg); }
+.chip.sql { background: var(--warn-bg); color: var(--warn-fg); }
+.chip.new { background: var(--info-bg); color: var(--info-fg); }
+.chip.unk { background: transparent; color: var(--text-2); border: 1px dashed var(--text-dis); }
+.chip.plain { background: var(--grey); color: var(--text-2); }
+.chip.owner { background: var(--info-bg); color: var(--info-fg); }
+.row .own { margin-left: auto; flex: none; font-size: var(--fs-sm); font-weight: 600; color: var(--info-fg); background: var(--info-bg); border-radius: var(--r-pill); padding: 0 8px; height: 20px; display: inline-flex; align-items: center; }
+.lead { margin: 0 0 var(--s3); max-width: 70ch; color: var(--text-2); }
+.card { background: var(--paper); border: 1px solid var(--divider); border-radius: var(--r-md); }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--s2); margin-bottom: var(--s3); }
+.fact { padding: var(--s2); min-width: 0; }
+.fact h3 { margin: 0 0 4px; font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-2); font-weight: 600; }
+.fact p { margin: 0; }
+.gridwrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; min-width: 520px; font-variant-numeric: tabular-nums; }
+th { text-align: left; font-size: var(--fs-sm); color: var(--text-2); font-weight: 600; padding: 0 var(--s2); height: calc(var(--row-h) + 4px); background: var(--grey); border-bottom: 1px solid var(--divider); white-space: nowrap; }
+td { padding: 0 var(--s2); height: calc(var(--row-h) + 4px); border-bottom: 1px solid var(--divider); }
+tr:last-child td { border-bottom: 0; }
+.gridbar { display: flex; align-items: center; justify-content: space-between; gap: var(--s2); padding: var(--s1) var(--s2); border-bottom: 1px solid var(--divider); }
+.gridbar strong { font-family: var(--font-head); font-weight: 500; }
+.btn { min-height: 36px; padding: 0 16px; border-radius: var(--r-sm); border: 1px solid var(--divider); background: var(--paper); font-weight: 600; }
+.btn[aria-pressed="true"] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.portalbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: var(--s2); }
+.pchip { height: 28px; padding: 0 12px; border-radius: var(--r-pill); border: 0; background: var(--grey); color: var(--text-2); font-size: var(--fs-sm); font-weight: 600; cursor: pointer; }
+.pchip:hover { background: var(--primary-focus); color: var(--text); }
+.pchip[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); }
+.portalbar .pl { font-size: var(--fs-sm); text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-2); font-weight: 600; margin-right: 4px; }
+.btn.primary { background: var(--primary); border-color: var(--primary); color: var(--on-primary); }
+.legend { display: flex; gap: var(--s2); flex-wrap: wrap; align-items: center; margin-top: var(--s3); color: var(--text-2); font-size: var(--fs-sm); }
+.reopen { margin-bottom: var(--s2); }
+
+@media (max-width: 860px) {
+  .app { grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--head-h) auto minmax(0, 1fr); height: auto; min-height: 100vh; }
+  .rail { flex-direction: row; border-right: 0; border-bottom: 1px solid var(--divider); height: calc(var(--rail-btn) + var(--s1)); }
+  .rail-nav { flex-direction: row; padding-top: 0; padding-inline: var(--s1); }
+  .rail-nav button { width: 76px; flex: none; border-left: 0; border-bottom: 4px solid transparent; }
+  .rail-nav button[aria-current="true"] { border-bottom-color: var(--primary); }
+  .rail .more { height: var(--rail-btn); width: 64px; }
+  .rail-bottom { border-top: 0; border-left: 1px solid var(--divider); }
+  .rail-bottom button { width: 76px; border-left: 0; }
+  .body { grid-column: 1; grid-template-columns: minmax(0, 1fr); }
+  .panel { width: auto; border-right: 0; border-bottom: 1px solid var(--divider); max-height: 50vh; }
+  .search, .navarrows, .head > .icon-btn:not(#railBtn) { display: none; }
+  .head { gap: 8px; }
+  .sw-label { font-size: 1rem; }
+  .mock { position: static; margin: var(--s2); max-width: none; }
+  .main { padding: var(--s2); }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app" id="app">
+  <header class="head">
+    <button class="icon-btn" id="railBtn" title="Collapse sidebar" aria-label="Toggle sidebar"><span class="ms">left_panel_close</span></button>
+    <a class="logo" href="#" aria-label="Home"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOCAyOCI+PHJlY3QgeD0iMiIgeT0iMiIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiByeD0iNiIgZmlsbD0iIzAwNURCRiIvPjxwYXRoIGQ9Ik05IDE5IDE0IDlsNSAxMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjRkZGRkZGIiBzdHJva2Utd2lkdGg9IjIuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PC9zdmc+" alt="Logo" width="28" height="28"></a>
+    <div class="switcher">
+      <button class="sw-btn" id="swBtn" aria-haspopup="true" aria-expanded="false"><span class="sw-label">Harbor &amp; Pine Admin</span><span class="ms sw-caret">keyboard_arrow_down</span></button>
+      <div class="sw-menu" id="swMenu" hidden role="menu">
+        <button role="menuitem">Harbor &amp; Pine</button>
+        <button role="menuitem">Harbor &amp; Pine Billing</button>
+        <button role="menuitem">Harbor &amp; Pine Claims</button>
+        <button role="menuitem" aria-current="true">Harbor &amp; Pine Admin</button>
+        <hr>
+        <button role="menuitem"><span class="ms">robot_2</span>AI Workspace</button>
+      </div>
+    </div>
+    <div class="navarrows"><button class="icon-btn lg" disabled aria-label="Back"><span class="ms">chevron_left</span></button><button class="icon-btn lg" disabled aria-label="Forward"><span class="ms">chevron_right</span></button></div>
+    <label class="search"><span class="ms">search</span><span>Search admin settings</span></label>
+    <button class="icon-btn" aria-label="Add new" title="Add new"><span class="ms">add</span></button>
+    <div class="spacer"></div>
+    <div class="tools">
+      <button class="icon-btn" aria-label="Notifications" title="Notifications"><span class="ms">notifications</span></button>
+      <button class="icon-btn" aria-label="Settings" title="Settings"><span class="ms">settings</span></button>
+      <div class="avatar" title="Ben Sumet">BS</div>
+    </div>
+  </header>
+  <nav class="rail" id="rail" aria-label="Admin areas"><div class="rail-nav" id="railNav"></div><div class="rail-bottom" id="railBottom"></div></nav>
+  <div class="pop" id="morePop" role="menu" hidden></div>
+  <div class="dlg-back" id="dlg" hidden>
+    <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgT">
+      <div class="dlg-head"><span class="ms dlg-grip">drag_indicator</span><span class="dlg-vr"></span><h2 id="dlgT">Customize your sidebar</h2><button class="dlg-x" data-custcancel="1" aria-label="Close"><span class="ms">close</span></button></div>
+      <p class="dlg-p">Drag items to reorder your sidebar menu. Home is always first.</p>
+      <div id="dlgList" class="dlg-list"></div>
+      <div class="dlg-act"><button class="dlg-cancel" data-custcancel="1">Cancel</button><button class="btn primary dlg-save" data-custdone="1">Save changes</button></div>
+    </div>
+  </div>
+<div class="body">
+    <aside class="panel" id="panel"></aside>
+    <main class="main" id="main"></main>
+  </div>
+</div>
+
+<div class="mock" role="group" aria-label="Mockup controls">
+  <span class="mock-t">Mockup controls</span>
+  <label>Preview as <select id="roleSel" aria-label="Preview as role"></select></label>
+  <button class="mock-b" id="densityBtn" aria-label="Toggle compact view"><span class="ms">density_small</span>Compact</button>
+  <button class="mock-b" id="themeBtn" aria-label="Theme: switch light or dark"><span class="ms">contrast</span>Theme</button>
+</div>
+<script>
+/* Icons: the exact path data of @harbor/ui/icons (Material Symbols Rounded, weight 400, no stroke), viewBox 0 -960 960 960. */
+const ICONS = {"home":"M220-180h150v-220q0-12.75 8.63-21.38Q387.25-430 400-430h160q12.75 0 21.38 8.62Q590-412.75 590-400v220h150v-390L480-765 220-570v390Zm-60 0v-390q0-14.25 6.38-27 6.37-12.75 17.62-21l260-195q15.68-12 35.84-12Q500-825 516-813l260 195q11.25 8.25 17.63 21 6.37 12.75 6.37 27v390q0 24.75-17.62 42.37Q764.75-120 740-120H560q-12.75 0-21.37-8.63Q530-137.25 530-150v-220H430v220q0 12.75-8.62 21.37Q412.75-120 400-120H220q-24.75 0-42.37-17.63Q160-155.25 160-180Zm320-293Z","shield":"M470.12-85q-4.56-1-9.12-3-139-47-220-168.5t-81-266.61V-719q0-19.26 10.88-34.66Q181.75-769.07 199-776l260-97q11-4 21-4t21 4l260 97q17.25 6.93 28.13 22.34Q800-738.26 800-719v195.89Q800-378 719-256.5T499-88q-4.56 2-9.12 3T480-84q-5.32 0-9.88-1Zm9.88-58q115-38 187.5-143.5T740-523v-196l-260-98-260 98v196q0 131 72.5 236.5T480-143Zm0-337Z","payments":"M540-420q-50 0-85-35t-35-85q0-50 35-85t85-35q50 0 85 35t35 85q0 50-35 85t-85 35ZM220-280q-24.75 0-42.37-17.63Q160-315.25 160-340v-400q0-24.75 17.63-42.38Q195.25-800 220-800h640q24.75 0 42.38 17.62Q920-764.75 920-740v400q0 24.75-17.62 42.37Q884.75-280 860-280H220Zm100-60h440q0-42 29-71t71-29v-200q-42 0-71-29t-29-71H320q0 42-29 71t-71 29v200q42 0 71 29t29 71Zm450 180H100q-24.75 0-42.37-17.63Q40-195.25 40-220v-430q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v430h670q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5ZM220-340v-400 400Z","gavel":"M190-180h420q13 0 21.5 8.5T640-150q0 13-8.5 21.5T610-120H190q-13 0-21.5-8.5T160-150q0-13 8.5-21.5T190-180Zm150-194L202-512q-17-17-17.5-41.5T201-596l29-30 224 222-30 30q-17 17-42 17t-42-17Zm296-212L414-810l30-29q18-17 42.5-16.5T528-838l138 138q17 17 17 42t-17 42l-30 30Zm181 405L302-696l42-42 515 515q9 9 9 21t-9 21q-9 9-21 9t-21-9Z","robot_2":"M190-120q-12.75 0-21.37-8.63Q160-137.25 160-150v-190q0-24.75 17.63-42.38Q195.25-400 220-400h520q24.75 0 42.38 17.62Q800-364.75 800-340v190q0 12.75-8.62 21.37Q782.75-120 770-120H190Zm170-320q-83 0-141.5-58.5T160-640q0-83 58.5-141.5T360-840h240q83 0 141.5 58.5T800-640q0 83-58.5 141.5T600-440H360ZM220-180h520v-160H220v160Zm140-320h240q58.33 0 99.17-40.76 40.83-40.77 40.83-99Q740-698 699.17-739q-40.84-41-99.17-41H360q-58.33 0-99.17 40.76-40.83 40.77-40.83 99Q220-582 260.83-541q40.84 41 99.17 41Zm21.5-118.68q8.5-8.67 8.5-21.5 0-12.82-8.68-21.32-8.67-8.5-21.5-8.5-12.82 0-21.32 8.68-8.5 8.67-8.5 21.5 0 12.82 8.68 21.32 8.67 8.5 21.5 8.5 12.82 0 21.32-8.68Zm240 0q8.5-8.67 8.5-21.5 0-12.82-8.68-21.32-8.67-8.5-21.5-8.5-12.82 0-21.32 8.68-8.5 8.67-8.5 21.5 0 12.82 8.68 21.32 8.67 8.5 21.5 8.5 12.82 0 21.32-8.68ZM480-180Zm0-460Z","mail":"M140-160q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v520q0 24-18 42t-42 18H140Zm680-525L496-473q-4 2-7.5 3.5T480-468q-5 0-8.5-1.5T464-473L140-685v465h680v-465ZM480-522l336-218H145l335 218ZM140-685v7-39.32.73V-740v23-.91V-678v-7 465-465Z","checklist_rtl":"m659-299 158-158q9-9 21-8.5t21.39 9.5q8.61 9 8.61 21t-9 21L680-235q-9 9-21 9t-21-9L538-335q-9-9-9-21t9-21q9-9 21-8.5t21 8.5l79 78Zm0-320 158-158q9-9 21-8.5t21.39 9.5q8.61 9 8.61 21t-9 21L680-555q-9 9-21 9t-21-9L538-655q-9-9-9-21t9-21q9-9 21-8.5t21 8.5l79 78ZM110-290q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32Q97.25-350 110-350h300q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H110Zm0-320q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32Q97.25-670 110-670h300q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H110Z","folder_copy":"M100-120q-24.75 0-42.37-17.63Q40-155.25 40-180v-530q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v530h710q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H100Zm120-120q-24.75 0-42.37-17.63Q160-275.25 160-300v-520q0-24.75 17.63-42.38Q195.25-880 220-880h215q12.44 0 23.72 5T478-862l62 62h320q24.75 0 42.38 17.62Q920-764.75 920-740v440q0 24.75-17.62 42.37Q884.75-240 860-240H220Zm0-60h640v-440H515l-80-80H220v520Zm0 0v-520 520Z","dashboard":"M510-600v-210q0-12.75 8.63-21.38Q527.25-840 540-840h270q12.75 0 21.38 8.62Q840-822.75 840-810v210q0 12.75-8.62 21.37Q822.75-570 810-570H540q-12.75 0-21.37-8.63Q510-587.25 510-600ZM120-480v-330q0-12.75 8.63-21.38Q137.25-840 150-840h270q12.75 0 21.38 8.62Q450-822.75 450-810v330q0 12.75-8.62 21.37Q432.75-450 420-450H150q-12.75 0-21.37-8.63Q120-467.25 120-480Zm390 330v-330q0-12.75 8.63-21.38Q527.25-510 540-510h270q12.75 0 21.38 8.62Q840-492.75 840-480v330q0 12.75-8.62 21.37Q822.75-120 810-120H540q-12.75 0-21.37-8.63Q510-137.25 510-150Zm-390 0v-210q0-12.75 8.63-21.38Q137.25-390 150-390h270q12.75 0 21.38 8.62Q450-372.75 450-360v210q0 12.75-8.62 21.37Q432.75-120 420-120H150q-12.75 0-21.37-8.63Q120-137.25 120-150Zm60-360h210v-270H180v270Zm390 330h210v-270H570v270Zm0-450h210v-150H570v150ZM180-180h210v-150H180v150Zm210-330Zm180-120Zm0 180ZM390-330Z","table_chart":"M780-121H180q-24 0-42-18t-18-42v-599q0-24 18-42t42-18h600q24 0 42 18t18 42v599q0 24-18 42t-42 18ZM180-639h600v-141H180v141Zm130 60H180v398h130v-398Zm340 0v398h130v-398H650Zm-60 0H370v398h220v-398Z","admin_panel_settings":"M480-877q5 0 10.5 1t10.5 3l260 97q17.25 6.93 28.13 22.34Q800-738.26 800-719v187q0 12.33-9 20.66-9 8.34-21 8.34t-21-9q-9-9-9-21v-186l-260-96-260 96v197q0 70 21 129.5T295-286q33 47 74.5 80.5T451-154q11 5 16 16.5t.38 22.63Q462-103 449.5-98 437-93 425-98q-125-51-195-170.74Q160-388.48 160-522v-197q0-19.26 10.88-34.66Q181.75-769.07 199-776l260-97q5.25-2.4 10.5-3.2 5.25-.8 10.5-.8ZM692.5-80Q615-80 560-135.5T505-267q0-78.43 54.99-133.72Q614.98-456 693-456q77 0 132.5 55.28Q881-345.43 881-267q0 76-55.5 131.5T692.5-80ZM480-479Zm254.88 190Q753-308 753-333.88q0-25.88-18.12-44t-44-18.12Q665-396 646-377.88q-19 18.12-19 44T646-289q19 19 44.88 19 25.88 0 44-19Zm-44.69 144q28.19 0 53-11T786-187q4-5 2.5-11t-6.5-8q-22-10-45.22-15.5-23.21-5.5-47-5.5-23.78 0-46.78 5t-45 16q-5 2-7 8t2 11q18 21 43.5 31.5t53.69 10.5Z","monitor_heart":"M80-740q0-24 18-42t42-18h680q24 0 42 18t18 42v140q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63-8.5-8.62-8.5-21.37v-140H140v140q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63Q80-587.25 80-600v-140Zm60 580q-24 0-42-18t-18-42v-140q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v140h680v-140q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v140q0 24-18 42t-42 18H140Zm275.6-134q7.6-4 11.4-12l133-266 53 106q3.75 8 11.25 12t15.75 4h210q12.75 0 21.38-8.68 8.62-8.67 8.62-21.5 0-12.82-8.62-21.32-8.63-8.5-21.38-8.5H659l-72-143q-3.72-8.25-11.17-11.63-7.45-3.37-15.64-3.37-8.19 0-15.79 3.37-7.6 3.38-11.4 11.63L400-388l-53-106q-3.75-8-11.25-12T320-510H110q-12.75 0-21.37 8.68-8.63 8.67-8.63 21.5 0 12.82 8.63 21.32Q97.25-450 110-450h191l72 144q3.72 8 11.17 12 7.45 4 15.64 4 8.19 0 15.79-4ZM480-480Z","manage_accounts":"M292-527q-42-42-42-108t42-108q42-42 108-42t108 42q42 42 42 108t-42 108q-42 42-108 42t-108-42ZM80-224v-34q0-35 17.5-64t50.5-44q58-26 119.5-42T393-424q13 0 21.5 8.5T423-394q0 13-8.5 21.5T393-364q-58 0-113.5 14T172-310q-14 8-23 21.5t-9 30.5v34h254q13 0 21.5 8.5T424-194q0 13-8.5 21.5T394-164H140q-25 0-42.5-17.5T80-224Zm584 81-7-43q-17-5-34.5-14.5T593-222l-38 8q-8 2-15-1t-11-10l-6-10q-5-8-3.5-16t7.5-14l33-31q-2-9-2-25t2-25l-33-31q-6-5-7.5-13.5T523-406l6-12q4-7 10.5-9.5t14.5-.5l39 8q12-12 29.5-21.5T657-456l7-43q2-10 9-16.5t17-6.5h8q10 0 17 6.5t9 16.5l7 43q17 5 34.5 14.5T795-420l38-8q8-2 15 1t11 10l6 10q5 8 3.5 16t-7.5 14l-33 31q2 9 2 25t-2 25l33 31q6 5 7.5 13.5T865-236l-6 12q-4 7-10.5 9.5t-14.5.5l-39-8q-12 12-29.5 21.5T731-186l-7 43q-2 10-9 16.5t-17 6.5h-8q-10 0-17-6.5t-9-16.5Zm88-120q22-22 22-58t-22-58q-22-22-58-22t-58 22q-22 22-22 58t22 58q22 22 58 22t58-22ZM464.5-570.5Q490-596 490-635t-25.5-64.5Q439-725 400-725t-64.5 25.5Q310-674 310-635t25.5 64.5Q361-545 400-545t64.5-25.5ZM400-635Zm9 411Z","bar_chart_4_bars":"M110-130q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32Q97.25-190 110-190h740q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H110Zm24.5-134.58Q120-279.17 120-300v-170q0-20.83 14.62-35.42Q149.24-520 170.12-520q20.88 0 35.38 14.58Q220-490.83 220-470v170q0 20.83-14.62 35.42Q190.76-250 169.88-250q-20.88 0-35.38-14.58Zm206 0Q326-279.17 326-300v-370q0-20.83 14.62-35.42Q355.24-720 376.12-720q20.88 0 35.38 14.58Q426-690.83 426-670v370q0 20.83-14.62 35.42Q396.76-250 375.88-250q-20.88 0-35.38-14.58Zm207 0Q533-279.17 533-300v-250q0-20.83 14.62-35.42Q562.24-600 583.12-600q20.88 0 35.38 14.58Q633-570.83 633-550v250q0 20.83-14.62 35.42Q603.76-250 582.88-250q-20.88 0-35.38-14.58Zm207 0Q740-279.17 740-300v-490q0-20.83 14.62-35.42Q769.24-840 790.12-840q20.88 0 35.38 14.58Q840-810.83 840-790v490q0 20.83-14.62 35.42Q810.76-250 789.88-250q-20.88 0-35.38-14.58Z","settings":"M421-80q-14 0-25-9t-13-23l-15-94q-19-7-40-19t-37-25l-86 40q-14 6-28 1.5T155-226L97-330q-8-13-4.5-27t15.5-23l80-59q-2-9-2.5-20.5T185-480q0-9 .5-20.5T188-521l-80-59q-12-9-15.5-23t4.5-27l58-104q8-13 22-17.5t28 1.5l86 40q16-13 37-25t40-18l15-95q2-14 13-23t25-9h118q14 0 25 9t13 23l15 94q19 7 40.5 18.5T669-710l86-40q14-6 27.5-1.5T804-734l59 104q8 13 4.5 27.5T852-580l-80 57q2 10 2.5 21.5t.5 21.5q0 10-.5 21t-2.5 21l80 58q12 8 15.5 22.5T863-330l-58 104q-8 13-22 17.5t-28-1.5l-86-40q-16 13-36.5 25.5T592-206l-15 94q-2 14-13 23t-25 9H421Zm15-60h88l14-112q33-8 62.5-25t53.5-41l106 46 40-72-94-69q4-17 6.5-33.5T715-480q0-17-2-33.5t-7-33.5l94-69-40-72-106 46q-23-26-52-43.5T538-708l-14-112h-88l-14 112q-34 7-63.5 24T306-642l-106-46-40 72 94 69q-4 17-6.5 33.5T245-480q0 17 2.5 33.5T254-413l-94 69 40 72 106-46q24 24 53.5 41t62.5 25l14 112Zm44-210q54 0 92-38t38-92q0-54-38-92t-92-38q-54 0-92 38t-38 92q0 54 38 92t92 38Zm0-130Z","tune":"M435.5-128.63Q427-137.25 427-150v-165q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v53h323q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H487v52q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63ZM150-202q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h187q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H150Zm165.5-174.63Q307-385.25 307-398v-52H150q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h157v-54q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v166q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63ZM457-450q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h353q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H457Zm144.5-173.63Q593-632.25 593-645v-165q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v52h157q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H653v53q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63ZM150-698q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h353q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H150Z","more_horiz":"M207.86-432Q188-432 174-446.14t-14-34Q160-500 174.14-514t34-14Q228-528 242-513.86t14 34Q256-460 241.86-446t-34 14Zm272 0Q460-432 446-446.14t-14-34Q432-500 446.14-514t34-14Q500-528 514-513.86t14 34Q528-460 513.86-446t-34 14Zm272 0Q732-432 718-446.14t-14-34Q704-500 718.14-514t34-14Q772-528 786-513.86t14 34Q800-460 785.86-446t-34 14Z","left_panel_close":"M663-380v-200q0-9.92-9.5-13.46Q644-597 637-590l-89 89q-9 9-9 21t9 21l89 89q7 7 16.5 3.46T663-380ZM180-120q-24.75 0-42.37-17.63Q120-155.25 120-180v-600q0-24.75 17.63-42.38Q155.25-840 180-840h600q24.75 0 42.38 17.62Q840-804.75 840-780v600q0 24.75-17.62 42.37Q804.75-120 780-120H180Zm147-60v-600H180v600h147Zm60 0h393v-600H387v600Zm-60 0H180h147Z","left_panel_open":"M527-580v200q0 9.92 9.5 13.46Q546-363 553-370l89-89q9-9 9-21t-9-21l-89-89q-7-7-16.5-3.46T527-580ZM180-120q-24.75 0-42.37-17.63Q120-155.25 120-180v-600q0-24.75 17.63-42.38Q155.25-840 180-840h600q24.75 0 42.38 17.62Q840-804.75 840-780v600q0 24.75-17.62 42.37Q804.75-120 780-120H180Zm147-60v-600H180v600h147Zm60 0h393v-600H387v600Zm-60 0H180h147Z","keyboard_arrow_down":"M469-358q-5-2-10-7L261-563q-9-9-8.5-21.5T262-606q9-9 21.5-9t21.5 9l175 176 176-176q9-9 21-8.5t21 9.5q9 9 9 21.5t-9 21.5L501-365q-5 5-10 7t-11 2q-6 0-11-2Z","chevron_left":"m406-481 177 177q9 9 8.5 21t-9.5 21q-9 9-21.5 9t-21.5-9L341-460q-5-5-7-10t-2-11q0-6 2-11t7-10l199-199q9-9 21.5-9t21.5 9q9 9 9 21.5t-9 21.5L406-481Z","chevron_right":"M530-481 353-658q-9-9-8.5-21t9.5-21q9-9 21.5-9t21.5 9l198 198q5 5 7 10t2 11q0 6-2 11t-7 10L396-261q-9 9-21 8.5t-21-9.5q-9-9-9-21.5t9-21.5l176-176Z","add":"M450-450H230q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h220v-220q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v220h220q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H510v220q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63-8.5-8.62-8.5-21.37v-220Z","notifications":"M190-200q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h50v-304q0-84 49.5-150.5T420-798v-22q0-25 17.5-42.5T480-880q25 0 42.5 17.5T540-820v22q81 17 130.5 83.5T720-564v304h50q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H190Zm290-302Zm0 422q-33 0-56.5-23.5T400-160h160q0 33-23.5 56.5T480-80ZM300-260h360v-304q0-75-52.5-127.5T480-744q-75 0-127.5 52.5T300-564v304Z","search":"M378-329q-108.16 0-183.08-75Q120-479 120-585t75-181q75-75 181.5-75t181 75Q632-691 632-584.85 632-542 618-502q-14 40-42 75l242 240q9 8.56 9 21.78T818-143q-9 9-22.22 9-13.22 0-21.78-9L533-384q-30 26-69.96 40.5Q423.08-329 378-329Zm-1-60q81.25 0 138.13-57.5Q572-504 572-585t-56.87-138.5Q458.25-781 377-781q-82.08 0-139.54 57.5Q180-666 180-585t57.46 138.5Q294.92-389 377-389Z","drag_indicator":"M349.91-160q-28.91 0-49.41-20.59-20.5-20.59-20.5-49.5t20.59-49.41q20.59-20.5 49.5-20.5t49.41 20.59q20.5 20.59 20.5 49.5t-20.59 49.41q-20.59 20.5-49.5 20.5Zm260 0q-28.91 0-49.41-20.59-20.5-20.59-20.5-49.5t20.59-49.41q20.59-20.5 49.5-20.5t49.41 20.59q20.5 20.59 20.5 49.5t-20.59 49.41q-20.59 20.5-49.5 20.5Zm-260-250q-28.91 0-49.41-20.59-20.5-20.59-20.5-49.5t20.59-49.41q20.59-20.5 49.5-20.5t49.41 20.59q20.5 20.59 20.5 49.5t-20.59 49.41q-20.59 20.5-49.5 20.5Zm260 0q-28.91 0-49.41-20.59-20.5-20.59-20.5-49.5t20.59-49.41q20.59-20.5 49.5-20.5t49.41 20.59q20.5 20.59 20.5 49.5t-20.59 49.41q-20.59 20.5-49.5 20.5Zm-260-250q-28.91 0-49.41-20.59-20.5-20.59-20.5-49.5t20.59-49.41q20.59-20.5 49.5-20.5t49.41 20.59q20.5 20.59 20.5 49.5t-20.59 49.41q-20.59 20.5-49.5 20.5Zm260 0q-28.91 0-49.41-20.59-20.5-20.59-20.5-49.5t20.59-49.41q20.59-20.5 49.5-20.5t49.41 20.59q20.5 20.59 20.5 49.5t-20.59 49.41q-20.59 20.5-49.5 20.5Z","close":"M480-438 270-228q-9 9-21 9t-21-9q-9-9-9-21t9-21l210-210-210-210q-9-9-9-21t9-21q9-9 21-9t21 9l210 210 210-210q9-9 21-9t21 9q9 9 9 21t-9 21L522-480l210 210q9 9 9 21t-9 21q-9 9-21 9t-21-9L480-438Z","visibility":"M600.5-379.62q49.5-49.62 49.5-120.5T600.38-620.5Q550.76-670 479.88-670T359.5-620.38Q310-570.76 310-499.88t49.62 120.38q49.62 49.5 120.5 49.5t120.38-49.62Zm-200-41.12q-32.5-32.73-32.5-79.5 0-46.76 32.74-79.26 32.73-32.5 79.5-32.5 46.76 0 79.26 32.74 32.5 32.73 32.5 79.5 0 46.76-32.74 79.26-32.73 32.5-79.5 32.5-46.76 0-79.26-32.74ZM234.5-276Q124-352 57-470q-4-7.13-6-14.65-2-7.52-2-15.43 0-7.92 2-15.38 2-7.47 6-14.54 67-118 177.5-194T480-800q135 0 245.5 76T903-530q4 7.12 6 14.65 2 7.52 2 15.43 0 7.92-2 15.38-2 7.47-6 14.54-67 118-177.5 194T480-200q-135 0-245.5-76ZM480-500Zm222.5 174.5Q804-391 857-500q-53-109-154.33-174.5Q601.34-740 480.17-740T257.5-674.5Q156-609 102-500q54 109 155.33 174.5Q358.66-260 479.83-260t222.67-65.5Z","visibility_off":"M600-620q29 29 42.5 71.5T647-464q0 13-8.5 21.5T617-434q-13 0-21.5-8.5T587-464q11-34 2.5-64.5T559-580q-21-22-52-30t-64 3q-13 0-21.5-8.5T413-637q0-13 8.5-21.5T443-667q42-9 85 4.5t72 42.5ZM490-740q-32 0-64 3t-63 13q-12 4-24-1t-17-16q-5-11 0-22.5t16-15.5q35-11 72-16t75-5q137 0 249.5 75.5T907-526q3 6 5 12.5t2 13.5q0 7-1.5 13.5T908-474q-23 49-55 90.5T779-307q-9 8-20 5.5T741-313q-7-9-5.5-20t10.5-19q36-30 65-66.5t46-81.5q-49-109-148-174.5T490-740Zm-10 540q-136 0-247.5-76T55-472q-4-7-5.5-13.5T48-500q0-8 2-14.5t5-13.5q24-48 55.5-90.5T182-696L77-801q-9-9-8.5-21t8.5-21q9-9 21.5-9t21.5 9l716 716q8 8 8 19.5T836-87q-8 10-20.5 10T794-86L648-229q-41 15-83 22t-85 7ZM223-654q-41 29-72 68t-49 86q52 112 156.5 176T488-260q29 0 58-1.5t55-14.5l-64-64q-14 6-28.5 8t-28.5 2q-71 0-120.5-49.5T310-500q0-14 2.5-28.5T320-557l-97-97Zm305 142Zm-116 58Z","contrast":"M324-111.5Q251-143 197-197t-85.5-127Q80-397 80-480t31.5-156Q143-709 197-763t127-85.5Q397-880 480-880t156 31.5Q709-817 763-763t85.5 127Q880-563 880-480t-31.5 156Q817-251 763-197t-127 85.5Q563-80 480-80t-156-31.5ZM500-140q137-10 228.5-106T820-480q0-138-91.5-234T500-820v680Z","density_small":"M150-80q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h660q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32Q822.75-80 810-80H150Zm0-247q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h660q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H150Zm0-246q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h660q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H150Zm0-247q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32 8.62-8.5 21.37-8.5h660q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H150Z","account_balance_wallet":"M180-233v53-600 547Zm0 113q-24.75 0-42.37-17.63Q120-155.25 120-180v-600q0-24.75 17.63-42.38Q155.25-840 180-840h600q24.75 0 42.38 17.62Q840-804.75 840-780v134h-60v-134H180v600h600v-133h60v133q0 24.75-17.62 42.37Q804.75-120 780-120H180Zm358-173q-30.52 0-52.26-21.44Q464-335.89 464-366v-227q0-30.11 21.74-51.56Q507.48-666 538-666h270q30.53 0 52.26 21.44Q882-623.11 882-593v227q0 30.11-21.74 51.56Q838.53-293 808-293H538Zm284-60v-253H524v253h298Zm-124.5-81.96Q716-453.92 716-481q0-26.25-19-44.63Q678-544 652-544t-45 18.37q-19 18.38-19 44.63 0 27.08 18.74 46.04Q625.47-416 652.24-416q26.76 0 45.26-18.96Z","assignment_late":"M504.5-290.5Q515-301 515-315t-10.5-24.5Q494-350 480-350t-24.5 10.5Q445-329 445-315t10.5 24.5Q466-280 480-280t24.5-10.5Zm-4-130.13q8.5-8.62 8.5-21.37v-208q0-12.75-8.68-21.38-8.67-8.62-21.5-8.62-12.82 0-21.32 8.62-8.5 8.63-8.5 21.38v208q0 12.75 8.68 21.37 8.67 8.63 21.5 8.63 12.82 0 21.32-8.63ZM180-120q-24.75 0-42.37-17.63Q120-155.25 120-180v-600q0-24.75 17.63-42.38Q155.25-840 180-840h205q5-35 32-57.5t63-22.5q36 0 63 22.5t32 57.5h205q24.75 0 42.38 17.62Q840-804.75 840-780v600q0 24.75-17.62 42.37Q804.75-120 780-120H180Zm0-60h600v-600H180v600Zm324.5-627.5Q515-818 515-832t-10.5-24.5Q494-867 480-867t-24.5 10.5Q445-846 445-832t10.5 24.5Q466-797 480-797t24.5-10.5ZM180-180v-600 600Z","assured_workload":"M212-271v-279q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v279q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63-8.5-8.62-8.5-21.37Zm242 0v-279q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v279q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63-8.5-8.62-8.5-21.37Zm400-369H103q-9.58 0-16.29-6.71Q80-653.42 80-663v-17q0-6 3.5-11.5T92-700l358-204q14.17-8 30-8t30 8l357 203q6 4 9.5 10t3.5 13.5v10.23q0 11.59-7.47 19.43Q865.05-640 854-640Zm-640-60h532L480-852 214-700ZM110-121q-12.75 0-21.37-8.68-8.63-8.67-8.63-21.5 0-12.82 8.63-21.32Q97.25-181 110-181h440q12.75 0 21.38 8.68 8.62 8.67 8.62 21.5 0 12.82-8.62 21.32-8.63 8.5-21.38 8.5H110Zm586.5-314.63Q688-444.25 688-457v-93q0-12.75 8.68-21.38 8.67-8.62 21.5-8.62 12.82 0 21.32 8.62 8.5 8.63 8.5 21.38v93q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63ZM640-218v-83q0-8.16 4.5-15.58T657-328l130-65q5.71-3 12.86-3 7.14 0 13.14 3l130 65q8 4 12.5 11.42T960-301v83q0 78-39.5 131T812-5q-4 2-12 2l-12-2q-69-29-108.5-82T640-218Zm139 42-45-45q-6-6-14-6t-14 6q-6 6-6 14t6 14l52 52q9 9 21 9t21-9l107-107q6-6 6-14t-6-14q-6-6-14-6t-14 6L779-176ZM214-700h532-532Z","personal_injury":"M480-580q-66 0-108-42t-42-108q0-66 42-108t108-42q66 0 108 42t42 108q0 66-42 108t-108 42Zm0-60q39 0 64.5-25.5T570-730q0-39-25.5-64.5T480-820q-39 0-64.5 25.5T390-730q0 39 25.5 64.5T480-640Zm.11 130q74.1 0 137 18.5Q680-473 731-450q31 14 50 41t19 65v204q0 24-18 42t-42 18H390q-41.82 0-70.91-29.13-29.09-29.13-29.09-71Q290-222 319.09-251q29.09-29 70.91-29h118l72-160q-26-5-51.5-7.5t-48.61-2.5q-72.35 0-128.62 16.5Q295-417 252-396q-14 7-23 21.25T220-344v234q0 12.75-8.68 21.37-8.67 8.63-21.5 8.63-12.82 0-21.32-8.63Q160-97.25 160-110v-234q0-38 19-65t49-41.1q51-22.9 114.5-41.4T480.11-510ZM390-140h54l37-80h-91q-16 0-28 12t-12 28q0 16 12 28t28 12Zm120 0h230v-204q0-16.5-9.5-30.75T707-396q-12-6-29-13t-39-15L510-140Zm-30-590Zm0 443Z"};
+function hydrateIcons(root) {
+  (root.querySelectorAll ? root.querySelectorAll('.ms:not([data-i])') : []).forEach((el) => {
+    const name = el.textContent.trim();
+    const d = ICONS[name];
+    if (!d) { console.warn('missing icon', name); return; }
+    el.setAttribute('data-i', name);
+    el.innerHTML = '<svg viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="' + d + '"/></svg>';
+  });
+}
+new MutationObserver(() => hydrateIcons(document)).observe(document.body, { childList: true, subtree: true });
+hydrateIcons(document);
+/* ---------- data: every link below comes from the PAS / Harbor & Pine admin inventory ---------- */
+const ST = { live: 'Screen exists today', sql: 'No screen today (SQL, XML or spreadsheet)', new: 'Proposed screen', unk: 'Menu exists, contents not confirmed' };
+const RULE = {
+  setup: 'Setup admin permission. The administrators role bypasses every tile filter.',
+  polsys: 'Needs both "Site Menu/View" and "Utilities" permissions for the item.',
+  utilities: 'Utilities permission on the tile. List tiles also hide when the user cannot report on the list.',
+  bulk: 'RIBulkEndorsementPermission.',
+  billing: 'Billing application (Billing). System administrator, or a Function Master privilege level at or above the screen.',
+  claims: 'Claims application. Needs the Claims role set (for example CLMADMIN).',
+  tasks: 'UTM permissions: CORE_UTM_AUTHOR (Configuration, Content), CORE_UTM_MANAGER (Escalations, Groups, Monitor), CORE_UTM_USER. Policy side also needs UTM_FUNCTIONALITY = Y.',
+  utm: 'UTM permissions: CORE_UTM_AUTHOR for Content Management and most Configuration Management links; CORE_UTM_MANAGER for Manage Groups, Escalation Matrix and the monitors. One shared /utm app for every portal.',
+  docs: 'Docgen applications assigned to the user in the Security UI (Assigned Applications).',
+  email: 'UESADMIN for full access. Templates need CORE_EMAIL_TEMPLATES. Menu is visible to Admin, Supervisor, Manager and Inquiry roles. Needs ues enable = Y.',
+  reports: 'Report framework admin permission. Grid configuration is kept per portal, so a change affects only that portal’s grids.',
+  copilot: 'ASSISTANT_COMMON parameters present and the Assistant feature flag on for the tenant.',
+  secui: 'Core Security application assigned to the user. Users and roles are shared by Policy, Billing, Claims, UTM and UES.',
+  sys: 'Admin permission on the customer domain, or the specific tile permission shown in the source.',
+  processing: 'Integration/Process or Farm - Admin permission. These users see only Processes and Scheduler.'
+};
+const I = (label, p, st, desc, o) => Object.assign({ label, key: (o && o.key) || label, p, st, desc }, o || {});
+const SCOPE = {
+  all: 'One config for all portals. The same values apply to Policy, Billing and Claims.',
+  tagged: 'One tool for all portals. Each entry is tagged to a portal, so values differ by portal.',
+  own: 'Each portal has its own copy with its own values. Same name, different data.'
+};
+const NEWTAG = 'New in Harbor & Pine. No legacy screen exists in Policy, Billing or Claims.';
+const ALL_PORTALS = ['Policy', 'Billing', 'Claims'];
+/* Unified Email Service (/ues): one app for every portal, entries tagged by the Product dropdown. */
+const UES = (label, st, desc) => I(label, 'email', st, desc, { src: 'Unified Email Service (/ues), Configuration Management menu (your screenshot)', in: ALL_PORTALS, scope: 'tagged' });
+/* Task Management (/utm): one app and one config for every portal. */
+const UTM = (menu, label, desc) => I(label, 'utm', 'unk', desc, { src: 'Task Management (/utm), ' + menu + ' menu (your screenshot). Menu name seen; screen contents not opened.', in: ALL_PORTALS, scope: 'all' });
+const NAVS = [
+  { id: 'home', icon: 'home', label: 'Home', title: 'Admin home', home: true },
+  { id: 'policy', icon: 'shield', label: 'Policy', title: 'Policy settings', src: 'Policy portal, Administration menu (your screenshots and the product site data)', groups: [
+    { name: 'Setup', items: [
+      I('Site', 'setup', 'live', 'Site-wide policy settings.'),
+      I('Products', 'setup', 'live', 'Create, import and maintain insurance products and their lines of business.'),
+      I('Programs', 'setup', 'live', 'Programs within a product.', { src: 'Seen on the local PAS and in the product site data. Not shown on the test site' }),
+      I('Producers', 'setup', 'live', 'Agencies and producers.'),
+      I('Market Group', 'setup', 'live', 'Market groups used for eligibility and rating.'),
+      I('Underwriter Setup', 'setup', 'live', 'Underwriter records and authority.'),
+      I('Mortgagee', 'setup', 'live', 'Mortgagee records.', { src: 'Seen on the local PAS and in the product site data. Not shown on the test site' }),
+      I('Finance Company', 'setup', 'live', 'Premium finance companies.', { src: 'Seen on the local PAS and in the product site data. Not shown on the test site' }),
+      I('Pay Plans', 'setup', 'live', 'Payment plans offered on policies.', { src: 'Seen on the local PAS and in the product site data. Not shown on the test site' }),
+      I('Reinsurers', 'setup', 'live', 'Reinsurer records.', { src: 'Seen on the local PAS and in the product site data. Not shown on the test site' }),
+      I('Rules', 'setup', 'live', 'Underwriting and business rules. Not the same screen as Rule Master in Billing and Claims.'),
+      I('Rule Sets', 'setup', 'live', 'Ordered groups of rules applied to a product.'),
+      I('Workflow', 'setup', 'live', 'Workflow definitions for policy transactions.', { src: 'Seen on the local PAS and in the product site data. Not shown on the test site' }),
+      I('Customer Maintained Tables', 'setup', 'live', 'Lookup tables the carrier maintains itself.'),
+      I('Policy Counters Setup', 'setup', 'live', 'Number sequences for policies.'),
+      I('Quote Counters Setup', 'setup', 'live', 'Number sequences for quotes.'),
+      I('Billing Account', 'setup', 'live', 'List of billing accounts (account number, insured, business name, address, payer type, email, phone) with New Billing Account. Sits in the Policy Setup menu. Billing has no matching link in its own System Administration menu.', { src: 'Seen on the test site Policy Administration page, Setup, after Quote Counters Setup. Opens BillingAccountConf.xml' }),
+      I('Document Packages Setup', 'setup', 'live', 'Packages of forms issued with a transaction.'),
+      I('MGA', 'setup', 'live', 'Managing general agent setup.'),
+      I('Task Management Events', 'tasks', 'live', 'Events that create tasks from policy transactions. 51 events seen: 24 Policy, 22 Quote, 4 Submission. Policy only; Billing and Claims have no equivalent.', { src: 'Policy > Administration > Setup', in: ['Policy'], scope: 'own' })
+    ] },
+    { name: 'Utilities', items: [
+      { label: 'Import', children: [
+        I('Import Quote or Policy', 'utilities', 'live', 'Import a quote or policy through the standard rules.'),
+        I('Import As Is Quote or Policy', 'utilities', 'live', 'Import a quote or policy without re-running rules.'),
+        I('Import All Quote or Policy As Is', 'utilities', 'live', 'Bulk import of every record as is.')
+      ] },
+      I('Booking Error List', 'utilities', 'live', 'Transactions that failed to book.'),
+      I('Activities Error List', 'utilities', 'live', 'Workflow activities that ended in error, with retry.'),
+      I('Policies Booking Error List', 'utilities', 'live', 'Policies that failed to book.'),
+      I('System Help', 'utilities', 'live', 'Built-in system help.'),
+      I('Curated Metadata', 'polsys', 'live', 'Review curated product metadata.', { src: 'Policy Utilities menu (also built in Java)' }),
+      I('Moratorium', 'utilities', 'live', 'Moratoriums that block business by state, county, zip, agent or product code for a date range. List with New Moratorium. The test site shows the tile twice, both open the same list.', { src: 'Seen on the test site Policy Administration page. Two tiles open the same list' })
+    ] },
+    { name: 'System Administration', items: [
+      I('Version & License Details', 'polsys', 'live', 'Build version and licensed modules.'),
+      I('Web Service', 'polsys', 'live', 'Web service endpoints and credentials.'),
+      I('Farm', 'polsys', 'live', 'Nodes in the server farm.'),
+      I('Processes Administration', 'processing', 'live', 'Start, stop and inspect background processes.'),
+      I('System Logging', 'polsys', 'live', 'Change the log level. A single dropdown, unlike Billing Change Log Levels which sets a level per logger.'),
+      I('Interfaces', 'polsys', 'live', 'Interface monitoring.', { src: 'Seen on the local PAS and in the product site data. Not shown on the test site' }),
+      I('Transaction Cycle Time', 'polsys', 'live', 'Transaction cycle time report.', { src: 'Seen on the local PAS and in the product site data. Not shown on the test site' }),
+      I('System Monitoring', 'polsys', 'live', 'System health monitoring.', { src: 'Seen on the local PAS and in the product site data. Not shown on the test site' }),
+      I('Performance Investigation', 'polsys', 'live', 'Performance investigation tools.', { src: 'Seen on the local PAS and in the product site data. Not shown on the test site' })
+    ] }
+  ] },
+  { id: 'billing', icon: 'assured_workload', label: 'Billing', title: 'Billing settings', src: 'Billing portal, System Administration menu (your screenshot)', groups: [
+    { name: 'System Administration', items: [
+    I('Bank Profile Master', 'billing', 'live', 'Maintain bank profiles.'),
+    I('Business Intelligence', 'billing', 'live', 'Business intelligence setup.'),
+    I('Update System Parameters', 'billing', 'live', 'Edit Billing system parameters by category and key. Same screen as Claims, but Billing keeps its own values (Attachment_Size is 20 here).', { in: ['Billing'], scope: 'own' }),
+    I('Update Batch Parameters', 'billing', 'live', 'Edit batch job parameters.'),
+    I('Entity Address Master', 'billing', 'live', 'Maintain entities and addresses used by accounts and agents.'),
+    I('Change Business Date', 'billing', 'live', 'Change the system business date.'),
+    I('Data Extraction', 'billing', 'live', 'Export and import policy or account data as XML between environments.'),
+    I('Scenario Creation', 'billing', 'live', 'Create test scenarios.'),
+    I('Data Segmentation', 'billing', 'live', 'Map users to data segments.'),
+    I('Rule Master', 'billing', 'live', 'Clear the rule agenda from cache for Billing rules. Billing has its own agenda list. Not the same as Policy Rules and Rule Sets.', { in: ['Billing'], scope: 'own' }),
+    I('Rule Analyzer', 'billing', 'live', 'Inspect rule results.'),
+    I('Entity Unlocking', 'billing', 'live', 'Release locked entities.'),
+    I('Change Password', 'billing', 'live', 'Change a user password.'),
+    I('Maintain Accounting Year Month', 'billing', 'live', 'Open and close accounting year-months.'),
+    I('Process Message Retry', 'billing', 'live', 'Resend failed JMS policy-status messages.', { flag: 'EnableJMSYN' }),
+    I('Performance Logger', 'billing', 'live', 'Performance logging controls.'),
+    I('Change Log Levels', 'billing', 'live', 'Set the log level per logger.'),
+    I('Orthogonal Logging', 'billing', 'live', 'Cross-cutting logging for Billing flows. Same form as Claims, but the flow list is Billing own.', { in: ['Billing'], scope: 'own' }),
+    I('Locale Import Export', 'billing', 'live', 'Import and export the Billing translation resource bundle.', { in: ['Billing'], scope: 'own', src: 'Billing language import and export screen' }),
+    I('KeyCloak Configuration', 'billing', 'live', 'Single sign-on client configuration for Billing.', { in: ['Billing'], scope: 'own', src: 'Billing sign-in settings screen' }),
+    I('Agent Analyst Assignment', 'billing', 'live', 'Assign analysts to agents.'),
+    I('Task Creation', 'billing', 'live', 'Create a task by hand. A usage screen, not configuration; the task inbox itself is the shared /utm app.', { src: 'Billing > System Administration', in: ['Billing'] }),
+    ] },
+    { name: 'Security', items: [
+      I('Ldap Search', 'billing', 'live', 'Search the directory for a Billing user. Claims has no equivalent. The test site lists it twice, once directly under Security and once under User Management.', { in: ['Billing'] }),
+      I('Function Master', 'billing', 'live', 'Define functions and screens with program name and privilege level.'),
+      I('Function Mapping', 'billing', 'live', 'Drag functions onto menu items. This is how the Billing menu is assembled.'),
+      { label: 'User Management', children: [
+      I('Create User', 'billing', 'live', 'Create a Billing user. Billing keeps its own user list (a search for "admin" gave 7 users, 3 also in Claims).', { in: ['Billing'], scope: 'own' }),
+      I('Update User', 'billing', 'live', 'Edit a Billing user.', { in: ['Billing'], scope: 'own' }),
+      I('User Import', 'billing', 'live', 'Import Billing users from a file.', { in: ['Billing'], scope: 'own' })
+      ] },
+      I('Role Master', 'billing', 'live', 'Define roles.'),
+      I('Sync User Data', 'billing', 'live', 'Synchronize Billing user data.', { in: ['Billing'], scope: 'own' })
+    ] }
+  ] },
+  { id: 'claims', icon: 'personal_injury', label: 'Claims', title: 'Claims settings', src: 'Claims portal, System Administration menu (your screenshot)', groups: [
+    { name: 'System Administration', items: [
+    I('Update System Parameters', 'claims', 'live', 'Edit Claims system parameters by category and key. Same screen as Billing, but Claims keeps its own values (Attachment_Size is 100 here).', { in: ['Claims'], scope: 'own' }),
+    I('Multiple Policy Configuration', 'claims', 'live', 'Settings for claims that span more than one policy.'),
+    I('Docgen Parameter Configuration', 'claims', 'live', 'Document generation parameters for claims letters. Opens an external docgen service.'),
+    I('Interface File Logs', 'claims', 'live', 'Logs of interface files sent and received.'),
+    I('Rule Master', 'claims', 'live', 'Clear the rule agenda from cache for Claims rules. Claims has its own agenda list. Not the same as Policy Rules and Rule Sets.', { in: ['Claims'], scope: 'own' }),
+    I('Authority Group Master', 'claims', 'live', 'Authority groups and their limits.'),
+    I('Financial Authority Bulk Update', 'claims', 'live', 'Update financial authority for many users at once.'),
+    I('Orthogonal Logging', 'claims', 'live', 'Cross-cutting logging for Claims flows. Same form as Billing, but the flow list is Claims own.', { in: ['Claims'], scope: 'own' }),
+    I('Locale Import Export', 'claims', 'live', 'Import and export the Claims translation resource bundle.', { in: ['Claims'], scope: 'own', src: 'Claims language import and export screen' }),
+    I('KeyCloak Configuration', 'claims', 'live', 'Single sign-on client configuration for Claims.', { in: ['Claims'], scope: 'own', src: 'Claims sign-in settings screen' }),
+    ] },
+    { name: 'Security', items: [
+      { label: 'User Management', children: [
+      I('Create User', 'claims', 'live', 'Create a Claims user. Claims keeps its own user list (a search for "admin" gave 6 users; 2 are not in the suite-wide store).', { in: ['Claims'], scope: 'own' }),
+      I('Update User', 'claims', 'live', 'Edit a Claims user.', { in: ['Claims'], scope: 'own' }),
+      I('User Import', 'claims', 'live', 'Import Claims users from a file.', { in: ['Claims'], scope: 'own' })
+      ] },
+      I('Sync User Data', 'claims', 'live', 'Synchronize Claims user data.', { in: ['Claims'], scope: 'own' })
+    ] }
+  ] },
+  { id: 'copilot', icon: 'robot_2', label: 'Assistant', title: 'Assistant settings', src: NEWTAG + ' Names from the Assistant workspace sidebar screenshot; contents proposed.', flat: [
+    I('Admin', 'copilot', 'new', 'Set up what Assistant can use and who can use it.', { inc: ['Agents', 'Tools', 'AI Models', 'Knowledge Base (coming soon)'], src: NEWTAG }),
+    I('Insights', 'copilot', 'new', 'How Assistant is used: conversations, adoption, cost and answer quality.', { inc: ['Usage by user and portal', 'Conversation volume', 'Model cost'], src: NEWTAG }),
+    I('Settings', 'copilot', 'new', 'Assistant behaviour for the whole tenant.', { inc: ['ASSISTANT_COMMON parameters'], src: NEWTAG })
+  ] },
+  { id: 'email', icon: 'mail', label: 'Email', title: 'Email settings', src: 'the Unified Email Service (/ues) Configuration Management menu. One app for every portal, with a Product dropdown (Policy, Billing, Claim, Distribution, Digital Portal)', groups: [
+    { name: 'Configuration Management', items: [
+      UES('Email Account', 'live', 'Email accounts the service sends from. The list shows a functional name per account, for example Admin Account and Claims Application Account.'),
+      UES('Template', 'live', 'Templates for outbound email. A template can be shared by every portal or specific to one portal.'),
+      UES('Template Placeholder', 'live', 'Placeholders a template can insert into an email.'),
+      UES('System Configuration', 'unk', 'Settings for the Unified Email Service as a whole.'),
+      UES('Export', 'unk', 'Export the email configuration, for example to move it between environments.'),
+      UES('Import', 'unk', 'Import email configuration exported from another environment.'),
+      UES('Rules Manager', 'live', 'Rules that control how outbound email is handled.')
+    ] }
+  ] },
+  { id: 'tasks', icon: 'checklist_rtl', label: 'Tasks', title: 'Task settings', src: 'the Task Management (/utm) Content Management and Configuration Management menus. One app and one config for every portal', groups: [
+    { name: 'Content Management', items: [
+      UTM('Content Management', 'Model Configuration', 'Configure the task models.'),
+      UTM('Content Management', 'Event Mapping', 'Map events to the tasks they create. Policy also has Task Management Events under Setup, which only Policy uses.'),
+      UTM('Content Management', 'Action Configuration', 'Configure the actions available on tasks.'),
+      UTM('Content Management', 'Template Configuration', 'Configure task templates.'),
+      UTM('Content Management', 'Rule Configuration', 'Configure the rules that apply to tasks.'),
+      UTM('Content Management', 'Import', 'Import task content configuration.'),
+      UTM('Content Management', 'Export', 'Export task content configuration.')
+    ] },
+    { name: 'Configuration Management', items: [
+      UTM('Configuration Management', 'Manage Groups', 'Maintain task groups.'),
+      UTM('Configuration Management', 'List of Values', 'Maintain the lists of values used on tasks.'),
+      UTM('Configuration Management', 'Escalation Matrix', 'Define how overdue tasks escalate.'),
+      UTM('Configuration Management', 'Automation Task Monitor', 'Monitor automated tasks.'),
+      UTM('Configuration Management', 'System Configuration', 'Settings for Task Management as a whole.'),
+      UTM('Configuration Management', 'Monitor Out Of Office', 'Monitor users who are out of office.'),
+      UTM('Configuration Management', 'Task Migration', 'Move tasks between environments or owners.'),
+      UTM('Configuration Management', 'Configure Task Screen', 'Configure the layout of the task screen.')
+    ] }
+  ] },
+  { id: 'reports', icon: 'table_chart', label: 'Reports', title: 'Report settings', src: NEWTAG + ' Backed by the report framework (XML configuration delivered by API).', groups: [
+    { name: 'All portals', items: [
+      I('Report Catalog', 'reports', 'new', 'Every report and list grid across Policy, Billing and Claims, and which portal each belongs to.', { in: ['Policy', 'Billing', 'Claims'], scope: 'tagged', src: NEWTAG })
+    ] },
+    { name: 'Policy grids', items: [
+      I('Column Configuration', 'reports', 'new', 'Which columns each Policy grid shows, in what order and at what width. Grids are not reused by other portals.', { key: 'rep:policy:cols', in: ['Policy'], scope: 'own', src: NEWTAG }),
+      I('Column Labels', 'reports', 'new', 'Column headings for Policy grids, including the localized text.', { key: 'rep:policy:labels', in: ['Policy'], scope: 'own', src: NEWTAG })
+    ] },
+    { name: 'Billing grids', items: [
+      I('Column Configuration', 'reports', 'new', 'Which columns each Billing grid shows, in what order and at what width. Grids are not reused by other portals.', { key: 'rep:billing:cols', in: ['Billing'], scope: 'own', src: NEWTAG }),
+      I('Column Labels', 'reports', 'new', 'Column headings for Billing grids, including the localized text.', { key: 'rep:billing:labels', in: ['Billing'], scope: 'own', src: NEWTAG })
+    ] },
+    { name: 'Claims grids', items: [
+      I('Column Configuration', 'reports', 'new', 'Which columns each Claims grid shows, in what order and at what width. Grids are not reused by other portals.', { key: 'rep:claims:cols', in: ['Claims'], scope: 'own', src: NEWTAG }),
+      I('Column Labels', 'reports', 'new', 'Column headings for Claims grids, including the localized text.', { key: 'rep:claims:labels', in: ['Claims'], scope: 'own', src: NEWTAG })
+    ] }
+  ] },
+  { id: 'landing', icon: 'dashboard', label: 'Landing', title: 'Landing page settings', src: 'Page framework configurator (/page-framework/configurator.html), opened today from Policy and Billing', flat: [
+    I('Landing Page', 'sys', 'live', 'Landing page configurator: pages, cards, themes and the BI server settings. One tool for every portal. Cards carry a portal tag and the page has its own filter.', { in: ['Policy', 'Billing', 'Claims'], scope: 'all', inc: ['Technical configuration (includes the BI server name)', 'Pages, Cards, Themes', '21 cards, each tagged to a portal'], src: 'Policy and Billing both open /page-framework/configurator.html and show the same 21 cards and the same technical configuration. Claims has no link. The Pages list was empty in both.' })
+  ] },
+  { id: 'access', icon: 'admin_panel_settings', label: 'Access', title: 'Access settings', src: 'Policy Security Administration, the suite security app (linked only from Policy)', flat: [
+    I('Security Administration', 'secui', 'live', 'Clear the security cache (all users or one user), then the suite security application: users, roles, applications, user directories, resources, audit and login reports, API clients, log level and configuration. It registers every suite application (Policy, Billing, Claims, UTM, SuiteUtil, PageFramework, DocgenService, DataNexus and more), so it applies to the whole system, not to one portal.', { src: 'Linked only from Policy > Administration > System Administration. Billing and Claims have no link. Not checked: whether Billing and Claims users and roles are managed here (they keep their own user links).', in: ['Policy'], scope: 'all' })
+  ] },
+  { id: 'system', icon: 'monitor_heart', label: 'Platform', title: 'Platform settings', src: 'Billing, Claims and Policy links that open the same screen or the same shared app (suite-util, page-framework)', flat: [
+      I('Unified Search Configuration', 'sys', 'live', 'Which entities and attributes global search covers. One global config: 8 entities, 62 attributes, nothing tagged to a portal.', { in: ['Policy', 'Billing', 'Claims'], scope: 'all', src: 'Policy, Billing and Claims all open /suite-util/unifiedsearch/loadconfigscreen. Seen from Billing; Policy and Claims views not opened.' }),
+      I('Environment Audit Wrapper', 'sys', 'live', 'Environment audit across the suite apps (Policy, Billing, Claims, DM, Platform). Labelled "Environment Audit" in Policy.', { in: ['Billing', 'Claims'], scope: 'all', src: 'Billing and Claims open /suite-util/audit/loadauditscreen. Audit rows not seen in the last run; Policy tile not confirmed.' }),
+      I('Suite Parameter Configuration', 'sys', 'live', 'Suite-level parameters in one table (121 rows). Each row carries an application tag, and the page has its own filter. Below it, Anonymization Config: application URLs and selection criteria. Labelled "Suite Parameter Config" in Policy.', { in: ['Policy', 'Billing', 'Claims'], scope: 'all', inc: ['121 parameters, application tag on each row', 'Anonymization Config: Application Config and Selection Criteria'], src: 'Policy, Billing and Claims all open /suite-util/config/loadscreen. Policy and Billing show the same 121 rows and the same two Application Config rows (BILLING, POLICY). Claims opens the same screen; its Application Config tab was not compared.' })
+  ] }
+];
+const ROLES = [
+  { id: 'admin', label: 'Administrator', all: true },
+  { id: 'nobilling', label: 'Administrator, no Billing licence', all: true, minus: ['billing'] },
+  { id: 'pol', label: 'Policy admin', perms: ['setup', 'utilities', 'polsys', 'email', 'tasks', 'utm', 'reports'] },
+  { id: 'bill', label: 'Billing admin', perms: ['billing', 'utm', 'reports'] },
+  { id: 'clm', label: 'Claims admin', perms: ['claims', 'email', 'utm', 'reports'] },
+  { id: 'proc', label: 'Processing tools user', perms: ['processing'] }
+];
+const GRIDS = {
+  'Policies columns': { cols: ['Column', 'Label key', 'Visible', 'Order', 'Width'], rows: [['policyNumber', 'col.policyNumber', 'Yes', '1', '150'], ['insuredName', 'col.insuredName', 'Yes', '2', '200'], ['status', 'col.status', 'Yes', '3', '120'], ['effectiveDate', 'col.effectiveDate', 'Yes', '4', '130'], ['premium', 'col.premium', 'Yes', '6', '120'], ['producer', 'col.producer', 'No', '8', '160'], ['underwriter', 'col.underwriter', 'No', '9', '160']], add: 'Add column', note: 'Defaults for the Policies grid. First 7 of 9 columns shown.' },
+  'Products': { cols: ['Product', 'Code', 'Lines', 'Status'], rows: [['Commercial Auto', 'CA', '1', 'Active'], ['General Liability', 'GL', '1', 'Active'], ['Commercial Property', 'CP', '2', 'Active'], ['Workers Compensation', 'WK', '1', 'Draft']], add: 'Add product' },
+  'Producers': { cols: ['Producer', 'Code', 'State', 'Status'], rows: [['Northwind Agency', 'NW-104', 'OH', 'Active'], ['Harbor Insurance Group', 'HB-220', 'MI', 'Active'], ['Summit Brokers', 'SB-017', 'PA', 'Suspended']], add: 'Add producer' },
+  'Task groups': { cols: ['Task group', 'Members', 'Applies to'], rows: [['FNOL', '6', 'Claims'], ['Underwriting referral', '9', 'Policy'], ['Billing exceptions', '4', 'Billing']], add: 'New group' },
+  'Users': { cols: ['User', 'Role', 'Applications', 'Status'], rows: [['A. Rivera', 'Underwriter', 'Policy, UTM', 'Active'], ['J. Chen', 'Billing analyst', 'Billing', 'Active'], ['M. Okafor', 'CLMADJ', 'Claims, UTM', 'Locked']], add: 'New user' }
+};
+
+/* ---------- state ---------- */
+const PORTAL_NAVS = ['policy', 'billing', 'claims'];
+const DEFAULT_ORDER = ['policy', 'billing', 'claims', 'copilot', 'email', 'tasks', 'reports', 'landing', 'access', 'system'];
+const byId = (id) => NAVS.find((n) => n.id === id);
+const state = { portal: {}, order: DEFAULT_ORDER.slice(), hiddenNavs: new Set(), draft: null, over: [], nav: 'policy', sel: 'Products', open: { 'policy:Setup': true, 'policy:Import': true, 'billing:System Administration': true, 'claims:System Administration': true }, panel: true, q: '', role: 'admin' };
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const role = () => ROLES.find((r) => r.id === state.role);
+function can(it) {
+  const r = role();
+  const ps = [].concat(it.p);
+  if (r.all) return ps.some((x) => !(r.minus || []).includes(x));
+  return ps.some((x) => r.perms.includes(x));
+}
+const visItems = (items) => items.map((it) => it.children ? Object.assign({}, it, { children: it.children.filter(can) }) : it).filter((it) => it.children ? it.children.length : can(it));
+function groupsOf(nav) { return nav.groups ? nav.groups : [{ name: null, items: nav.flat || [] }]; }
+function visGroups(nav) { return groupsOf(nav).map((g) => Object.assign({}, g, { items: visItems(g.items) })).filter((g) => g.items.length); }
+const realNavs = () => NAVS.filter((n) => n.label);
+const navVisible = (n) => !!n.home || visGroups(n).length > 0;
+const matches = (it) => !state.q || it.label.toLowerCase().includes(state.q.toLowerCase());
+function findItem(nav, label) {
+  for (const g of groupsOf(nav)) for (const it of g.items) {
+    if (it.children) { const c = it.children.find((x) => x.key === label); if (c) return { it: c, group: g.name, parent: it.label }; }
+    else if (it.key === label) return { it, group: g.name };
+  }
+  return null;
+}
+
+/* Select the first visible link (keep the current one when keepCurrent and it is still visible) and open its section. */
+function pickFirst(keepCurrent) {
+  const nav = NAVS.find((n) => n.id === state.nav);
+  const gs = visGroups(nav);
+  let first = null, firstKey = null;
+  const flatten = [];
+  gs.forEach((g) => g.items.forEach((it) => (it.children ? it.children : [it]).forEach((x) => flatten.push({ x, g, parent: it.children ? it.label : null }))));
+  const cur = keepCurrent && flatten.find((f) => f.x.key === state.sel);
+  const pick = cur || flatten.find((f) => !f.x.soon);
+  if (!pick) { state.sel = null; return; }
+  state.sel = pick.x.key;
+  if (pick.g.name) state.open[`${nav.id}:${pick.g.name}`] = true;
+  if (pick.parent) state.open[`${nav.id}:${pick.parent}`] = true;
+  if (pick.parent && pick.x.sub) state.open[`${nav.id}:${pick.parent}:${pick.x.sub}`] = true;
+}
+
+/* ---------- render ---------- */
+const railItems = () => [byId('home')].concat(state.order.map(byId).filter((n) => n && navVisible(n) && !state.hiddenNavs.has(n.id)));
+const navBtn = (n) => `<button data-nav="${n.id}" aria-current="${n.id === state.nav}" title="${esc(n.title)}"><span class="pill"><span class="ms">${n.icon}</span></span>${esc(n.label)}</button>`;
+/* Same rule as the real useDynamicSidebarSplit: what fits stays, the rest moves behind a "More" button (min 4 shown). */
+function renderRail() {
+  const rail = $('rail'), horiz = matchMedia('(max-width: 860px)').matches;
+  const btn = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--rail-btn')) || 72;
+  const size = horiz ? 76 : btn, moreSize = horiz ? 64 : 48;
+  const room = (horiz ? rail.clientWidth : rail.clientHeight) - size - 16;
+  const list = railItems();
+  let vis = list, over = [];
+  if (room > 0 && list.length * size > room) {
+    const n = Math.max(horiz ? 3 : 4, Math.floor((room - moreSize) / size));
+    vis = list.slice(0, n); over = list.slice(n);
+  }
+  state.over = over;
+  const overActive = over.some((n) => n.id === state.nav);
+  $('railNav').innerHTML = vis.map(navBtn).join('') + (over.length ? `<button class="more" data-more="1" aria-haspopup="true" aria-label="More" aria-current="${overActive}" title="More"><span class="pill"><span class="ms">more_horiz</span></span></button>` : '');
+  $('railBottom').innerHTML = '<button data-cust="1" title="Customize sidebar"><span class="pill"><span class="ms">tune</span></span>Customize Sidebar</button>';
+  const pop = $('morePop');
+  pop.hidden = true;
+  pop.innerHTML = over.map((n) => `<button data-nav="${n.id}" aria-current="${n.id === state.nav}"><span class="ms">${n.icon}</span>${esc(n.label)}</button>`).join('');
+}
+function showMore(btn) {
+  const pop = $('morePop');
+  if (!pop.hidden) { pop.hidden = true; return; }
+  pop.hidden = false;
+  const r = btn.getBoundingClientRect(), p = pop.getBoundingClientRect();
+  const horiz = matchMedia('(max-width: 860px)').matches;
+  pop.style.left = Math.max(8, Math.min(innerWidth - p.width - 8, horiz ? r.left : r.right + 4)) + 'px';
+  pop.style.top = Math.max(8, Math.min(innerHeight - p.height - 8, horiz ? r.bottom + 4 : r.top + r.height / 2 - p.height / 2)) + 'px';
+}
+function renderDialog() {
+  const d = state.draft;
+  const row = (n, fixed) => {
+    const off = d.hidden.has(n.id);
+    if (fixed) return `<div class="dlg-row fixed"><span class="ms dlg-ic">${n.icon}</span><span class="dlg-l">${esc(n.label)}</span></div>`;
+    return `<div class="dlg-row ${off ? 'off' : ''}" draggable="true" data-row="${n.id}"><button class="dlg-handle" data-grip="${n.id}" aria-label="Reorder ${esc(n.label)}. Use the arrow keys."><span class="ms">drag_indicator</span></button><span class="ms dlg-ic">${n.icon}</span><span class="dlg-l">${esc(n.label)}</span><button class="dlg-eye" data-eye="${n.id}" aria-pressed="${!off}" aria-label="${off ? 'Show' : 'Hide'} ${esc(n.label)}"><span class="ms">${off ? 'visibility_off' : 'visibility'}</span></button></div>`;
+  };
+  $('dlgList').innerHTML = row(byId('home'), true) + d.order.map(byId).filter((n) => n && navVisible(n)).map((n) => row(n, false)).join('');
+}
+function openDialog() { state.draft = { order: state.order.slice(), hidden: new Set(state.hiddenNavs) }; renderDialog(); $('dlg').hidden = false; }
+function closeDialog(save) {
+  if (save && state.draft) { state.order = state.draft.order; state.hiddenNavs = state.draft.hidden; }
+  state.draft = null; $('dlg').hidden = true; renderRail();
+}
+function moveDraft(id, to) {
+  const o = state.draft.order, i = o.indexOf(id);
+  if (i < 0 || to < 0 || to >= o.length) return;
+  o.splice(i, 1); o.splice(to, 0, id);
+}
+const PROV = [
+  ['Policy', 'Portal-specific', 'Your screenshots of the Policy Administration menu plus the product site data (Setup, Utilities, System Administration). Includes Task Management Events, which only Policy has. Processes Administration is under System Administration in both the product site data and the test site. Programs, Mortgagee, Finance Company, Pay Plans, Reinsurers, Workflow, Interfaces, Transaction Cycle Time, System Monitoring and Performance Investigation are in the product site data and the local PAS but not on the test-site Administration page. Moratorium is placed in Utilities (two test-site tiles open the same list). Start New Customer is left out: it opens the new customer entry form, so it is a shortcut, not a setting. Not placed: Producer Transfer and Underwriter Transfer (Bulk Processing menu in the product site data, not on the test site); Setup Import/Export, Multinational Configuration and the report tiles (Booking Audit Report, UES Auto Email Error List, Reinsurance Integration Feed Log, Anonymization Recon Report), which are not admin menu links on the test site.', 'Labels match the screenshots and site data'],
+  ['Billing', 'Portal-specific', 'Your screenshot of the Billing System Administration menu. Billing keeps its own copy of Update System Parameters, Rule Master, Orthogonal Logging, Locale Import Export, KeyCloak Configuration and the user links, with the same names as Claims but its own values.', 'Labels match the screenshot. Batch, Workbench and the other top menus not covered'],
+  ['Claims', 'Portal-specific', 'Your screenshot of the Claims System Administration menu. Claims keeps its own copy of the same links as Billing, with its own values.', 'Labels match the screenshot. Other top menus read, no further admin links found'],
+  ['Assistant', 'Shared', 'Admin, Insights and Settings from the Assistant workspace sidebar screenshot. New in Harbor & Pine: no legacy screen exists.', 'Names from your screenshot. Contents proposed'],
+  ['Email', 'Shared, entries tagged per portal', 'The seven links in the Unified Email Service (/ues) Configuration Management menu, in the same order: Email Account, Template, Template Placeholder, System Configuration, Export, Import, Rules Manager. One app for every portal, with a Product dropdown. This replaces the earlier two links (Email Configuration, Email Templates).', 'Menu names from your screenshot. Email Account, Template, Template Placeholder and Rules Manager seen earlier in the browser; System Configuration, Export and Import not opened'],
+  ['Tasks', 'Shared, one config', 'The Task Management (/utm) Content Management menu (7 links) and Configuration Management menu (8 links), in the order of your screenshots. One app and one config for every portal. The Workbench and Task Management menus are work screens, not configuration, so they are left out.', 'Menu names from your screenshots. No UTM screen was opened, so every link is marked contents not confirmed'],
+  ['Reports', 'Shared, grids per portal', 'New in Harbor & Pine: no legacy screen. Report framework (XML configuration delivered by API). Grid settings are split by portal because grids are not reused across portals.', 'Proposed. Per-portal split is a design decision'],
+  ['Access', 'Suite-wide, linked from Policy', 'Security Administration applies to the whole system: its Applications tab registers every suite application, not just the three portals. Only Policy links to it. Whether it also manages Billing and Claims users and roles was not checked; they keep their own user links (7 and 6 users for "admin", 3 in both).', 'Opened in the browser. Users and Roles tabs not opened'],
+  ['Platform', 'Shared', 'Only tools that are one shared app. Unified Search Configuration, Environment Audit and Suite Parameter Configuration, all one config for every portal. Landing Page has its own area: one suite-wide tool (same cards seen from Policy and Billing). Task configuration has its own Tasks area. The /utm inbox itself is a work screen, and Task Management Events (Policy) and Task Creation (Billing) stay with their portal.', 'Same app proven by URL. Environment Audit rows and the Landing Page Pages list not seen']
+];
+function provenance() {
+  return '<details class="notes" open style="margin-top:var(--s3)"><summary>Where each sidebar area came from <span>mockup note, not part of the page</span></summary><div class="card"><div class="gridwrap"><table><thead><tr><th>Area</th><th>Scope</th><th>Where it comes from</th><th>How sure we are</th></tr></thead><tbody>' + PROV.map((r) => '<tr>' + r.map((c, i) => '<td' + (i === 2 ? ' style="min-width:320px;white-space:normal;padding-block:8px"' : i === 3 ? ' style="min-width:200px;white-space:normal"' : '') + '>' + esc(c) + '</td>').join('') + '</tr>').join('') + '</tbody></table></div></div></details>';
+}
+function renderHome() {
+  const cards = railItems().filter((n) => !n.home).map((n) => {
+    const gs = visGroups(n), all = [];
+    gs.forEach((g) => g.items.forEach((it) => (it.children ? it.children : [it]).forEach((x) => all.push(x.label))));
+    const scope = PORTAL_NAVS.includes(n.id) ? 'Specific to this portal' : 'Shared across portals';
+    return `<button class="ov-card" data-nav="${n.id}"><span class="ov-top"><span class="ms">${n.icon}</span><strong>${esc(n.title)}</strong></span><span class="ov-list">${esc(all.slice(0, 4).join(', '))}${all.length > 4 ? ' and ' + (all.length - 4) + ' more' : ''}</span><span class="ov-meta"><span class="chip plain">${scope}</span>${all.length} ${all.length === 1 ? 'setting' : 'settings'}</span></button>`;
+  }).join('');
+  $('main').innerHTML = `<div class="crumbs">Harbor &amp; Pine Admin</div><div class="titlebar"><h1>Admin home</h1></div><p class="lead">Everything you can configure, based on your role. The first three areas belong to one portal each. The rest are shared by all of them.</p><div class="ov">${cards}</div>${provenance()}`;
+}
+function ownerOf(it) { return it.scope === 'own' && it.in && it.in.length === 1 ? it.in[0] : null; }
+function rowHtml(it, cls, nav) {
+  const cur = state.sel === it.key && state.nav === nav.id;
+  if (it.soon) return `<button class="row ${cls} lock" disabled><span class="lbl">${esc(it.label)}<small>Coming soon</small></span></button>`;
+  const ic = it.icon ? `<span class="ms row-ic">${it.icon}</span>` : '';
+  return `<button class="row ${cls}" data-sel="${esc(it.key)}" aria-current="${cur}">${ic}<span class="lbl">${esc(it.label)}</span></button>`;
+}
+function renderPanel() {
+  const nav = NAVS.find((n) => n.id === state.nav);
+  const p = $('panel');
+  p.hidden = !state.panel || !!nav.home;
+  if (p.hidden) return;
+  let body = '';
+  const groups = visGroups(nav);
+  let any = false;
+  groups.forEach((g) => {
+    const items = g.items.map((it) => it.children ? Object.assign({}, it, { children: it.children.filter(matches) }) : it).filter((it) => it.children ? it.children.length : matches(it));
+    if (!items.length) return;
+    any = true;
+    const flat = g.name === null;
+    const key = `${nav.id}:${g.name}`;
+    const open = flat || state.q || state.open[key];
+    const count = g.items.reduce((a, it) => a + (it.children ? it.children.length : 1), 0);
+    if (!flat) body += `<button class="sec-btn" data-sec="${esc(key)}" aria-expanded="${!!open}"><span>${esc(g.name)}</span><span class="cnt">${count}</span><span class="ms">keyboard_arrow_down</span></button>`;
+    if (open) items.forEach((it) => {
+      if (it.children) {
+        const k2 = `${nav.id}:${it.label}`;
+        const o2 = state.q || state.open[k2];
+        body += `<button class="row parent${flat ? ' flat' : ''}" data-sec="${esc(k2)}" aria-expanded="${!!o2}"><span class="lbl">${esc(it.label)}</span><span class="cnt">${it.children.length}</span><span class="ms">chevron_right</span></button>`;
+        if (o2) { let ps = null; it.children.forEach((c) => { if (c.sub && c.sub !== ps) { const k3 = k2 + ':' + c.sub; const o3 = state.q || state.open[k3]; body += `<button class="row parent nested${flat ? ' f' : ''}" data-sec="${esc(k3)}" aria-expanded="${!!o3}"><span class="lbl">${esc(c.sub)}</span><span class="ms">chevron_right</span></button>`; } ps = c.sub || null; if (!c.sub || state.q || state.open[k2 + ':' + c.sub]) body += rowHtml(c, (c.sub ? 'nested sub' : 'nested') + (flat ? ' f' : ''), nav); }); }
+      } else body += rowHtml(it, flat ? 'flat' : '', nav);
+    });
+  });
+  if (!any) body = '<p class="empty">No settings match your filter, or your role cannot see them.</p>';
+  p.innerHTML = `<div class="panel-head"><h2>${esc(nav.title)}</h2><button class="icon-btn" data-panel="hide" title="Collapse menu" aria-label="Collapse menu"><span class="ms">left_panel_close</span></button></div>
+  <label class="panel-filter"><span class="ms">search</span><input id="filter" type="search" placeholder="Filter ${esc(nav.label.toLowerCase())} settings" value="${esc(state.q)}" aria-label="Filter settings"></label>
+  <div class="menu">${body}</div>`;
+  const f = $('filter');
+  if (f && state.refocus) { f.focus(); f.setSelectionRange(f.value.length, f.value.length); state.refocus = false; }
+}
+function renderMain() {
+  const nav = NAVS.find((n) => n.id === state.nav);
+  const found = findItem(nav, state.sel);
+  if (nav.home) { renderHome(); return; }
+  let html = state.panel ? '' : `<button class="btn reopen" data-panel="show"><span class="ms" style="font-size:18px;vertical-align:-4px">left_panel_open</span> Menu</button>`;
+  if (!found) {
+    html += `<div class="crumbs">Harbor &amp; Pine Admin <span class="ms">chevron_right</span> ${esc(nav.title)}</div><div class="titlebar"><h1>${esc(nav.title)}</h1></div><p class="lead">Choose a setting from the menu. This area collects ${esc(nav.src.toLowerCase())}.</p>`;
+    $('main').innerHTML = html; return;
+  }
+  const it = found.it;
+  const crumbs = ['Harbor &amp; Pine Admin', esc(nav.title)].concat(found.group ? [esc(found.group)] : []).concat(found.parent ? [esc(found.parent)] : []).concat(found.it.sub ? [esc(found.it.sub)] : []).concat([esc(it.label)]);
+  const opts = it.scope === 'tagged' ? ['All', 'Policy', 'Billing', 'Claims'] : it.scope === 'own' && it.in && it.in.length > 1 ? it.in : null;
+  const pick = opts ? (state.portal[it.key] && opts.includes(state.portal[it.key]) ? state.portal[it.key] : opts[0]) : null;
+  const bar = opts ? `<div class="portalbar" role="group" aria-label="Portal"><span class="pl">Portal</span>${opts.map((o) => `<button class="pchip" data-portal="${esc(o)}" aria-pressed="${o === pick}">${esc(o)}</button>`).join('')}</div>` : '';
+  html += `<div class="crumbs">${crumbs.join(' <span class="ms">chevron_right</span> ')}</div>
+  <div class="titlebar"><h1>${esc(it.label)}</h1>${ownerOf(it) ? `<span class="chip owner">${esc(ownerOf(it))} copy</span>` : it.scope === 'all' ? '<span class="chip owner">One config for all portals</span>' : it.scope === 'tagged' ? '<span class="chip owner">Entries tagged per portal</span>' : ''}</div>${bar}
+  <section class="soon" aria-label="Coming soon"><span class="ms soon-ic">${it.icon || nav.icon}</span><h2 class="soon-t">${esc(it.label)}</h2><p class="soon-d">${esc(it.desc)}${opts ? ' Showing ' + esc(pick === 'All' ? 'entries for all portals' : pick) + '.' : ''} Coming soon.</p></section>`;
+  const g = GRIDS[it.grid];
+  let notes = `<div class="facts"><div class="card fact"><h3>Status today</h3><p><span class="chip ${it.st}">${ST[it.st]}</span>${it.flag ? ' <span class="chip plain">Flag: ' + esc(it.flag) + '</span>' : ''}</p></div><div class="card fact"><h3>Visible when</h3><p>${esc([].concat(it.p).map((x) => RULE[x] || '').join(' Or: '))}${it.flag ? ' Also needs ' + esc(it.flag) + '.' : ''}</p></div><div class="card fact"><h3>Appears in</h3><p>${esc(it.in && it.in.length ? it.in.join(', ') : PORTAL_NAVS.includes(nav.id) ? nav.label + ' only' : 'Not tied to one portal')}</p></div>${it.scope ? '<div class="card fact"><h3>Config scope</h3><p>' + esc(SCOPE[it.scope]) + '</p></div>' : ''}<div class="card fact"><h3>Link name</h3><p>${it.st === 'new' ? 'Proposed name. No portal has this link yet.' : it.st === 'unk' ? 'Name taken from the portal menu. Contents not confirmed.' : 'Same label as the portal.'}</p></div><div class="card fact"><h3>Where it lives today</h3><p>${esc(it.src || nav.src)}</p></div></div>`;
+  if (it.inc) notes += `<div class="card fact" style="margin-bottom:var(--s2)"><h3>Includes</h3><p>${it.inc.map(esc).join(' \u00b7 ')}</p></div>`;
+  if (g) notes += `<div class="card" style="margin-bottom:var(--s2)"><div class="gridbar"><strong>Sample of the screen to build: ${esc(it.grid)}</strong></div><div class="gridwrap"><table><thead><tr>${g.cols.map((c) => '<th>' + esc(c) + '</th>').join('')}</tr></thead><tbody>${g.rows.map((r) => '<tr>' + r.map((c) => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('')}</tbody></table></div></div>`;
+  notes += `<div class="legend"><span class="chip live">Screen exists today</span><span class="chip sql">No screen today (SQL, XML or spreadsheet)</span><span class="chip new">Proposed screen</span><span class="chip unk">Menu exists, contents not confirmed</span></div>`;
+  html += `<details class="notes"><summary>Review notes <span>mockup only, not part of the page</span></summary>${notes}</details>`;
+  $('main').innerHTML = html;
+}
+function render() { renderRail(); renderPanel(); renderMain(); }
+
+/* ---------- events ---------- */
+document.addEventListener('click', (e) => {
+  const t = e.target.closest('button');
+  const sw = $('swMenu');
+  if (!e.target.closest('#morePop') && !(t && t.dataset.more)) $('morePop').hidden = true;
+  if (t && t.dataset.more) { showMore(t); return; }
+  if (t && t.dataset.cust) { openDialog(); return; }
+  if (t && t.dataset.custdone) { closeDialog(true); return; }
+  if (t && t.dataset.custcancel) { closeDialog(false); return; }
+  if (t && t.dataset.eye) { const s = state.draft.hidden; if (s.has(t.dataset.eye)) s.delete(t.dataset.eye); else s.add(t.dataset.eye); renderDialog(); return; }
+  if (e.target === $('dlg')) { closeDialog(false); return; }
+  if (!e.target.closest('.switcher')) { sw.hidden = true; $('swBtn').setAttribute('aria-expanded', 'false'); }
+  if (!t) return;
+  if (t.id === 'swBtn') { sw.hidden = !sw.hidden; t.setAttribute('aria-expanded', String(!sw.hidden)); return; }
+  if (t.id === 'themeBtn') { const d = document.documentElement; const cur = d.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); d.dataset.theme = cur === 'dark' ? 'light' : 'dark'; return; }
+  if (t.id === 'railBtn') { const off = $('app').classList.toggle('rail-off'); const m = t.querySelector('.ms'); m.removeAttribute('data-i'); m.textContent = off ? 'left_panel_open' : 'left_panel_close'; return; }
+  if (t.id === 'densityBtn') { const d = document.documentElement; d.dataset.density = d.dataset.density === 'compact' ? 'comfortable' : 'compact'; render(); return; }
+  if (t.dataset.nav) {
+    state.nav = t.dataset.nav; state.q = ''; state.panel = true; pickFirst(); render(); return;
+  }
+  if (t.dataset.sec) { state.open[t.dataset.sec] = !state.open[t.dataset.sec]; renderPanel(); return; }
+  if (t.dataset.portal) { state.portal[state.sel] = t.dataset.portal; renderMain(); return; }
+  if (t.dataset.sel) { state.sel = t.dataset.sel; renderPanel(); renderMain(); return; }
+  if (t.dataset.panel) { state.panel = t.dataset.panel === 'show'; renderPanel(); renderMain(); }
+});
+let dragId = null;
+document.addEventListener('dragstart', (e) => { const r = e.target.closest && e.target.closest('[data-row]'); if (!r) return; dragId = r.dataset.row; r.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', dragId); } catch (x) { /* ignore */ } });
+document.addEventListener('dragover', (e) => {
+  const r = e.target.closest && e.target.closest('[data-row]');
+  if (!r || !dragId) return;
+  e.preventDefault();
+  const dragged = document.querySelector('[data-row="' + dragId + '"]');
+  if (!dragged || r === dragged) return;
+  const b = r.getBoundingClientRect();
+  if (e.clientY > b.top + b.height / 2) r.after(dragged); else r.before(dragged);
+});
+document.addEventListener('dragend', () => {
+  if (dragId && state.draft) state.draft.order = Array.from(document.querySelectorAll('#dlgList [data-row]')).map((n) => n.dataset.row);
+  dragId = null; if (state.draft) renderDialog();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') { if (state.draft) closeDialog(false); $('morePop').hidden = true; return; }
+  const g = e.target.dataset && e.target.dataset.grip;
+  if (g && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) {
+    e.preventDefault();
+    moveDraft(g, state.draft.order.indexOf(g) + (e.key === 'ArrowUp' ? -1 : 1));
+    renderDialog();
+    const el = document.querySelector('[data-grip="' + g + '"]'); if (el) el.focus();
+  }
+});
+addEventListener('resize', () => renderRail());
+document.addEventListener('input', (e) => { if (e.target.id === 'filter') { state.q = e.target.value; state.refocus = true; renderPanel(); } });
+$('roleSel').innerHTML = ROLES.map((r) => `<option value="${r.id}">${esc(r.label)}</option>`).join('');
+$('roleSel').addEventListener('change', (e) => {
+  state.role = e.target.value;
+  const nav = NAVS.find((n) => n.id === state.nav);
+  if (!navVisible(nav)) state.nav = realNavs().find(navVisible).id;
+  pickFirst(true);
+  render();
+});
+render();
+</script>
+
+<script>(function(){function s(){parent.postMessage({demoHeight:document.documentElement.scrollHeight,demo:location.pathname},'*')}new ResizeObserver(s).observe(document.body);addEventListener('load',s);s()})();</script></body></html>

@@ -1,0 +1,7 @@
+node_modules
+dist
+*.log
+.DS_Store
+apps/site/public/edge
+packages/edge/generated
+apps/site/dist-preview
