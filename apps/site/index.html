@@ -6,6 +6,14 @@
     <meta name="description" content="Ben Viwatmanitsakul: design engineer and frontend architect. Design systems, AI interfaces, and the print work they grew from." />
     <title>Ben Viwatmanitsakul</title>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script>
+      // Set the remembered mode before the first paint, so the page never flashes the other one.
+      (function () {
+        var m; try { m = localStorage.getItem('edge.color-mode'); } catch (e) {}
+        if (m === 'system') m = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-edge-mode', m === 'light' ? 'light' : 'dark');
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

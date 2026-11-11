@@ -146,6 +146,75 @@ export const typography = {
   readingLeading: 1.65,
 } as const;
 
+/**
+ * Text roles: every piece of text on a screen is one of these. The theme turns
+ * each role into a Typography variant (`<Typography variant="prose">`), so a
+ * screen picks a role and never sets font, size or leading itself.
+ * Sizes are rem; leading is unitless. `size` may vary by breakpoint.
+ */
+export type TextRole =
+  | 'poster' | 'posterItalic' | 'posterSection' | 'posterSectionItalic' | 'indexTitle' | 'figure'
+  | 'lead' | 'prose' | 'eyebrow' | 'kicker' | 'label' | 'data' | 'mono' | 'caption' | 'brand' | 'brandItalic';
+
+export interface TextRoleSpec {
+  family: keyof Pick<typeof typography, 'display' | 'poster' | 'body' | 'mono'>;
+  size: string | { xs: string; md: string };
+  leading: number;
+  weight?: number;
+  /** Width axis of the variable grotesque, in percent. */
+  stretch?: number;
+  tracking?: string;
+  italic?: boolean;
+  caps?: boolean;
+  /** Tabular, lining figures, for numbers compared in columns. */
+  tabular?: boolean;
+  /** Default text color: the main text, the muted text or the accent. */
+  tone?: 'text' | 'muted' | 'accent';
+  description: string;
+}
+
+export const textRoles: Record<TextRole, TextRoleSpec> = {
+  poster: { family: 'poster', size: 'clamp(2.8rem, 1.2rem + 6vw, 6.4rem)', leading: 0.88, weight: 850, stretch: 72, caps: true, description: 'The bold first line of a page title.' },
+  posterItalic: { family: 'display', size: 'clamp(2rem, 1rem + 4vw, 4.4rem)', leading: 1.05, weight: 400, italic: true, tone: 'accent', description: 'The Garamond italic second line of a page title.' },
+  posterSection: { family: 'poster', size: 'clamp(2rem, 1.2rem + 3vw, 3.4rem)', leading: 0.88, weight: 850, stretch: 72, caps: true, description: 'A title one step down from the page title.' },
+  posterSectionItalic: { family: 'display', size: 'clamp(1.5rem, 1rem + 2vw, 2.4rem)', leading: 1.05, weight: 400, italic: true, tone: 'accent', description: 'Italic counterpart of posterSection.' },
+  indexTitle: { family: 'poster', size: { xs: '1.5rem', md: '1.9rem' }, leading: 1, weight: 750, stretch: 80, caps: true, description: 'Titles in a contents list.' },
+  figure: { family: 'poster', size: { xs: '2.2rem', md: '3rem' }, leading: 0.9, weight: 850, stretch: 72, tabular: true, tone: 'accent', description: 'A headline number in a row of results.' },
+  lead: { family: 'display', size: { xs: '1.2rem', md: '1.32rem' }, leading: 1.65, tone: 'text', description: 'Opening and featured paragraphs.' },
+  prose: { family: 'display', size: '1.15rem', leading: 1.55, description: 'Reading text: explanations under a label, essays, captions with substance.' },
+  eyebrow: { family: 'body', size: '0.7rem', leading: 1.4, weight: 600, tracking: '0.24em', caps: true, tone: 'muted', description: 'A small letterspaced label above a title or a value.' },
+  kicker: { family: 'body', size: '0.62rem', leading: 1.4, weight: 600, tracking: '0.42em', caps: true, description: 'Widely spaced diagram labels and running heads.' },
+  label: { family: 'body', size: '1rem', leading: 1.5, weight: 650, description: 'The bold head of a point, a row or a card.' },
+  data: { family: 'body', size: '1rem', leading: 1.5, weight: 600, tabular: true, tone: 'accent', description: 'Numbers that line up: step numbers, counts.' },
+  mono: { family: 'mono', size: '0.85rem', leading: 1.6, description: 'Code, file names and token names.' },
+  caption: { family: 'body', size: '0.85rem', leading: 1.5, tone: 'muted', description: 'Notes under figures and small print.' },
+  brand: { family: 'poster', size: '1.35rem', leading: 1, weight: 850, stretch: 72, caps: true, tracking: '-0.01em', description: 'The wordmark: bold first name.' },
+  brandItalic: { family: 'display', size: '1.3rem', leading: 1, italic: true, tone: 'accent', description: 'The wordmark: italic surname.' },
+};
+
+/**
+ * Layout presets: the column structures screens repeat. Each value is a
+ * responsive grid-template-columns; the Columns component takes the name.
+ */
+export const layout = {
+  columns: {
+    halves: { xs: '1fr', md: '1fr 1fr' },
+    halvesEarly: { xs: '1fr', sm: '1fr 1fr' },
+    thirds: { xs: '1fr', md: 'repeat(3, 1fr)' },
+    quarters: { xs: '1fr 1fr', md: 'repeat(4, 1fr)' },
+    /** A label column beside its content. */
+    aside: { xs: '1fr', md: '12rem 1fr' },
+    asideWide: { xs: '1fr', md: '14rem 1fr' },
+    /** Number, head and body: numbered decisions and gates. */
+    numbered: { xs: '2.5rem 1fr', md: '3rem 1fr 1.3fr' },
+    /** A narrow note beside a wide figure. */
+    narrowWide: { xs: '1fr', md: '1fr 2fr' },
+  },
+  /** Vertical space between page sections, in theme spacing units. */
+  sectionGap: { xs: 6, md: 8 },
+} as const;
+export type ColumnPreset = keyof typeof layout.columns;
+
 export const space = [0, 4, 8, 12, 16, 24, 32, 48, 64] as const;
 // Square corners throughout, like cut leather and trimmed paper.
 export const radius = { sm: 0, md: 0, lg: 0 } as const;

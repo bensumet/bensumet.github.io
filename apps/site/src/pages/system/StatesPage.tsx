@@ -1,10 +1,9 @@
-import { useMemo } from 'react';
 import {
   Box, Button, Checkbox, Chip, CircularProgress, FormControlLabel, Skeleton, Stack, Switch, TextField, Typography,
 } from '@mui/material';
-import { alpha, ThemeProvider, useTheme } from '@mui/material/styles';
-import { createEdgeTheme, Lead, typography, useEdgeSettings, type Mode } from '@bensumet/edge';
-import { Eyebrow, Opener } from '../../components/Layout';
+import { useTheme } from '@mui/material/styles';
+import { Columns, Lead, ModeScope, Section, type Mode } from '@bensumet/edge';
+import { Opener } from '../../components/Layout';
 
 // Every core component in every state, in both modes side by side. Hover and
 // pressed can't be held still in a browser, so they're drawn with the theme's
@@ -20,9 +19,11 @@ function State({ name, children }: { name: string; children: React.ReactNode }) 
 }
 
 function Buttons() {
-  const t = useTheme();
-  const hover = { contained: { bgcolor: 'primary.dark' }, outlined: { bgcolor: alpha(t.palette.primary.main, t.palette.action.hoverOpacity) } };
-  const pressed = { contained: { bgcolor: 'primary.dark', boxShadow: `inset 0 0 0 100vmax ${alpha(t.palette.common.black, 0.12)}` }, outlined: { bgcolor: alpha(t.palette.primary.main, t.palette.action.selectedOpacity + 0.08) } };
+  // The theme's own hover and pressed values, from its CSS variables.
+  const { vars } = useTheme();
+  const tint = (opacity: string | number) => `rgba(${vars.palette.primary.mainChannel} / ${opacity})`;
+  const hover = { contained: { bgcolor: 'primary.dark' }, outlined: { bgcolor: tint(vars.palette.action.hoverOpacity) } };
+  const pressed = { contained: { bgcolor: 'primary.dark', filter: 'brightness(0.9)' }, outlined: { bgcolor: tint(`calc(${vars.palette.action.selectedOpacity} + 0.08)`) } };
   const row = (v: 'contained' | 'outlined', label: string) => (
     <>
       <State name="Default"><Button variant={v} tabIndex={-1}>{label}</Button></State>
@@ -34,10 +35,10 @@ function Buttons() {
     </>
   );
   return (
-    <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, columnGap: 3 }}>
+    <Columns preset="halvesEarly" gap={{ xs: 0, sm: 3 }}>
       <Box>{row('contained', 'Save changes')}</Box>
       <Box>{row('outlined', 'Cancel')}</Box>
-    </Box>
+    </Columns>
   );
 }
 
@@ -91,8 +92,8 @@ function DataStates() {
   return (
     <>
       <State name="Loading">{frame(<Stack spacing={1} role="status" aria-label="Loading services"><Skeleton height={18} /><Skeleton height={18} width="80%" /><Skeleton height={18} width="60%" /></Stack>)}</State>
-      <State name="Empty">{frame(<><Typography sx={{ fontWeight: 600 }}>No services yet</Typography><Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Deploy one to see its status here.</Typography><Button size="small" variant="outlined" tabIndex={-1}>Deploy a service</Button></>)}</State>
-      <State name="Error">{frame(<><Typography sx={{ fontWeight: 600, color: 'error.main' }}>Couldn&rsquo;t load your services.</Typography><Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Your data is safe. Check your connection and try again.</Typography><Button size="small" variant="outlined" tabIndex={-1}>Try again</Button></>)}</State>
+      <State name="Empty">{frame(<><Typography variant="label">No services yet</Typography><Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Deploy one to see its status here.</Typography><Button size="small" variant="outlined" tabIndex={-1}>Deploy a service</Button></>)}</State>
+      <State name="Error">{frame(<><Typography variant="label" color="error.main">Couldn&rsquo;t load your services.</Typography><Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>Your data is safe. Check your connection and try again.</Typography><Button size="small" variant="outlined" tabIndex={-1}>Try again</Button></>)}</State>
       <State name="Partial">{frame(<><Typography variant="body2">8 services shown.</Typography><Typography variant="body2" color="text.secondary">Two regions didn&rsquo;t answer; their services are missing. <Box component="span" sx={{ color: 'primary.main', fontWeight: 600 }}>Retry those regions</Box></Typography></>)}</State>
     </>
   );
@@ -106,20 +107,17 @@ const galleries = [
   { id: 'data', name: 'Data regions', note: 'What a list or table shows besides its rows.', C: DataStates },
 ];
 
-function Column({ mode, edge, children }: { mode: Mode; edge: Parameters<typeof createEdgeTheme>[1]; children: React.ReactNode }) {
-  const theme = useMemo(() => createEdgeTheme(mode, edge), [mode, edge]);
+/** One mode's column. The attribute switches the CSS variables, so the components inside are the real ones. */
+function Column({ mode, children }: { mode: Mode; children: React.ReactNode }) {
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ bgcolor: 'background.default', color: 'text.primary', p: { xs: 1.5, md: 2.5 }, border: 1, borderColor: 'divider', minWidth: 0 }}>
-        <Eyebrow>{mode === 'ink' ? 'Ink · dark' : 'Paper · light'}</Eyebrow>
-        <Box sx={{ mt: 1 }}>{children}</Box>
-      </Box>
-    </ThemeProvider>
+    <ModeScope mode={mode} sx={{ p: { xs: 1.5, md: 2.5 }, border: 1, borderColor: 'divider' }}>
+      <Typography variant="eyebrow">{mode === 'ink' ? 'Ink · dark' : 'Paper · light'}</Typography>
+      <Box sx={{ mt: 1 }}>{children}</Box>
+    </ModeScope>
   );
 }
 
 export default function StatesPage() {
-  const { edge } = useEdgeSettings();
   return (
     <>
       <Opener eyebrow="States" bold="Every state," italic="in both modes.">
@@ -130,14 +128,12 @@ export default function StatesPage() {
         </Lead>
       </Opener>
       {galleries.map(({ id, name, note, C }) => (
-        <Box component="section" key={id} aria-labelledby={`st-${id}`} sx={{ mb: 7 }}>
-          <Typography id={`st-${id}`} variant="h3" component="h2">{name}</Typography>
-          <Typography color="text.secondary" sx={{ mt: 0.5, mb: 2.5, maxWidth: typography.measure }}>{note}</Typography>
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: '1fr 1fr' }, gap: 2 }}>
-            <Column mode="paper" edge={edge}><C /></Column>
-            <Column mode="ink" edge={edge}><C /></Column>
-          </Box>
-        </Box>
+        <Section key={id} id={`st-${id}`} title={name} intro={note}>
+          <Columns gap={2}>
+            <Column mode="paper"><C /></Column>
+            <Column mode="ink"><C /></Column>
+          </Columns>
+        </Section>
       ))}
     </>
   );

@@ -5,6 +5,7 @@ export * from './tokens/contrast';
 export * from './theme/createEdgeTheme';
 export * from './theme/EdgeThemeProvider';
 export * from './components/EdgeCard';
+export * from './components/layout/Layout';
 export * from './components/type/Display';
 export * from './components/type/Lead';
 export * from './components/type/ProcessRail';
