@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Box, Link, Stack, Typography } from '@mui/material';
-import { EdgeCard, Lead, Tag, typography } from '@bensumet/edge';
+import { CodeBlock, Columns, EdgeCard, Lead, Measure, RuleItem, RuleList, Section, Tag } from '@bensumet/edge';
 import { Opener } from '../../components/Layout';
 import { href } from '../../router';
 
@@ -63,92 +63,81 @@ export default function AgentsPage() {
         </Lead>
       </Opener>
 
-      <Box component="section" aria-labelledby="published" sx={{ mb: 7 }}>
-        <Typography id="published" variant="h3" component="h2" sx={{ mb: 2 }}>What Edge publishes</Typography>
-        <Box component="ul" sx={{ listStyle: 'none', m: 0, p: 0, borderTop: 1, borderColor: 'text.primary' }}>
+      <Section id="published" title="What Edge publishes">
+        <RuleList>
           {files.map((f) => (
-            <Box component="li" key={f.file} sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '14rem 1fr' }, gap: 1, py: 2, borderBottom: 1, borderColor: 'divider' }}>
-              <Link href={'href' in f ? f.href : base + f.file} sx={{ fontFamily: typography.mono, fontSize: '0.95rem' }}>{f.file}</Link>
+            <RuleItem key={f.file} preset="asideWide" space={2}>
+              <Link variant="mono" href={'href' in f ? f.href : base + f.file}>{f.file}</Link>
               <Typography color="text.secondary">{f.what}</Typography>
-            </Box>
+            </RuleItem>
           ))}
-        </Box>
-      </Box>
+        </RuleList>
+      </Section>
 
-      <Box component="section" aria-labelledby="rules" sx={{ mb: 7 }}>
-        <Typography id="rules" variant="h3" component="h2" sx={{ mb: 1 }}>The rules</Typography>
-        <Typography color="text.secondary" sx={{ mb: 3, maxWidth: typography.measure }}>
-          One short file per component or family: when to use it, when not to, its props, and its accessibility requirements. A test fails the build if
-          a component ships without one.
-        </Typography>
+      <Section id="rules" title="The rules" intro={<>
+        One short file per component or family: when to use it, when not to, its props, and its accessibility requirements. A test fails the build if
+        a component ships without one.
+      </>}>
         {rules ? (
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 2 }}>
+          <Columns gap={2}>
             {rules.map((r) => (
               <EdgeCard key={r.url} variant="outlined" sx={{ p: 2.5 }}>
                 <Stack direction="row" spacing={1.5} alignItems="baseline" sx={{ mb: 1 }}>
-                  <Link href={base + r.url} sx={{ fontWeight: 700, fontSize: '1.05rem' }}>{r.name}</Link>
-                  <Tag sx={{ fontSize: '0.65rem' }}>{r.kind}</Tag>
+                  <Link variant="label" href={base + r.url}>{r.name}</Link>
+                  <Tag>{r.kind}</Tag>
                 </Stack>
                 <Typography variant="body2" color="text.secondary">{r.summary}</Typography>
               </EdgeCard>
             ))}
-          </Box>
+          </Columns>
         ) : (
           <Typography color="text.secondary" role="status">Loading the rules…</Typography>
         )}
-      </Box>
+      </Section>
 
-      <Box component="section" aria-labelledby="mcp" sx={{ mb: 7 }}>
-        <Typography id="mcp" variant="h3" component="h2" sx={{ mb: 1 }}>Ask Edge directly: the MCP server</Typography>
-        <Typography color="text.secondary" sx={{ mb: 3, maxWidth: typography.measure }}>
-          Files are good for reading; a server is better for asking. Edge&rsquo;s MCP server gives an AI assistant three tools and keeps its
-          context small: it asks for one component&rsquo;s rules or one mode&rsquo;s tokens instead of loading everything. It reads the same
-          sources as the code and the tests, so it can&rsquo;t drift.
-        </Typography>
-        <Box component="ul" sx={{ listStyle: 'none', m: 0, p: 0, mb: 4, borderTop: 1, borderColor: 'text.primary' }}>
+      <Section id="mcp" title="Ask Edge directly: the MCP server" intro={<>
+        Files are good for reading; a server is better for asking. Edge&rsquo;s MCP server gives an AI assistant three tools and keeps its
+        context small: it asks for one component&rsquo;s rules or one mode&rsquo;s tokens instead of loading everything. It reads the same
+        sources as the code and the tests, so it can&rsquo;t drift.
+      </>}>
+        <RuleList sx={{ mb: 4 }}>
           {mcpTools.map((t) => (
-            <Box component="li" key={t.name} sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '14rem 1fr' }, gap: 1, py: 2, borderBottom: 1, borderColor: 'divider' }}>
-              <Typography sx={{ fontFamily: typography.mono, fontSize: '0.95rem' }}>{t.name}</Typography>
+            <RuleItem key={t.name} preset="asideWide" space={2}>
+              <Typography variant="mono">{t.name}</Typography>
               <Typography color="text.secondary">{t.what}</Typography>
-            </Box>
+            </RuleItem>
           ))}
-        </Box>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
-          <Box sx={{ minWidth: 0 }}>
+        </RuleList>
+        <Columns gap={4}>
+          <Box>
             <Typography variant="eyebrow">Connect it</Typography>
-            <Typography sx={{ mt: 1, mb: 1.5, maxWidth: typography.measure }}>
+            <Measure as={Typography} sx={{ mt: 1, mb: 1.5 }}>
               The repo&rsquo;s <code>.mcp.json</code> registers it for Claude Code when you open the repo. Anywhere else, one command:
-            </Typography>
-            <Box component="pre" tabIndex={0} role="region" aria-label="Command to connect the server" sx={{ m: 0, p: 2, bgcolor: 'edge.raised', border: 1, borderColor: 'divider', overflowX: 'auto', fontSize: '0.8rem', lineHeight: 1.6 }}>
-              <code>{connect}</code>
-            </Box>
+            </Measure>
+            <CodeBlock label="Command to connect the server">{connect}</CodeBlock>
           </Box>
-          <Box sx={{ minWidth: 0 }}>
+          <Box>
             <Typography variant="eyebrow">A real exchange</Typography>
-            <Typography sx={{ mt: 1, mb: 1.5, maxWidth: typography.measure }}>
+            <Measure as={Typography} sx={{ mt: 1, mb: 1.5 }}>
               Before using a gray it picked for helper text, a client asks the server. The answer is unedited, apart from shortening.
-            </Typography>
-            <Box component="pre" tabIndex={0} role="region" aria-label="Example exchange with the server" sx={{ m: 0, p: 2, bgcolor: 'edge.raised', border: 1, borderColor: 'divider', overflowX: 'auto', fontSize: '0.8rem', lineHeight: 1.6 }}>
-              <code>{exchange}</code>
-            </Box>
+            </Measure>
+            <CodeBlock label="Example exchange with the server">{exchange}</CodeBlock>
           </Box>
-        </Box>
-      </Box>
+        </Columns>
+      </Section>
 
-      <Box component="section" aria-labelledby="try" sx={{ mb: 7, display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
+      <Columns as="section" aria-labelledby="try" gap={4} sx={{ mt: 8 }}>
         <Box>
           <Typography id="try" variant="h3" component="h2" sx={{ mb: 1 }}>Using it with an AI assistant</Typography>
-          <Typography color="text.secondary" sx={{ maxWidth: typography.measure }}>
+          <Measure as={Typography} color="text.secondary">
             Point a coding assistant at the index once, in its project instructions. It then reads the rules for the components it's about to use,
             instead of guessing from memory.
-          </Typography>
+          </Measure>
         </Box>
-        <Box component="pre" tabIndex={0} role="region" aria-label="Project instructions for an AI assistant" sx={{ m: 0, p: 2.5, bgcolor: 'edge.raised', border: 1, borderColor: 'divider', overflowX: 'auto', fontSize: '0.85rem', lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
-          <code>{prompt}</code>
-        </Box>
-      </Box>
+        <CodeBlock label="Project instructions for an AI assistant" wrap>{prompt}</CodeBlock>
+      </Columns>
 
-      <Box component="section" aria-labelledby="honest" sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
+      <Columns as="section" aria-labelledby="honest" gap={4} sx={{ mt: 8 }}>
         <Box>
           <Typography id="honest" variant="h3" component="h2" sx={{ mb: 1 }}>What keeps it honest</Typography>
           <Box component="ul" sx={{ pl: 2.5, m: 0, '& li': { mb: 1 } }}>
@@ -161,13 +150,13 @@ export default function AgentsPage() {
         </Box>
         <Box>
           <Typography variant="eyebrow">Where I'd take it next</Typography>
-          <Typography sx={{ mt: 1, maxWidth: typography.measure }}>
+          <Measure as={Typography} sx={{ mt: 1 }}>
             A first evaluation is done: fresh agents built the same screens with and without these rules, and a checker scored them. See{' '}
             <Link href={href('system', 'evals')}>Evaluations</Link>. Next is running the
             evaluation with the MCP server connected, to see whether asking beats reading.
-          </Typography>
+          </Measure>
         </Box>
-      </Box>
+      </Columns>
     </>
   );
 }

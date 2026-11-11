@@ -155,7 +155,7 @@ export const typography = {
 export type TextRole =
   | 'poster' | 'posterItalic' | 'posterSection' | 'posterSectionItalic' | 'indexTitle' | 'figure'
   | 'hero' | 'heroItalic' | 'signoff' | 'accentItalic' | 'posterMinor' | 'byline' | 'smallCaps'
-  | 'lead' | 'prose' | 'eyebrow' | 'kicker' | 'nav' | 'tab' | 'label' | 'data' | 'mono' | 'caption' | 'brand';
+  | 'lead' | 'prose' | 'eyebrow' | 'kicker' | 'nav' | 'tab' | 'metric' | 'label' | 'data' | 'mono' | 'caption' | 'brand';
 
 export interface TextRoleSpec {
   family: keyof Pick<typeof typography, 'display' | 'poster' | 'body' | 'mono'>;
@@ -196,6 +196,7 @@ export const textRoles: Record<TextRole, TextRoleSpec> = {
   prose: { family: 'display', size: '1.15rem', leading: 1.55, description: 'Reading text: explanations under a label, essays, captions with substance.' },
   eyebrow: { family: 'body', size: '0.7rem', leading: 1.4, weight: 600, tracking: '0.24em', caps: true, tone: 'muted', description: 'A small letterspaced label above a title or a value.' },
   nav: { family: 'body', size: '0.72rem', leading: 1.4, weight: 600, tracking: '0.18em', caps: true, description: 'Section links in the site navigation.' },
+  metric: { family: 'body', size: '1.3rem', leading: 1.3, weight: 700, tabular: true, description: 'A key figure in a product screen\'s summary strip.' },
   tab: { family: 'body', size: '1rem', leading: 1.5, weight: 600, description: 'Page links inside a section, set as tabs.' },
   kicker: { family: 'body', size: '0.62rem', leading: 1.4, weight: 600, tracking: '0.42em', caps: true, description: 'Widely spaced diagram labels and running heads.' },
   label: { family: 'body', size: '1rem', leading: 1.35, weight: 650, description: 'The bold head of a point, a row or a card.' },

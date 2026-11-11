@@ -1,5 +1,5 @@
 ```json
-{ "name": "Layout", "kind": "component", "import": "Columns, Section, RuleList, RuleItem, StatGrid, Stat, Headline, CodeBlock, Measure, ModeScope", "summary": "Layout primitives that carry Edge's grids, section spacing, rules, stats, two-voice titles and code blocks, so screens don't write them by hand." }
+{ "name": "Layout", "kind": "component", "import": "Columns, Section, RuleList, RuleItem, StatGrid, Stat, Headline, CodeBlock, DataTable, Measure, ModeScope", "summary": "Layout primitives that carry Edge's grids, section spacing, rules, stats, two-voice titles and code blocks, so screens don't write them by hand." }
 ```
 
 # Layout
@@ -13,6 +13,7 @@ Screens compose these instead of writing `display: grid`, column templates, sect
 - `StatGrid` and `Stat` only for figures Ben can stand behind. A figure is a number with a source, never an estimate dressed up.
 - `Headline` is the page title (an `h1`) or, with `level="section"`, a large section title. One page-level `Headline` per screen.
 - `CodeBlock` always gets a `label`; it's focusable so keyboard users can scroll it.
+- `DataTable` for tabular data outside MUI's Table: give it a `label`, and write a `caption` and `th scope="col"` headers. `dense` for product screens, `interactive` when rows open something (then handle Enter and the arrow keys).
 - `Measure` keeps reading content near 65 characters.
 - `ModeScope` shows its contents in a fixed mode (ink or paper) whatever the page is in. It's for side-by-side comparisons, not for theming a whole screen.
 

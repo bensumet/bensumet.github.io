@@ -3,9 +3,10 @@ import {
   Alert, Box, Button, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Drawer, FormControl, IconButton,
   InputLabel, MenuItem, Select, Skeleton, Stack, TextField, ToggleButton, ToggleButtonGroup, Typography,
 } from '@mui/material';
-import { EdgeCard, Lead, typography } from '@bensumet/edge';
+import { CodeBlock, Columns, DataTable, EdgeCard, Lead, Measure } from '@bensumet/edge';
 import { Opener } from '../../components/Layout';
 import { useVisitState } from '../../useVisitState';
+import { visuallyHidden } from '@mui/utils';
 
 // A cloud-console screen for a fictional platform, built only from Edge and the
 // MUI parts Edge themes. Sample data throughout. Every control does something.
@@ -62,7 +63,7 @@ type Panel = { kind: 'detail'; id: string } | { kind: 'logs'; id: string } | nul
 
 function StatusChip({ status }: { status: Status }) {
   const s = statusLook[status];
-  return <Chip size="small" variant="outlined" color={s.color} label={<><Box component="span" aria-hidden="true" sx={{ mr: 0.75, fontWeight: 800 }}>{s.mark}</Box>{s.word}</>} />;
+  return <Chip size="small" variant="outlined" color={s.color} label={<><Box component="b" aria-hidden="true" sx={{ mr: 0.75 }}>{s.mark}</Box>{s.word}</>} />;
 }
 
 const blankForm = { name: '', repo: '', kind: 'Web service', region: 'Oregon' };
@@ -177,13 +178,13 @@ export default function ConsolePage() {
       <Box component="section" aria-labelledby="cn-demo" sx={{ mb: 3, p: 2, bgcolor: 'edge.raised', border: 1, borderColor: 'divider' }}>
         <Stack direction="row" useFlexGap sx={{ flexWrap: 'wrap', gap: 1.5, alignItems: 'center' }}>
           <Box sx={{ mr: 1 }}>
-            <Typography id="cn-demo" variant="body2" sx={{ fontWeight: 650 }}>Demo controls</Typography>
+            <Typography id="cn-demo" variant="body2"><strong>Demo controls</strong></Typography>
             <Typography variant="body2" color="text.secondary">Not part of the console. They choose which state it&rsquo;s in.</Typography>
           </Box>
           <ToggleButtonGroup exclusive size="small" value={scenario} aria-labelledby="cn-demo" onChange={(_, v: Scenario | null) => { if (v) setScenario(v); }}>
-            <ToggleButton value="normal" sx={{ textTransform: 'none' }}>With services</ToggleButton>
-            <ToggleButton value="empty" sx={{ textTransform: 'none' }}>New project</ToggleButton>
-            <ToggleButton value="error" sx={{ textTransform: 'none' }}>Load fails</ToggleButton>
+            <ToggleButton value="normal">With services</ToggleButton>
+            <ToggleButton value="empty">New project</ToggleButton>
+            <ToggleButton value="error">Load fails</ToggleButton>
           </ToggleButtonGroup>
           <Button size="small" variant="text" onClick={() => load(scenario, env)}>Reload</Button>
         </Stack>
@@ -211,7 +212,7 @@ export default function ConsolePage() {
         </Stack>
 
         {phase === 'ready' && services.length > 0 && (
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4, 1fr)' }, borderBottom: 1, borderColor: 'divider' }}>
+          <Columns preset="quarters" gap={0} sx={{ borderBottom: 1, borderColor: 'divider' }}>
             {[
               ['Services', String(services.length)],
               ['Live', `${live} of ${services.length}`],
@@ -220,10 +221,10 @@ export default function ConsolePage() {
             ].map(([k, v]) => (
               <Box key={k} sx={{ px: { xs: 2, md: 3 }, py: 1.5, borderRight: 1, borderColor: 'divider' }}>
                 <Typography variant="body2" color="text.secondary">{k}</Typography>
-                <Typography sx={{ fontWeight: 700, fontSize: '1.3rem', fontVariantNumeric: 'tabular-nums' }}>{v}</Typography>
+                <Typography variant="metric">{v}</Typography>
               </Box>
             ))}
-          </Box>
+          </Columns>
         )}
 
         <Box sx={{ p: { xs: 2, md: 3 } }}>
@@ -250,20 +251,20 @@ export default function ConsolePage() {
 
           {phase === 'error' && (
             <EdgeCard variant="outlined" sx={{ p: 3 }}>
-              <Typography sx={{ fontWeight: 650, color: 'error.main' }}>Couldn&rsquo;t load your services.</Typography>
-              <Typography color="text.secondary" sx={{ mt: 0.5, mb: 2, maxWidth: typography.measure }}>
+              <Typography variant="label" color="error.main">Couldn&rsquo;t load your services.</Typography>
+              <Measure as={Typography} color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>
                 Nothing is down; the console couldn&rsquo;t reach the platform. Your services keep running while we retry.
-              </Typography>
+              </Measure>
               <Button variant="outlined" onClick={() => setScenario('normal')}>Try again</Button>
             </EdgeCard>
           )}
 
           {phase === 'ready' && services.length === 0 && (
             <EdgeCard variant="outlined" sx={{ p: 3 }}>
-              <Typography sx={{ fontWeight: 650 }}>No services yet</Typography>
-              <Typography color="text.secondary" sx={{ mt: 0.5, mb: 2, maxWidth: typography.measure }}>
+              <Typography variant="label">No services yet</Typography>
+              <Measure as={Typography} color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>
                 Connect a repository and the platform builds and deploys it on every push. Most first deploys take about two minutes.
-              </Typography>
+              </Measure>
               <Button variant="outlined" onClick={openCreate}>Connect a repository</Button>
             </EdgeCard>
           )}
@@ -284,26 +285,20 @@ export default function ConsolePage() {
 
               {shown.length === 0 ? (
                 <EdgeCard variant="outlined" sx={{ p: 3 }}>
-                  <Typography sx={{ fontWeight: 650 }}>No services match</Typography>
+                  <Typography variant="label">No services match</Typography>
                   <Typography color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>Nothing in {env} matches those filters.</Typography>
                   <Button variant="outlined" onClick={() => { setQuery(''); setStatusFilter('all'); }}>Clear filters</Button>
                 </EdgeCard>
               ) : (
-                <Box tabIndex={0} role="region" aria-label="Services table" sx={{ overflowX: 'auto', border: 1, borderColor: 'divider' }}>
-                  <Box component="table" sx={{ width: '100%', minWidth: 720, borderCollapse: 'collapse', fontVariantNumeric: 'tabular-nums', fontSize: '0.9rem',
-                    '& th, & td': { textAlign: 'left', px: 1.5, py: 0.9, borderBottom: 1, borderColor: 'divider', whiteSpace: 'nowrap' },
-                    '& th': { bgcolor: 'edge.raised', fontWeight: 600, fontSize: '0.8rem' },
-                    '& tbody tr': { cursor: 'pointer', outline: 'none' },
-                    '& tbody tr:hover': { bgcolor: 'action.hover' },
-                    '& tbody tr:focus-visible': { boxShadow: (t) => `inset 3px 0 0 ${t.palette.primary.main}`, bgcolor: 'action.selected' } }}>
-                    <caption style={{ position: 'absolute', left: -9999 }}>Services in {env}. Use the arrow keys to move between rows, and Enter to open one.</caption>
+                <DataTable label="Services table" dense interactive>
+                    <Box component="caption" sx={visuallyHidden}>Services in {env}. Use the arrow keys to move between rows, and Enter to open one.</Box>
                     <thead><tr><th scope="col">Name</th><th scope="col">Type</th><th scope="col">Region</th><th scope="col">Status</th><th scope="col">Last deploy</th><th scope="col">CPU</th></tr></thead>
                     <tbody>
                       {shown.map((s, i) => (
                         <tr key={s.id} ref={(el) => { rows.current[i] = el; }} tabIndex={i === Math.min(active, shown.length - 1) ? 0 : -1}
                           onKeyDown={(e) => onRowKey(e, i)} onFocus={() => setActive(i)} onClick={() => setPanel({ kind: 'detail', id: s.id })}
                           aria-label={`${s.name}, ${statusLook[s.status].word}. Press Enter to open.`}>
-                          <td style={{ fontWeight: 600 }}>{s.name}</td>
+                          <td><strong>{s.name}</strong></td>
                           <td>{s.kind}</td>
                           <td>{s.region}</td>
                           <td><StatusChip status={s.status} /></td>
@@ -312,8 +307,7 @@ export default function ConsolePage() {
                         </tr>
                       ))}
                     </tbody>
-                  </Box>
-                </Box>
+                </DataTable>
               )}
             </>
           )}
@@ -335,12 +329,12 @@ export default function ConsolePage() {
               <IconButton aria-label="Close" onClick={() => setPanel(null)}><Box component="span" aria-hidden="true">×</Box></IconButton>
             </Stack>
             <Box><StatusChip status={current.status} /></Box>
-            <Box component="dl" sx={{ m: 0, display: 'grid', gridTemplateColumns: 'auto 1fr', gap: 1, columnGap: 3, '& dt': { color: 'text.secondary' }, '& dd': { m: 0, fontVariantNumeric: 'tabular-nums' } }}>
+            <Columns as="dl" template="auto 1fr" gap={1} sx={{ m: 0, columnGap: 3, '& dt': { color: 'text.secondary' }, '& dd': { m: 0 } }} className="tabular">
               <dt>Repository</dt><dd>{current.repo}</dd>
               <dt>Last deploy</dt><dd>{current.deployed}</dd>
               <dt>CPU</dt><dd>{current.status === 'live' || current.status === 'deploying' ? `${current.cpu}%` : 'Not running'}</dd>
-              <dt>Address</dt><dd style={{ fontFamily: typography.mono, fontSize: '0.85rem' }}>{current.name}.northpine.example</dd>
-            </Box>
+              <dt>Address</dt><Typography variant="mono" component="dd">{current.name}.northpine.example</Typography>
+            </Columns>
             <Stack direction="row" useFlexGap sx={{ flexWrap: 'wrap', gap: 1 }}>
               <Button variant="outlined" onClick={() => redeploy(current)} disabled={current.status === 'deploying'}>
                 {current.status === 'deploying' ? 'Deploying…' : 'Deploy latest commit'}
@@ -363,11 +357,11 @@ export default function ConsolePage() {
               </Box>
               <IconButton aria-label="Close" onClick={() => setPanel(null)}><Box component="span" aria-hidden="true">×</Box></IconButton>
             </Stack>
-            <Box component="pre" tabIndex={0} aria-label="Log output" sx={{ m: 0, p: 2, bgcolor: 'edge.raised', border: 1, borderColor: 'divider', whiteSpace: 'pre-wrap', wordBreak: 'break-word', fontFamily: typography.mono, fontSize: '0.8rem', lineHeight: 1.7 }}>
+            <CodeBlock label="Log output" wrap>
               {logLines(current.name).map((l) => (
-                <Box key={l} component="span" sx={{ display: 'block', color: l.startsWith('FATAL') ? 'error.main' : 'text.primary', fontWeight: l.startsWith('FATAL') ? 700 : 400 }}>{l}</Box>
+                <Box key={l} component={l.startsWith('FATAL') ? 'b' : 'span'} sx={{ display: 'block', color: l.startsWith('FATAL') ? 'error.main' : 'text.primary' }}>{l}</Box>
               ))}
-            </Box>
+            </CodeBlock>
             <Typography variant="body2" color="text.secondary">The build needed more memory than its instance has. A larger instance, or a smaller build step, fixes it.</Typography>
             <Box><Button variant="outlined" onClick={() => setPanel({ kind: 'detail', id: current.id })}>Back to {current.name}</Button></Box>
           </Stack>

@@ -210,3 +210,60 @@ export const CodeBlock = forwardRef<HTMLPreElement, { label: string; wrap?: bool
 
 /** Keeps a block of reading content to a comfortable line length. */
 export const Measure = styled('div', { name: 'EdgeMeasure', slot: 'Root' })({ maxWidth: typography.measure });
+
+// ----- Data table ----------------------------------------------------------
+
+const TableScroll = styled('div', { name: 'EdgeDataTable', slot: 'Root' })(({ theme }) => ({
+  overflowX: 'auto',
+  border: `1px solid ${theme.vars.palette.divider}`,
+}));
+
+const Table = styled('table', {
+  name: 'EdgeDataTable', slot: 'Table',
+  shouldForwardProp: (p) => !['dense', 'interactive', 'minWidth'].includes(p as string),
+})<{ dense?: boolean; interactive?: boolean; minWidth: number }>(({ theme, dense, interactive, minWidth }) => ({
+  width: '100%',
+  minWidth,
+  borderCollapse: 'collapse',
+  fontVariantNumeric: 'tabular-nums lining-nums',
+  ...(dense && { ...theme.typography.body2 }),
+  '& th, & td': {
+    textAlign: 'left',
+    verticalAlign: 'top',
+    padding: theme.spacing(dense ? 0.9 : 1.25, dense ? 1.5 : 2),
+    borderBottom: `1px solid ${theme.vars.palette.divider}`,
+    ...(dense && { whiteSpace: 'nowrap' }),
+  },
+  '& thead th': { ...theme.typography.caption, fontWeight: 600, color: theme.vars.palette.text.primary, backgroundColor: theme.vars.palette.edge.raised },
+  '& caption': { captionSide: 'bottom', textAlign: 'left', padding: theme.spacing(1.5, 2), ...theme.typography.body2, color: theme.vars.palette.text.secondary },
+  ...(interactive && {
+    '& tbody tr': { cursor: 'pointer', outline: 'none' },
+    '& tbody tr:hover': { backgroundColor: theme.vars.palette.action.hover },
+    '& tbody tr:focus-visible': { boxShadow: `inset 3px 0 0 ${theme.vars.palette.primary.main}`, backgroundColor: theme.vars.palette.action.selected },
+  }),
+}));
+
+export interface DataTableProps {
+  /** Names the scrollable region for assistive tech. */
+  label: string;
+  /** Below this width the table scrolls sideways instead of squeezing. */
+  minWidth?: number;
+  /** Smaller type and padding, one line per row: for product screens. */
+  dense?: boolean;
+  /** Rows are clickable and focusable; they show hover and keyboard focus. */
+  interactive?: boolean;
+  children: ReactNode;
+}
+
+/**
+ * A plain data table: raised header, hairline rows, tabular figures. It sits
+ * in a focusable region so keyboard users can scroll a wide one. Write the
+ * table's own caption, thead and tbody as children.
+ */
+export function DataTable({ label, minWidth = 720, dense, interactive, children }: DataTableProps) {
+  return (
+    <TableScroll tabIndex={0} role="region" aria-label={label}>
+      <Table dense={dense} interactive={interactive} minWidth={minWidth}>{children}</Table>
+    </TableScroll>
+  );
+}

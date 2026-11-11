@@ -1,6 +1,6 @@
 import { Box, Link, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
-import { Lead, typography } from '@bensumet/edge';
-import { Opener } from '../../components/Layout';
+import { Columns, DataTable, Lead, Measure, Section } from '@bensumet/edge';
+import { Opener, Points } from '../../components/Layout';
 import { art } from '../../data/craft';
 import { href } from '../../router';
 import { useVisitState } from '../../useVisitState';
@@ -45,7 +45,7 @@ export default function EvalsPage() {
         </Lead>
       </Opener>
 
-      <Box component="section" aria-labelledby="ev-method" sx={{ mb: 7, display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
+      <Columns as="section" aria-labelledby="ev-method" gap={4}>
         <Box>
           <Typography id="ev-method" variant="h3" component="h2" sx={{ mb: 1.5 }}>How it was run</Typography>
           <Box component="ul" sx={{ pl: 2.5, m: 0, '& li': { mb: 1 } }}>
@@ -62,54 +62,45 @@ export default function EvalsPage() {
             <li><b>Type check</b> and the <b>accessibility test</b> used on every page of this site.</li>
           </Box>
         </Box>
-      </Box>
+      </Columns>
 
-      <Box component="section" aria-labelledby="ev-results" sx={{ mb: 7 }}>
-        <Typography id="ev-results" variant="h3" component="h2" sx={{ mb: 2 }}>Results</Typography>
-        <Box tabIndex={0} role="region" aria-label="Scrollable table" sx={{ overflowX: 'auto', border: 1, borderColor: 'divider' }}>
-          <Box component="table" sx={{ width: '100%', minWidth: 720, borderCollapse: 'collapse', fontVariantNumeric: 'tabular-nums', '& th, & td': { textAlign: 'left', px: 2, py: 1.25, borderBottom: 1, borderColor: 'divider', verticalAlign: 'top' }, '& th': { bgcolor: 'edge.raised', fontWeight: 600, fontSize: '0.85rem' } }}>
-            <Box component="caption" sx={{ captionSide: 'bottom', textAlign: 'left', px: 2, py: 1.5 }}>
-              <Typography component="span" variant="body2" color="text.secondary">One agent per cell, one attempt each, run on November 1, 2026. Every screen is scored with the current checker, including checks added after the first run.</Typography>
-            </Box>
+      <Section id="ev-results" title="Results">
+        <DataTable label="Results by task and condition">
+            <caption>One agent per cell, one attempt each, run on November 1, 2026. Every screen is scored with the current checker, including checks added after the first run.</caption>
             <thead><tr><th scope="col">Task</th><th scope="col">Condition</th><th scope="col">Rules check</th><th scope="col">States beyond the happy path</th><th scope="col">Types</th><th scope="col">Accessibility</th></tr></thead>
             <tbody>
               {runs.map((r) => (
                 <tr key={r.task + r.cond}>
                   <td>{r.task}</td>
-                  <td style={{ fontWeight: 600 }}>{r.cond}</td>
+                  <td><strong>{r.cond}</strong></td>
                   <td>{r.rules}{r.note && <Typography variant="body2" color="text.secondary">{r.note}</Typography>}</td>
-                  <td><Box component="span" sx={{ color: r.good ? 'success.main' : 'error.main', fontWeight: 600 }}>{r.states}</Box>{'stateNote' in r && <Typography variant="body2" color="text.secondary">{r.stateNote}</Typography>}</td>
+                  <td><Typography component="strong" variant="inherit" color={r.good ? 'success.main' : 'error.main'}>{r.states}</Typography>{'stateNote' in r && <Typography variant="body2" color="text.secondary">{r.stateNote}</Typography>}</td>
                   <td>Pass</td>
-                  <td><Box component="span" sx={{ color: r.a11y === 'Pass' ? 'text.primary' : 'error.main', fontWeight: r.a11y === 'Pass' ? 400 : 600 }}>{r.a11y}</Box></td>
+                  <td>{r.a11y === 'Pass' ? r.a11y : <Typography component="strong" variant="inherit" color="error.main">{r.a11y}</Typography>}</td>
                 </tr>
               ))}
             </tbody>
-          </Box>
-        </Box>
-      </Box>
+        </DataTable>
+      </Section>
 
-      <Box component="section" aria-labelledby="ev-screens" sx={{ mb: 7 }}>
-        <Typography id="ev-screens" variant="h3" component="h2">What they built</Typography>
-        <Typography color="text.secondary" sx={{ mt: 0.5, mb: 2.5, maxWidth: typography.measure }}>
-          Six screens: each task was built twice, once without the rules and once with them. Pick a task to see its two screens side by side.
-        </Typography>
+      <Section id="ev-screens" title="What they built" intro="Six screens: each task was built twice, once without the rules and once with them. Pick a task to see its two screens side by side.">
         <Stack direction="row" useFlexGap sx={{ flexWrap: 'wrap', gap: 1.5, alignItems: 'center', mb: 3 }}>
-          <Typography id="ev-task" variant="body2" sx={{ fontWeight: 600 }}>Task</Typography>
+          <Typography id="ev-task" variant="body2"><strong>Task</strong></Typography>
           <ToggleButtonGroup exclusive size="small" value={task} onChange={(_, v) => v && setTask(v)} aria-labelledby="ev-task">
-            {tasks.map((t, i) => <ToggleButton key={t.id} value={t.id} sx={{ textTransform: 'none' }}>{i + 1}. {t.label}</ToggleButton>)}
+            {tasks.map((t, i) => <ToggleButton key={t.id} value={t.id}>{i + 1}. {t.label}</ToggleButton>)}
           </ToggleButtonGroup>
         </Stack>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, alignItems: 'start' }}>
+        <Columns align="start">
           {(['without', 'with'] as const).map((c) => {
             const run = runs.find((r) => r.task.startsWith(current.label.split(' ')[0]) && r.cond === (c === 'with' ? 'With rules' : 'Without rules'));
             return (
-              <Box component="figure" key={c} sx={{ m: 0, minWidth: 0 }}>
+              <Box component="figure" key={c} sx={{ m: 0 }}>
                 <Box component="figcaption" sx={{ mb: 1.25 }}>
-                  <Typography sx={{ fontWeight: 650 }}>{c === 'with' ? 'With the rules' : 'Without the rules'}</Typography>
+                  <Typography variant="label">{c === 'with' ? 'With the rules' : 'Without the rules'}</Typography>
                   {run && (
                     <Typography variant="body2" color="text.secondary">
-                      Rules check {run.rules} · States: <Box component="span" sx={{ color: run.good ? 'success.main' : 'error.main', fontWeight: 600 }}>{run.states.toLowerCase()}</Box>
-                      {run.a11y !== 'Pass' && <> · <Box component="span" sx={{ color: 'error.main', fontWeight: 600 }}>{run.a11y.toLowerCase()}</Box></>}
+                      Rules check {run.rules} · States: <Typography component="strong" variant="inherit" color={run.good ? 'success.main' : 'error.main'}>{run.states.toLowerCase()}</Typography>
+                      {run.a11y !== 'Pass' && <> · <Typography component="strong" variant="inherit" color="error.main">{run.a11y.toLowerCase()}</Typography></>}
                     </Typography>
                   )}
                 </Box>
@@ -121,38 +112,30 @@ export default function EvalsPage() {
               </Box>
             );
           })}
-        </Box>
+        </Columns>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1.5 }}>Each screen is rendered on its own, exactly as its agent wrote it, in the Ink theme. Screens show their first state, so loading and error states don&rsquo;t appear here. Click a screen to see it full size.</Typography>
-      </Box>
+      </Section>
 
-      <Box component="section" aria-labelledby="ev-findings" sx={{ mb: 7 }}>
-        <Typography id="ev-findings" variant="h3" component="h2" sx={{ mb: 3 }}>What I learned</Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
-          {findings.map(([h, b]) => (
-            <Box key={h}>
-              <Typography sx={{ fontWeight: 650 }}>{h}</Typography>
-              <Typography sx={{ mt: 0.5, fontFamily: typography.display, fontSize: '1.12rem', lineHeight: 1.55, color: 'text.secondary' }}>{b}</Typography>
-            </Box>
-          ))}
-        </Box>
-      </Box>
+      <Section id="ev-findings" title="What I learned">
+        <Points items={findings} />
+      </Section>
 
-      <Box component="section" aria-labelledby="ev-limits" sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
+      <Columns as="section" aria-labelledby="ev-limits" gap={4} sx={{ mt: 8 }}>
         <Box>
           <Typography id="ev-limits" variant="h3" component="h2" sx={{ mb: 1.5 }}>Limits</Typography>
-          <Typography sx={{ maxWidth: typography.measure }}>
+          <Measure as={Typography}>
             Six screens is a demonstration, not a benchmark: one attempt per cell, one model family, three tasks. The rules check reads code, so it
             can&rsquo;t judge how a screen looks; that&rsquo;s what the screenshots and a person are for.
-          </Typography>
+          </Measure>
         </Box>
         <Box>
           <Typography variant="eyebrow">Next</Typography>
-          <Typography sx={{ mt: 1, maxWidth: typography.measure }}>
+          <Measure as={Typography} sx={{ mt: 1 }}>
             Run more tasks, several attempts each, on every change to the rules, render each state instead of reading for it, and add a third condition with the MCP server connected. The rules, the instructions file
             and the check are in the repo; see <Link href={href('system', 'agents')}>For agents</Link>.
-          </Typography>
+          </Measure>
         </Box>
-      </Box>
+      </Columns>
     </>
   );
 }

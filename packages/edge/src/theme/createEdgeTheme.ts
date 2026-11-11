@@ -77,7 +77,7 @@ const roles = Object.keys(textRoles) as TextRole[];
 const variantMapping: Partial<Record<string, string>> = {
   hero: 'span', heroItalic: 'span', signoff: 'p', accentItalic: 'span', nav: 'span',
   poster: 'span', posterItalic: 'span', posterSection: 'span', posterSectionItalic: 'span', indexTitle: 'span',
-  figure: 'p', lead: 'p', prose: 'p', eyebrow: 'p', kicker: 'span', tab: 'span', label: 'p', data: 'span', mono: 'code', caption: 'p', brand: 'span', byline: 'p', posterMinor: 'span', smallCaps: 'span',
+  figure: 'p', lead: 'p', prose: 'p', eyebrow: 'p', kicker: 'span', tab: 'span', metric: 'p', label: 'p', data: 'span', mono: 'code', caption: 'p', brand: 'span', byline: 'p', posterMinor: 'span', smallCaps: 'span',
 };
 
 /** Palette for one mode, from tokens. */
