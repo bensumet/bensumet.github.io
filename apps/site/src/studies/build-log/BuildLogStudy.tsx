@@ -1,6 +1,6 @@
 import { Box, Link, Typography } from '@mui/material';
 import { EdgeCard, Lead, typography } from '@bensumet/edge';
-import { Eyebrow, Opener } from '../../components/Layout';
+import { Opener } from '../../components/Layout';
 import { href } from '../../router';
 
 const mine = [
@@ -59,13 +59,13 @@ export function BuildLogStudy() {
         <Typography id="bl-split" variant="h3" component="h2" sx={{ mb: 3 }}>Who did what</Typography>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
           <EdgeCard variant="outlined" sx={{ p: 3 }}>
-            <Eyebrow>Me</Eyebrow>
+            <Typography variant="eyebrow">Me</Typography>
             <Box component="ul" sx={{ pl: 2.5, mt: 1.5, mb: 0, '& li': { mb: 1.25 } }}>
               {mine.map((m) => <li key={m}>{m}</li>)}
             </Box>
           </EdgeCard>
           <EdgeCard variant="outlined" sx={{ p: 3 }}>
-            <Eyebrow>The assistant</Eyebrow>
+            <Typography variant="eyebrow">The assistant</Typography>
             <Box component="ul" sx={{ pl: 2.5, mt: 1.5, mb: 0, '& li': { mb: 1.25 } }}>
               {theirs.map((t) => <li key={t}>{t}</li>)}
             </Box>
@@ -112,7 +112,7 @@ export function BuildLogStudy() {
           </Typography>
         </Box>
         <Box>
-          <Eyebrow>What I took from it</Eyebrow>
+          <Typography variant="eyebrow">What I took from it</Typography>
           <Typography sx={{ mt: 1, fontFamily: typography.display, fontSize: '1.2rem', lineHeight: 1.6, maxWidth: typography.measure }}>
             The assistant is fastest when the standards are written down and tested, and slowest when they live only in my head. Most of my time
             went into deciding, reviewing and correcting, which is where I want it. More on that in{' '}

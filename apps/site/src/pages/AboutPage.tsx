@@ -1,6 +1,6 @@
 import { Box, Link, Typography } from '@mui/material';
 import { Lead, typography } from '@bensumet/edge';
-import { Eyebrow, Opener } from '../components/Layout';
+import { Opener } from '../components/Layout';
 
 const facts: [string, React.ReactNode][] = [
   ['Now', 'Director, Product Engineering at Majesco. I lead the frontend for Immersive AI, manage a team of four engineers, and stay hands-on.'],
@@ -33,7 +33,7 @@ export default function AboutPage() {
       <Box component="dl" sx={{ m: 0, borderTop: 1, borderColor: 'text.primary' }}>
         {facts.map(([k, v]) => (
           <Box key={k} sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '12rem 1fr' }, gap: 1, py: 2.5, borderBottom: 1, borderColor: 'divider' }}>
-            <Box component="dt"><Eyebrow>{k}</Eyebrow></Box>
+            <Box component="dt"><Typography variant="eyebrow">{k}</Typography></Box>
             <Typography component="dd" sx={{ m: 0, fontFamily: typography.display, fontSize: '1.15rem', lineHeight: 1.55, maxWidth: typography.measure }}>{v}</Typography>
           </Box>
         ))}
@@ -58,7 +58,7 @@ export default function AboutPage() {
         </Box>
       </Box>
       <Box sx={{ mt: 6 }}>
-        <Eyebrow>Contact</Eyebrow>
+        <Typography variant="eyebrow">Contact</Typography>
         <Typography sx={{ mt: 1, fontSize: '1.1rem' }}>
           <Link href="mailto:bensumet@gmail.com">bensumet@gmail.com</Link> · <Link href="https://www.linkedin.com/in/ben-viwatmanitsakul/">LinkedIn</Link> · <Link href="https://github.com/bensumet">GitHub</Link> · <Link href="https://github.com/bensumet/bensumet.github.io">View the code</Link>
         </Typography>

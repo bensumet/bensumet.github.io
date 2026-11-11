@@ -11,13 +11,27 @@ import { layout, typography, type ColumnPreset } from '../../tokens/tokens';
  * `as` for the element (`<RuleList as="ol">`).
  */
 
-type Responsive = number | { xs?: number; sm?: number; md?: number };
-const BREAKS = ['xs', 'sm', 'md'] as const;
+type Responsive = number | { xs?: number; sm?: number; md?: number; lg?: number };
+/** A responsive grid template: one value, or one per breakpoint. */
+export type Template = string | { xs?: string; sm?: string; md?: string; lg?: string };
+const BREAKS = ['xs', 'sm', 'md', 'lg'] as const;
 
 /** Spreads a responsive value over the theme's breakpoints. */
-function responsive(theme: Theme, value: Responsive | { xs?: string; sm?: string; md?: string }, css: (v: number | string) => object) {
+function responsive(theme: Theme, value: Responsive | Template, css: (v: number | string) => object) {
   if (typeof value !== 'object') return css(value);
   return Object.assign({}, ...BREAKS.filter((b) => value[b] !== undefined).map((b) => (b === 'xs' ? css(value[b]!) : { [theme.breakpoints.up(b)]: css(value[b]!) })));
+}
+
+/** Merges style objects, combining (not replacing) the same media query from each. */
+function merge(...styles: (object | false | undefined)[]) {
+  const out: Record<string, unknown> = {};
+  for (const st of styles) {
+    if (!st) continue;
+    for (const [k, v] of Object.entries(st)) {
+      out[k] = k.startsWith('@media') && out[k] ? { ...(out[k] as object), ...(v as object) } : v;
+    }
+  }
+  return out;
 }
 
 // ----- Columns -------------------------------------------------------------
@@ -27,23 +41,33 @@ export interface ColumnsProps {
   preset?: ColumnPreset;
   /** A count of equal columns at md and up, instead of a preset (two below). */
   count?: number;
+  /**
+   * A one-off template, for a shape no preset has (a figure's own proportions).
+   * If the same template appears twice, make it a preset instead.
+   */
+  template?: Template;
   /** Space between columns and rows, in theme units. */
   gap?: Responsive;
+  /** Space between rows, when it differs from the space between columns. */
+  rowGap?: Responsive;
   /** Rows align to their text baseline, for label-and-value rows. */
   baseline?: boolean;
+  /** How items sit in their row; the default stretches them to the row's height. */
+  align?: 'start' | 'center' | 'end' | 'baseline';
 }
 
 /** A responsive grid, from a named preset. Children never overflow their column. */
 export const Columns = styled('div', {
   name: 'EdgeColumns', slot: 'Root',
-  shouldForwardProp: (p) => !['preset', 'count', 'gap', 'baseline'].includes(p as string),
-})<ColumnsProps>(({ theme, preset = 'halves', count, gap = 3, baseline }) => ({
-  display: 'grid',
-  ...responsive(theme, count ? { xs: 'repeat(2, 1fr)', md: `repeat(${count}, 1fr)` } : layout.columns[preset], (v) => ({ gridTemplateColumns: v })),
-  ...responsive(theme, gap, (v) => ({ gap: theme.spacing(v as number) })),
-  ...(baseline && { alignItems: 'baseline' }),
-  '& > *': { minWidth: 0 },
-}));
+  shouldForwardProp: (p) => !['preset', 'count', 'template', 'gap', 'rowGap', 'baseline', 'align'].includes(p as string),
+})<ColumnsProps>(({ theme, preset = 'halves', count, template, gap = 3, rowGap, baseline, align }) => merge(
+  { display: 'grid' },
+  responsive(theme, template ?? (count ? { xs: 'repeat(2, 1fr)', md: `repeat(${count}, 1fr)` } : layout.columns[preset]), (v) => ({ gridTemplateColumns: v })),
+  responsive(theme, gap, (v) => ({ gap: theme.spacing(v as number) })),
+  rowGap !== undefined && responsive(theme, rowGap, (v) => ({ rowGap: theme.spacing(v as number) })),
+  (align || baseline) && { alignItems: align ?? 'baseline' },
+  { '& > *': { minWidth: 0 } },
+));
 
 // ----- Section -------------------------------------------------------------
 
@@ -98,17 +122,12 @@ export interface RuleItemProps {
 export const RuleItem = styled('li', {
   name: 'EdgeRuleItem', slot: 'Root',
   shouldForwardProp: (p) => p !== 'preset' && p !== 'space',
-})<RuleItemProps>(({ theme, preset, space = 2.5 }) => ({
-  borderBottom: `1px solid ${theme.vars.palette.divider}`,
-  ...responsive(theme, space, (v) => ({ paddingBlock: theme.spacing(v as number) })),
-  ...(preset && {
-    display: 'grid',
-    columnGap: theme.spacing(2),
-    rowGap: theme.spacing(0.5),
-    ...responsive(theme, layout.columns[preset], (v) => ({ gridTemplateColumns: v })),
-    '& > *': { minWidth: 0 },
-  }),
-}));
+})<RuleItemProps>(({ theme, preset, space = 2.5 }) => merge(
+  { borderBottom: `1px solid ${theme.vars.palette.divider}` },
+  responsive(theme, space, (v) => ({ paddingBlock: theme.spacing(v as number) })),
+  preset && { display: 'grid', columnGap: theme.spacing(2), rowGap: theme.spacing(0.5), '& > *': { minWidth: 0 } },
+  preset && responsive(theme, layout.columns[preset], (v) => ({ gridTemplateColumns: v })),
+));
 
 // ----- Stats ---------------------------------------------------------------
 

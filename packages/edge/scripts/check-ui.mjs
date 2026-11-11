@@ -27,10 +27,28 @@ const withoutDialogs = (s) => s.replace(/<Dialog\b[\s\S]*?<\/Dialog>/g, (m) => m
 const rules = [
   {
     id: 'theme-colors', rule: 'Colors come from the theme, never hex, rgb() or hsl() values',
-    find: (s) => [...all(/['"`]#[0-9a-fA-F]{3,8}['"`\s;)]/g, s), ...all(/\b(rgba?|hsla?)\(/g, s)],
+    find: (s) => [...all(/['"`]#[0-9a-fA-F]{3,8}['"`\s;)]/g, s), ...all(/\b(rgba?|hsla?)\((?!\$\{)/g, s)],
   },
   { id: 'square-corners', rule: 'Corners are square: no borderRadius', find: (s) => all(/borderRadius\s*[:=]\s*(?!\s*['"]?0\b)/g, s) },
-  { id: 'theme-fonts', rule: 'Fonts come from Edge typography, not font names', find: (s) => all(/fontFamily\s*:\s*['"`]/g, s) },
+  {
+    // A screen picks a text role (<Typography variant="prose">); the theme owns
+    // family, size, leading, tracking and width. A literal here drifts from the
+    // scale and doesn't follow a change to the system.
+    id: 'type-roles', rule: 'Type comes from text roles (Typography variant), not font, size or leading set by hand',
+    find: (s) => all(/\b(fontFamily|fontSize|lineHeight|letterSpacing|fontStretch)\s*:/g, s),
+  },
+  {
+    // Grids come from Columns presets. A one-off shape (a figure's own
+    // proportions) goes in Columns' template prop, where it's visible as one.
+    id: 'layout-presets', rule: 'Grids come from Edge layout (Columns presets), not gridTemplateColumns',
+    find: (s) => all(/\bgridTemplateColumns\s*:/g, s),
+  },
+  {
+    // theme.vars follows the mode attribute; theme.palette is fixed to one
+    // scheme, and alpha() bakes a color in at build time.
+    id: 'theme-vars', rule: 'Colors are read through theme.vars, not theme.palette or alpha()',
+    find: (s) => [...all(/\balpha\(/g, s), ...all(/(?<!vars)\.palette\.(?!mode\b)/g, s)],
+  },
   {
     id: 'visible-labels', rule: 'Every input has a visible label',
     find: (s) => [

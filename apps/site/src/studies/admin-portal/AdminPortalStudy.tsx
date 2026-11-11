@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { Lead, typography } from '@bensumet/edge';
-import { Eyebrow, Opener } from '../../components/Layout';
+import { Opener } from '../../components/Layout';
 import { DemoFrame } from '../../components/DemoFrame';
 
 const decisions = [
@@ -41,7 +41,7 @@ export function AdminPortalStudy() {
       </Box>
 
       <Box component="section" sx={{ mt: 8 }}>
-        <Eyebrow>From mockup to product</Eyebrow>
+        <Typography variant="eyebrow">From mockup to product</Typography>
         <Typography sx={{ mt: 1.5, fontFamily: typography.display, fontSize: '1.15rem', lineHeight: 1.6, maxWidth: typography.measure }}>
           The mockup is my design: I brought the requirements, the structure and the design calls, the AI
           assistant drafted options in code on the product&rsquo;s own theme, and we went round by round, with me choosing, tweaking and pushing

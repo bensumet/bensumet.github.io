@@ -1,7 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Box, Link, Stack, ToggleButton, ToggleButtonGroup, Tooltip, Typography } from '@mui/material';
 import { edgeColor, edgeLabel, edges, motion, typography, useEdgeSettings, type EdgeName } from '@bensumet/edge';
-import { Eyebrow } from '../components/Layout';
 import { href } from '../router';
 import { revealFrom } from '../components/Motion';
 
@@ -47,7 +46,7 @@ export default function SystemPage({ path }: { path: string[] }) {
     <>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center', justifyContent: 'space-between', mb: 4, pb: 2, borderBottom: 1, borderColor: 'divider' }}>
         <Box>
-          <Eyebrow>Design system</Eyebrow>
+          <Typography variant="eyebrow">Design system</Typography>
           <Typography component="p" sx={{ fontFamily: typography.display, fontStyle: 'italic', fontSize: '1.15rem', mt: 0.5 }}>
             Edge, the design system this site is built with.
           </Typography>

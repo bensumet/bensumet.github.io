@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { ArrowRule, Lead, Tag, typography } from '@bensumet/edge';
-import { Eyebrow, Opener } from '../../components/Layout';
+import { Opener } from '../../components/Layout';
 
 export interface Fact { label: string; value: string }
 export interface Point { head: string; body: string }
@@ -70,7 +70,7 @@ export function CaseStudy({ c }: { c: CaseStudyContent }) {
       <Box component="dl" sx={{ m: 0, display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: `repeat(${c.header.length}, 1fr)` }, gap: 3, py: 3, borderTop: 1, borderBottom: 1, borderColor: 'text.primary' }}>
         {c.header.map((f) => (
           <Box key={f.label} sx={{ minWidth: 0 }}>
-            <Box component="dt"><Eyebrow>{f.label}</Eyebrow></Box>
+            <Box component="dt"><Typography variant="eyebrow">{f.label}</Typography></Box>
             <Typography component="dd" sx={{ m: 0, mt: 0.75, fontSize: '0.95rem' }}>{f.value}</Typography>
           </Box>
         ))}

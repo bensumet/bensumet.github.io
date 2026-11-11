@@ -1,6 +1,6 @@
 import { Box, Link, Stack, Typography } from '@mui/material';
 import { Lead, WallArt, typography } from '@bensumet/edge';
-import { Eyebrow, IndexList } from '../components/Layout';
+import { IndexList } from '../components/Layout';
 import { href } from '../router';
 import { art } from '../data/craft';
 import { sections } from '../sections';
@@ -12,7 +12,7 @@ export default function HomePage() {
   return (
     <>
       <Box component="section" sx={{ position: 'relative', mb: { xs: 6, md: 10 } }}>
-        <Box sx={arrive(0)}><Eyebrow>Design systems · Frontend architecture · Engineering leadership</Eyebrow></Box>
+        <Box sx={arrive(0)}><Typography variant="eyebrow">Design systems · Frontend architecture · Engineering leadership</Typography></Box>
         <Box component="h1" sx={{ m: 0, mt: 2.5, maxWidth: { md: '78%' }, textWrap: 'balance' }}>
           <StripHeadline text="I build design systems" sx={{ fontFamily: typography.poster, fontStretch: '70%', fontWeight: 850, textTransform: 'uppercase', fontSize: 'clamp(3.2rem, 1rem + 9vw, 8.6rem)', lineHeight: 0.84 }} />
           <Box component="span" sx={{ ...arrive(700), display: 'block', fontFamily: typography.display, fontStyle: 'italic', color: 'primary.main', fontSize: 'clamp(2.1rem, 1rem + 4.6vw, 5rem)', lineHeight: 1.02, mt: 1 }}>
@@ -62,7 +62,7 @@ export default function HomePage() {
       </Box>
 
       <Box component="section" sx={{ mt: { xs: 6, md: 10 }, display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 2fr' }, gap: 3 }}>
-        <Eyebrow>Now</Eyebrow>
+        <Typography variant="eyebrow">Now</Typography>
         <Typography sx={{ fontFamily: typography.display, fontSize: '1.25rem', lineHeight: 1.55, maxWidth: typography.measure }}>
           Director, Product Engineering at Majesco. I lead the frontend for Immersive AI, a next-generation property and casualty insurance
           platform, and build its user-facing AI features. I manage a team of four engineers and stay hands-on.

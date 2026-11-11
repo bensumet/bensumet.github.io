@@ -2,7 +2,6 @@
 // internal details: boxes, arrows and labels only, drawn from the theme.
 import { Box, Typography } from '@mui/material';
 import { typography } from '@bensumet/edge';
-import { Eyebrow } from '../../components/Layout';
 
 function Node({ title, note, strong }: { title: string; note?: string; strong?: boolean }) {
   return (
@@ -20,7 +19,7 @@ function Down() {
 function Figure({ label, caption, children }: { label: string; caption: string; children: React.ReactNode }) {
   return (
     <Box component="figure" sx={{ m: 0, p: { xs: 2, md: 3.5 }, bgcolor: 'edge.tint', border: 1, borderColor: 'divider' }}>
-      <Eyebrow>{label}</Eyebrow>
+      <Typography variant="eyebrow">{label}</Typography>
       <Box sx={{ mt: 2.5 }}>{children}</Box>
       <Typography component="figcaption" color="text.secondary" sx={{ mt: 2.5, fontFamily: typography.display, fontSize: '1.05rem', maxWidth: typography.measure }}>{caption}</Typography>
     </Box>

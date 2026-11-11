@@ -1,37 +1,79 @@
 import { useState } from 'react';
 import { Box, Button, ButtonBase, Dialog, IconButton, Typography } from '@mui/material';
-import { alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import CloseIcon from '@mui/icons-material/Close';
-import { ChapterStripes, DotRule, Lead, typography } from '@bensumet/edge';
-import { Eyebrow, Opener, Title } from '../components/Layout';
+import { ChapterStripes, Columns, DotRule, Headline, Lead, Measure, RuleItem, RuleList } from '@bensumet/edge';
+import { Opener } from '../components/Layout';
 import { useVisitState } from '../useVisitState';
 import { a2, art, logos, paintings, placeSpace, placeSpaceBooks, recognition, tinfish, typeStudy, wallArt, type Plate } from '../data/craft';
 
+
+// ----- Gallery pieces ----------------------------------------------------
+// Print work shown as it was made: uncropped, on a mat. These read their
+// colors and spacing from the theme, so they follow the mode and the accent.
+
+/** The mat a plate sits on. Logos sit on white so their brand colors read as designed. */
+const MatButton = styled(ButtonBase, { shouldForwardProp: (p) => p !== 'light' && p !== 'tile' })<{ light?: boolean; tile?: boolean }>(({ theme, light, tile }) => ({
+  display: tile ? 'grid' : 'block',
+  placeItems: 'center',
+  width: '100%',
+  backgroundColor: light ? theme.vars.palette.common.white : theme.vars.palette.edge.tint,
+  padding: theme.spacing(tile ? 3 : 1.5),
+  ...(tile && { height: 200 }),
+  [theme.breakpoints.up('md')]: { padding: theme.spacing(tile ? 4 : 2.5), ...(tile && { height: 210 }) },
+  '& img': { transition: 'transform .2s' },
+  '&:hover img, &:focus-visible img': { transform: 'scale(1.01)' },
+}));
+
+/** Holds the image; on a spread it adds a soft gutter, so two facing pages read as an open book. */
+const Plate = styled('span', { shouldForwardProp: (p) => p !== 'spread' })<{ spread?: boolean }>(({ theme, spread }) => {
+  const shade = (pct: number) => `color-mix(in srgb, ${theme.vars.palette.common.black} ${pct}%, transparent)`;
+  return {
+    position: 'relative',
+    display: 'block',
+    width: 'fit-content',
+    maxWidth: '100%',
+    marginInline: 'auto',
+    ...(spread && {
+      '&::after': {
+        content: '""', position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: `linear-gradient(to right, transparent 46%, ${shade(6)} 49%, ${shade(16)} 50%, ${shade(6)} 51%, transparent 54%)`,
+      },
+    }),
+  };
+});
+
+const PlateImage = styled('img', { shouldForwardProp: (p) => p !== 'size' && p !== 'flat' })<{ size: 'tile' | 'wide' | 'page'; flat?: boolean }>(({ theme, size, flat }) => ({
+  display: 'block',
+  maxWidth: '100%',
+  height: 'auto',
+  objectFit: 'contain',
+  maxHeight: size === 'tile' ? 136 : size === 'wide' ? 420 : 340,
+  ...(size === 'tile' && { [theme.breakpoints.up('md')]: { maxHeight: 146 } }),
+  boxShadow: flat ? 'none' : theme.shadows[4],
+}));
 
 /** One image, uncropped, on a tinted mat. Click to view large. */
 function Mat({ p, onOpen, light, src, tile }: { p: Plate; onOpen: (p: Plate & { url: string }) => void; light?: boolean; src?: string; tile?: boolean }) {
   const url = src ?? art(p.src);
   return (
     <Box component="figure" sx={{ m: 0, gridColumn: p.wide && !tile ? { md: '1 / -1' } : undefined }}>
-      <ButtonBase onClick={() => onOpen({ ...p, url })} aria-label={`View larger: ${p.title}`} sx={{ display: tile ? 'grid' : 'block', placeItems: 'center', height: tile ? { xs: 200, md: 210 } : undefined, width: '100%', bgcolor: light ? 'common.white' : 'edge.tint', p: tile ? { xs: 3, md: 4 } : { xs: 1.5, md: 2.5 }, '&:hover img, &:focus-visible img': { transform: 'scale(1.01)' } }}>
-        <Box sx={{ position: 'relative', width: 'fit-content', maxWidth: '100%', mx: 'auto',
-          // A soft gutter down the middle of a spread, so two facing pages read as an open book.
-          ...(p.spread && { '&::after': { content: '""', position: 'absolute', inset: 0, pointerEvents: 'none',
-            background: (t) => `linear-gradient(to right, transparent 46%, ${alpha(t.palette.common.black, 0.06)} 49%, ${alpha(t.palette.common.black, 0.16)} 50%, ${alpha(t.palette.common.black, 0.06)} 51%, transparent 54%)` } }) }}>
-          <Box component="img" src={url} alt={p.alt} loading="lazy" decoding="async"
-            sx={{ display: 'block', maxWidth: '100%', maxHeight: tile ? { xs: 136, md: 146 } : p.wide ? 420 : 340, height: 'auto', objectFit: 'contain', boxShadow: light ? 0 : 4, transition: 'transform .2s' }} />
-        </Box>
-      </ButtonBase>
-      <Box component="figcaption" sx={{ mt: 1 }}>
-        <Typography component="span" sx={{ fontWeight: 650, fontSize: '0.9rem' }}>{p.title}</Typography>
-        {p.caption && <Typography component="span" color="text.secondary" sx={{ fontSize: '0.9rem' }}>. {p.caption}</Typography>}
-      </Box>
+      <MatButton light={light} tile={tile} onClick={() => onOpen({ ...p, url })} aria-label={`View larger: ${p.title}`}>
+        <Plate spread={p.spread}>
+          <PlateImage src={url} alt={p.alt} loading="lazy" decoding="async" size={tile ? 'tile' : p.wide ? 'wide' : 'page'} flat={light} />
+        </Plate>
+      </MatButton>
+      <Typography component="figcaption" variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+        <Typography component="strong" variant="inherit" color="text.primary">{p.title}</Typography>
+        {p.caption && <>. {p.caption}</>}
+      </Typography>
     </Box>
   );
 }
 
+/** Plates in a grid: one column on phones, two on tablets, `cols` on desktop. */
 function Grid({ children, cols = 3 }: { children: React.ReactNode; cols?: number }) {
-  return <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, 1fr)', md: `repeat(${cols}, 1fr)` }, gap: { xs: 3, md: 4 }, alignItems: 'start' }}>{children}</Box>;
+  return <Columns template={{ xs: '1fr', sm: 'repeat(2, 1fr)', md: `repeat(${cols}, 1fr)` }} gap={{ xs: 3, md: 4 }} align="start">{children}</Columns>;
 }
 
 /** A section head on a hairline that starts at a gold dot, as in the type study. */
@@ -39,9 +81,9 @@ function SectionHead({ n, bold, italic, children }: { n: string; bold: string; i
   return (
     <Box sx={{ mt: { xs: 9, md: 12 }, mb: 4 }}>
       <DotRule sx={{ mb: 3 }} />
-      <Eyebrow>{n}</Eyebrow>
-      <Box sx={{ mt: 1.5 }}><Title as="h2" bold={bold} italic={italic} /></Box>
-      {children && <Box sx={{ mt: 2.5, maxWidth: typography.measure }}>{children}</Box>}
+      <Typography variant="eyebrow">{n}</Typography>
+      <Box sx={{ mt: 1.5 }}><Headline level="section" bold={bold} italic={italic} /></Box>
+      {children && <Measure sx={{ mt: 2.5 }}>{children}</Measure>}
     </Box>
   );
 }
@@ -49,15 +91,15 @@ function SectionHead({ n, bold, italic, children }: { n: string; bold: string; i
 /** A book opener: stripe column, running head with the year, title, author in italic. */
 function BookOpener({ title, author, year, credit, note }: { title: string; author: string; year: number; credit: string; note: string }) {
   return (
-    <Box sx={{ display: 'grid', gridTemplateColumns: '14px 1fr', gap: { xs: 2, md: 3 }, mt: 6, mb: 3 }}>
+    <Columns template="14px 1fr" gap={{ xs: 2, md: 3 }} sx={{ mt: 6, mb: 3 }}>
       <ChapterStripes direction="horizontal" sx={{ height: '100%' }} />
       <Box>
-        <Eyebrow>{year} · {credit}</Eyebrow>
-        <Typography component="h3" sx={{ mt: 1, fontFamily: typography.poster, fontStretch: '72%', fontWeight: 850, textTransform: 'uppercase', fontSize: { xs: '1.7rem', md: '2.3rem' }, lineHeight: 0.92 }}>{title}</Typography>
-        <Typography sx={{ fontFamily: typography.display, fontStyle: 'italic', color: 'primary.main', fontSize: '1.3rem' }}>{author}</Typography>
-        <Typography color="text.secondary" sx={{ mt: 1, maxWidth: typography.measure }}>{note}</Typography>
+        <Typography variant="eyebrow">{year} · {credit}</Typography>
+        <Typography variant="posterMinor" component="h3" sx={{ mt: 1 }}>{title}</Typography>
+        <Typography variant="byline">{author}</Typography>
+        <Measure as={Typography} color="text.secondary" sx={{ mt: 1 }}>{note}</Measure>
       </Box>
-    </Box>
+    </Columns>
   );
 }
 
@@ -92,20 +134,21 @@ export default function CraftPage() {
           <i>Designing with Type</i>, and shown in the Typography III exhibition at the Commons Gallery.
         </Typography>
       </SectionHead>
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '758fr 335fr 672fr' }, gap: { xs: 3, md: 2.5 }, alignItems: 'start' }}>
+      {/* Columns sized to each print's own width, so the three hang at one scale. */}
+      <Columns template={{ xs: '1fr', md: '758fr 335fr 672fr' }} gap={{ xs: 3, md: 2.5 }} align="start">
         {placeSpace.map((p) => <Mat key={p.src} p={p} onOpen={setOpen} />)}
-      </Box>
-      <Box sx={{ mt: 5, display: 'grid', gridTemplateColumns: { xs: '1fr', md: '580fr 580fr 1160fr' }, gap: { xs: 3, md: 2.5 }, alignItems: 'start' }}>
+      </Columns>
+      <Columns template={{ xs: '1fr', md: '580fr 580fr 1160fr' }} gap={{ xs: 3, md: 2.5 }} align="start" sx={{ mt: 5 }}>
         {placeSpaceBooks.slice(0, 3).map((p) => <Mat key={p.src} p={p} onOpen={setOpen} />)}
-      </Box>
+      </Columns>
       <Box sx={{ mt: 4 }}><Grid cols={2}>{placeSpaceBooks.slice(3).map((p) => <Mat key={p.src} p={p} onOpen={setOpen} />)}</Grid></Box>
 
       <Box sx={{ mt: 8, mb: 3 }}>
         <Typography component="h3" variant="h3">One guide, twenty-one systems</Typography>
-        <Typography color="text.secondary" sx={{ mt: 1, maxWidth: typography.measure }}>
+        <Measure as={Typography} color="text.secondary" sx={{ mt: 1 }}>
           A study in showing the same information many ways with type alone: one customer information guide (providers, phone numbers,
           offices), organized twenty-one ways. Three are shown.
-        </Typography>
+        </Measure>
       </Box>
       <Grid>{typeStudy.map((p) => <Mat key={p.src} p={p} onOpen={setOpen} light />)}</Grid>
 
@@ -113,9 +156,10 @@ export default function CraftPage() {
         <Typography color="text.secondary">A 600-page guide for the East-West Center, and books I designed for Tinfish Press, 2008–2011. Spreads are shown small, for their design; the poems and prose belong to their authors.</Typography>
       </SectionHead>
       <BookOpener title={a2.title} author={a2.publisher} year={a2.year} credit="Logo, cover, charts and typesetting" note={a2.lead} />
-      <Typography color="text.secondary" sx={{ mb: 3, ml: { xs: '30px', md: '38px' }, maxWidth: typography.measure }}>
+      {/* Indented to the opener's text column: the stripe plus its gap. */}
+      <Measure as={Typography} color="text.secondary" sx={{ mb: 3, ml: { xs: '30px', md: '38px' } }}>
         I re-created every chart from the researchers&rsquo; data, designed them in each chapter&rsquo;s color family, and typeset all 600 pages.
-      </Typography>
+      </Measure>
       <Grid cols={4}>{a2.front.map((p) => <Mat key={p.src} p={p} onOpen={setOpen} />)}</Grid>
       <Box sx={{ mt: 4 }}><Grid>{a2.pages.map((p) => <Mat key={p.src} p={p} onOpen={setOpen} />)}</Grid></Box>
       <Box sx={{ mt: 4 }}><Grid>{a2.charts.map((p) => <Mat key={p.src} p={p} onOpen={setOpen} />)}</Grid></Box>
@@ -134,17 +178,17 @@ export default function CraftPage() {
       <Grid>{wallArt.map((p) => <Mat key={p.src} p={p} onOpen={setOpen} />)}</Grid>
 
       <SectionHead n="05 · Recognition" bold="Recognition" />
-      <Box component="dl" sx={{ m: 0, borderTop: 1, borderColor: 'text.primary' }}>
+      <RuleList as="dl">
         {recognition.map(([k, v]) => (
-          <Box key={k} sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '12rem 1fr' }, gap: 1, py: 2, borderBottom: 1, borderColor: 'divider' }}>
-            <Box component="dt"><Eyebrow>{k}</Eyebrow></Box>
-            <Typography component="dd" sx={{ m: 0, fontFamily: typography.display, fontSize: '1.15rem' }}>{v}</Typography>
-          </Box>
+          <RuleItem as="div" key={k} preset="aside" space={2}>
+            <Typography variant="eyebrow" component="dt">{k}</Typography>
+            <Typography variant="prose" component="dd">{v}</Typography>
+          </RuleItem>
         ))}
-      </Box>
+      </RuleList>
       <Box component="section" aria-labelledby="craft-more" sx={{ mt: 8, pt: 3, borderTop: 1, borderColor: 'divider' }}>
         <Typography id="craft-more" component="h2" variant="h4">More work</Typography>
-        <Typography color="text.secondary" sx={{ mt: 1, maxWidth: typography.measure }}>Two more books for Tinfish Press, and still lifes I painted digitally.</Typography>
+        <Measure as={Typography} color="text.secondary" sx={{ mt: 1 }}>Two more books for Tinfish Press, and still lifes I painted digitally.</Measure>
         <Button variant="outlined" sx={{ mt: 2 }} aria-expanded={more} aria-controls="craft-more-body" onClick={() => setMore((v) => !v)}>
           {more ? 'Hide more work' : 'Show more work'}
         </Button>

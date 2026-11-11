@@ -1,6 +1,6 @@
 import { Box, Link, Stack, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { Lead, typography } from '@bensumet/edge';
-import { Eyebrow, Opener } from '../../components/Layout';
+import { Opener } from '../../components/Layout';
 import { art } from '../../data/craft';
 import { href } from '../../router';
 import { useVisitState } from '../../useVisitState';
@@ -55,7 +55,7 @@ export default function EvalsPage() {
           </Box>
         </Box>
         <Box>
-          <Eyebrow>How it was scored</Eyebrow>
+          <Typography variant="eyebrow">How it was scored</Typography>
           <Box component="ul" sx={{ pl: 2.5, mt: 1, mb: 0, '& li': { mb: 1 } }}>
             <li><b>Rules check:</b> a script that reads the screen&rsquo;s code for hard-coded colors and fonts, rounded corners, raw pixel spacing, status shown by color alone, unlabeled inputs, extra primary buttons, page landmarks, and AI output without a label, sources or feedback.</li>
             <li><b>States:</b> whether the screen handles loading, empty and error, checked by reading the code, not just by the script.</li>
@@ -146,7 +146,7 @@ export default function EvalsPage() {
           </Typography>
         </Box>
         <Box>
-          <Eyebrow>Next</Eyebrow>
+          <Typography variant="eyebrow">Next</Typography>
           <Typography sx={{ mt: 1, maxWidth: typography.measure }}>
             Run more tasks, several attempts each, on every change to the rules, render each state instead of reading for it, and add a third condition with the MCP server connected. The rules, the instructions file
             and the check are in the repo; see <Link href={href('system', 'agents')}>For agents</Link>.

@@ -1,6 +1,6 @@
 import { Box, Link, Typography } from '@mui/material';
 import { Lead, typography } from '@bensumet/edge';
-import { Eyebrow, Opener } from '../../components/Layout';
+import { Opener } from '../../components/Layout';
 import { href } from '../../router';
 
 const P = ({ children }: { children: React.ReactNode }) => (
@@ -23,7 +23,7 @@ export function ProcessEssay() {
       <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '12rem 1fr' }, gap: { md: 4 } }}>
         <Box sx={{ display: { xs: 'none', md: 'block' } }}>
           <Box sx={{ position: 'sticky', top: 120 }}>
-            <Eyebrow>In this essay</Eyebrow>
+            <Typography variant="eyebrow">In this essay</Typography>
             <Box component="ol" sx={{ pl: 2.5, mt: 1, color: 'text.secondary', '& li': { mb: 0.75 } }}>
               <li>Design in code</li><li>Options are cheap</li><li>Every change is reviewed</li><li>Where it fails</li><li>Leading a team with it</li>
             </Box>

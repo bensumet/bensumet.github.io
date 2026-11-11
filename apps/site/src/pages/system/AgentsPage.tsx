@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Box, Link, Stack, Typography } from '@mui/material';
 import { EdgeCard, Lead, Tag, typography } from '@bensumet/edge';
-import { Eyebrow, Opener } from '../../components/Layout';
+import { Opener } from '../../components/Layout';
 import { href } from '../../router';
 
 interface RuleMeta { name: string; kind: string; summary: string; url: string }
@@ -115,7 +115,7 @@ export default function AgentsPage() {
         </Box>
         <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
           <Box sx={{ minWidth: 0 }}>
-            <Eyebrow>Connect it</Eyebrow>
+            <Typography variant="eyebrow">Connect it</Typography>
             <Typography sx={{ mt: 1, mb: 1.5, maxWidth: typography.measure }}>
               The repo&rsquo;s <code>.mcp.json</code> registers it for Claude Code when you open the repo. Anywhere else, one command:
             </Typography>
@@ -124,7 +124,7 @@ export default function AgentsPage() {
             </Box>
           </Box>
           <Box sx={{ minWidth: 0 }}>
-            <Eyebrow>A real exchange</Eyebrow>
+            <Typography variant="eyebrow">A real exchange</Typography>
             <Typography sx={{ mt: 1, mb: 1.5, maxWidth: typography.measure }}>
               Before using a gray it picked for helper text, a client asks the server. The answer is unedited, apart from shortening.
             </Typography>
@@ -160,7 +160,7 @@ export default function AgentsPage() {
           </Box>
         </Box>
         <Box>
-          <Eyebrow>Where I'd take it next</Eyebrow>
+          <Typography variant="eyebrow">Where I'd take it next</Typography>
           <Typography sx={{ mt: 1, maxWidth: typography.measure }}>
             A first evaluation is done: fresh agents built the same screens with and without these rules, and a checker scored them. See{' '}
             <Link href={href('system', 'evals')}>Evaluations</Link>. Next is running the

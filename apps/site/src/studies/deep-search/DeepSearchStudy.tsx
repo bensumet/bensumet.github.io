@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { Lead, typography } from '@bensumet/edge';
-import { Eyebrow, Opener } from '../../components/Layout';
+import { Opener } from '../../components/Layout';
 import { DemoFrame } from '../../components/DemoFrame';
 
 const decisions = [
@@ -41,7 +41,7 @@ export function DeepSearchStudy() {
 
       <Box component="section" sx={{ mt: 8, display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
         <Box>
-          <Eyebrow>Where it started</Eyebrow>
+          <Typography variant="eyebrow">Where it started</Typography>
           <Typography sx={{ mt: 1.5, fontFamily: typography.display, fontSize: '1.15rem', lineHeight: 1.6, maxWidth: typography.measure }}>
             The first version on the search results page was a row of chips for a few fixed categories; picking one filtered the results. It worked for
             simple searches and fell apart for mixed ones, because the chips never changed with the answer. I redesigned it around filter menus
@@ -49,7 +49,7 @@ export function DeepSearchStudy() {
           </Typography>
         </Box>
         <Box>
-          <Eyebrow>How AI shaped it</Eyebrow>
+          <Typography variant="eyebrow">How AI shaped it</Typography>
           <Typography sx={{ mt: 1.5, fontFamily: typography.display, fontSize: '1.15rem', lineHeight: 1.6, maxWidth: typography.measure }}>
             I used AI to work out how to design and group the information from what the search API actually returns, then prototyped each idea
             in code so the team could use it, not just look at it. We went through several rounds. The final version is the one shipping with the product.

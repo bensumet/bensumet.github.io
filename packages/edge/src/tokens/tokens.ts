@@ -154,17 +154,20 @@ export const typography = {
  */
 export type TextRole =
   | 'poster' | 'posterItalic' | 'posterSection' | 'posterSectionItalic' | 'indexTitle' | 'figure'
-  | 'lead' | 'prose' | 'eyebrow' | 'kicker' | 'label' | 'data' | 'mono' | 'caption' | 'brand' | 'brandItalic';
+  | 'hero' | 'heroItalic' | 'signoff' | 'accentItalic' | 'posterMinor' | 'byline'
+  | 'lead' | 'prose' | 'eyebrow' | 'kicker' | 'nav' | 'label' | 'data' | 'mono' | 'caption' | 'brand';
 
 export interface TextRoleSpec {
   family: keyof Pick<typeof typography, 'display' | 'poster' | 'body' | 'mono'>;
+  /** 'inherit' takes the size of the line the text sits in. */
   size: string | { xs: string; md: string };
-  leading: number;
+  leading: number | 'inherit';
   weight?: number;
   /** Width axis of the variable grotesque, in percent. */
   stretch?: number;
   tracking?: string;
   italic?: boolean;
+  /** true sets capitals; false undoes capitals inherited from a caps line. */
   caps?: boolean;
   /** Tabular, lining figures, for numbers compared in columns. */
   tabular?: boolean;
@@ -174,22 +177,28 @@ export interface TextRoleSpec {
 }
 
 export const textRoles: Record<TextRole, TextRoleSpec> = {
+  hero: { family: 'poster', size: 'clamp(3.2rem, 1rem + 9vw, 8.6rem)', leading: 0.84, weight: 850, stretch: 70, caps: true, description: 'The home page statement; once per site.' },
+  heroItalic: { family: 'display', size: 'clamp(2.1rem, 1rem + 4.6vw, 5rem)', leading: 1.02, weight: 400, italic: true, tone: 'accent', description: 'The italic line under the hero.' },
+  signoff: { family: 'poster', size: 'clamp(2.6rem, 1rem + 5vw, 5.5rem)', leading: 0.82, weight: 850, stretch: 72, caps: true, description: 'The closing line in the footer.' },
+  accentItalic: { family: 'display', size: 'inherit', leading: 'inherit', weight: 400, italic: true, caps: false, tone: 'accent', description: 'A Garamond italic run inside a poster line, at that line\'s size.' },
   poster: { family: 'poster', size: 'clamp(2.8rem, 1.2rem + 6vw, 6.4rem)', leading: 0.88, weight: 850, stretch: 72, caps: true, description: 'The bold first line of a page title.' },
   posterItalic: { family: 'display', size: 'clamp(2rem, 1rem + 4vw, 4.4rem)', leading: 1.05, weight: 400, italic: true, tone: 'accent', description: 'The Garamond italic second line of a page title.' },
   posterSection: { family: 'poster', size: 'clamp(2rem, 1.2rem + 3vw, 3.4rem)', leading: 0.88, weight: 850, stretch: 72, caps: true, description: 'A title one step down from the page title.' },
   posterSectionItalic: { family: 'display', size: 'clamp(1.5rem, 1rem + 2vw, 2.4rem)', leading: 1.05, weight: 400, italic: true, tone: 'accent', description: 'Italic counterpart of posterSection.' },
+  posterMinor: { family: 'poster', size: { xs: '1.7rem', md: '2.3rem' }, leading: 0.92, weight: 850, stretch: 72, caps: true, description: 'A small poster title: a book or chapter opener inside a section.' },
+  byline: { family: 'display', size: '1.3rem', leading: 1.3, italic: true, tone: 'accent', description: 'An italic name under or beside a title: an author, a publisher, the wordmark\'s surname.' },
   indexTitle: { family: 'poster', size: { xs: '1.5rem', md: '1.9rem' }, leading: 1, weight: 750, stretch: 80, caps: true, description: 'Titles in a contents list.' },
   figure: { family: 'poster', size: { xs: '2.2rem', md: '3rem' }, leading: 0.9, weight: 850, stretch: 72, tabular: true, tone: 'accent', description: 'A headline number in a row of results.' },
   lead: { family: 'display', size: { xs: '1.2rem', md: '1.32rem' }, leading: 1.65, tone: 'text', description: 'Opening and featured paragraphs.' },
   prose: { family: 'display', size: '1.15rem', leading: 1.55, description: 'Reading text: explanations under a label, essays, captions with substance.' },
   eyebrow: { family: 'body', size: '0.7rem', leading: 1.4, weight: 600, tracking: '0.24em', caps: true, tone: 'muted', description: 'A small letterspaced label above a title or a value.' },
+  nav: { family: 'body', size: '0.72rem', leading: 1.4, weight: 600, tracking: '0.18em', caps: true, description: 'Section links in the site navigation.' },
   kicker: { family: 'body', size: '0.62rem', leading: 1.4, weight: 600, tracking: '0.42em', caps: true, description: 'Widely spaced diagram labels and running heads.' },
   label: { family: 'body', size: '1rem', leading: 1.5, weight: 650, description: 'The bold head of a point, a row or a card.' },
   data: { family: 'body', size: '1rem', leading: 1.5, weight: 600, tabular: true, tone: 'accent', description: 'Numbers that line up: step numbers, counts.' },
   mono: { family: 'mono', size: '0.85rem', leading: 1.6, description: 'Code, file names and token names.' },
   caption: { family: 'body', size: '0.85rem', leading: 1.5, tone: 'muted', description: 'Notes under figures and small print.' },
   brand: { family: 'poster', size: '1.35rem', leading: 1, weight: 850, stretch: 72, caps: true, tracking: '-0.01em', description: 'The wordmark: bold first name.' },
-  brandItalic: { family: 'display', size: '1.3rem', leading: 1, italic: true, tone: 'accent', description: 'The wordmark: italic surname.' },
 };
 
 /**
@@ -207,6 +216,8 @@ export const layout = {
     asideWide: { xs: '1fr', md: '14rem 1fr' },
     /** Number, head and body: numbered decisions and gates. */
     numbered: { xs: '2.5rem 1fr', md: '3rem 1fr 1.3fr' },
+    /** A contents page: number, title, note. */
+    contents: { xs: '3rem 1fr', md: '4rem 1fr 1.2fr' },
     /** A narrow note beside a wide figure. */
     narrowWide: { xs: '1fr', md: '1fr 2fr' },
   },

@@ -61,7 +61,7 @@ function roleStyle(role: TextRole): CSSObject {
     ...(r.stretch && { fontStretch: `${r.stretch}%` }),
     ...(r.tracking && { letterSpacing: r.tracking }),
     ...(r.italic && { fontStyle: 'italic' }),
-    ...(r.caps && { textTransform: 'uppercase' }),
+    ...(r.caps !== undefined && { textTransform: r.caps ? 'uppercase' : 'none' }),
     ...(r.tabular && { fontVariantNumeric: 'tabular-nums lining-nums' }),
     ...(r.tone && { color: tones[r.tone] }),
   };
@@ -74,8 +74,9 @@ function roleStyle(role: TextRole): CSSObject {
 
 const roles = Object.keys(textRoles) as TextRole[];
 const variantMapping: Partial<Record<string, string>> = {
+  hero: 'span', heroItalic: 'span', signoff: 'p', accentItalic: 'span', nav: 'span',
   poster: 'span', posterItalic: 'span', posterSection: 'span', posterSectionItalic: 'span', indexTitle: 'span',
-  figure: 'p', lead: 'p', prose: 'p', eyebrow: 'p', kicker: 'span', label: 'p', data: 'span', mono: 'code', caption: 'p', brand: 'span', brandItalic: 'span',
+  figure: 'p', lead: 'p', prose: 'p', eyebrow: 'p', kicker: 'span', label: 'p', data: 'span', mono: 'code', caption: 'p', brand: 'span', byline: 'p', posterMinor: 'span',
 };
 
 /** Palette for one mode, from tokens. */
@@ -162,6 +163,8 @@ export function createEdgeTheme(edge: EdgeName = 'orange'): Theme {
           // Headlines balance across lines; reading text avoids orphans.
           'h1, h2, h3, h4': { textWrap: 'balance' },
           p: { textWrap: 'pretty' },
+          // Bold runs match the label weight, a step lighter than 700.
+          'strong, b': { fontWeight: 650 },
           // Figures line up in columns wherever numbers are compared.
           'table, .tabular': { fontVariantNumeric: 'tabular-nums lining-nums' },
           '::selection': { background: v('palette-primary-main'), color: v('palette-primary-contrastText') },
@@ -207,6 +210,28 @@ export function createEdgeTheme(edge: EdgeName = 'orange'): Theme {
             '&[aria-current="page"]': { color: v('palette-primary-main') },
           },
         },
+        variants: [
+          // A whole block as a link (a row in a contents list): it keeps the
+          // text color and lights up in the accent on hover and focus.
+          {
+            props: { underline: 'none', color: 'inherit' },
+            style: { '&:hover, &:focus-visible': { color: v('palette-primary-main') } },
+          },
+          // Section navigation: small letterspaced capitals with a bar under
+          // the current page.
+          {
+            props: { variant: 'nav' },
+            style: {
+              display: 'inline-block',
+              paddingBlock: 6,
+              color: v('palette-text-primary'),
+              textDecoration: 'none',
+              borderBottom: '2px solid transparent',
+              transition: `color ${quick}, border-color ${quick}`,
+              '&:hover, &:focus-visible, &[aria-current="page"]': { color: v('palette-primary-main'), borderColor: v('palette-primary-main') },
+            },
+          },
+        ],
       },
       MuiPaper: { styleOverrides: { root: { backgroundImage: 'none' } } },
       MuiCard: {
@@ -233,6 +258,8 @@ export function createEdgeTheme(edge: EdgeName = 'orange'): Theme {
             transition: `background-color ${quick}, color ${quick}`,
             [motion.reduced]: { transition: 'none' },
           },
+          // Small groups sit in toolbars and headers: tighter, so they line up with the text.
+          sizeSmall: { padding: '2px 10px' },
         },
       },
       MuiTab: { styleOverrides: { root: { textTransform: 'none', letterSpacing: 0, fontSize: '0.92rem', fontWeight: 700, minHeight: 48 } } },
