@@ -1,10 +1,10 @@
 import { Box, Link, Typography } from '@mui/material';
-import { Lead, typography } from '@bensumet/edge';
+import { Columns, Lead } from '@bensumet/edge';
 import { Opener } from '../../components/Layout';
 import { href } from '../../router';
 
 const P = ({ children }: { children: React.ReactNode }) => (
-  <Typography sx={{ fontFamily: typography.display, fontSize: '1.2rem', lineHeight: 1.65, maxWidth: typography.measure, mb: 2.5 }}>{children}</Typography>
+  <Typography variant="prose" sx={{ mb: 2.5 }}>{children}</Typography>
 );
 const H = ({ children }: { children: React.ReactNode }) => (
   <Typography variant="h3" component="h2" sx={{ mt: 6, mb: 2 }}>{children}</Typography>
@@ -20,7 +20,7 @@ export function ProcessEssay() {
         </Lead>
       </Opener>
 
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '12rem 1fr' }, gap: { md: 4 } }}>
+      <Columns preset="aside" gap={{ xs: 0, md: 4 }}>
         <Box sx={{ display: { xs: 'none', md: 'block' } }}>
           <Box sx={{ position: 'sticky', top: 120 }}>
             <Typography variant="eyebrow">In this essay</Typography>
@@ -81,7 +81,7 @@ export function ProcessEssay() {
             <Link href={href('ai', 'build-log')}>build log</Link> shows who did what.
           </Typography>
         </Box>
-      </Box>
+      </Columns>
     </>
   );
 }

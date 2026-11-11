@@ -1,5 +1,5 @@
 import { Box, Link, Stack, Typography } from '@mui/material';
-import { Columns, Headline, Measure, RuleItem, RuleList, Tag } from '@bensumet/edge';
+import { Columns, Headline, Measure, RuleItem, RuleList, Section, Tag } from '@bensumet/edge';
 
 /**
  * Site-level compositions of Edge pieces. Nothing here sets a font, size,
@@ -45,6 +45,47 @@ export function IndexList({ items, label }: { items: IndexItem[]; label: string 
         </RuleItem>
       ))}
     </RuleList>
+  );
+}
+
+/** Numbered points set as a contents page: number, the point, why. For decisions and gates. */
+export function NumberedList({ id, title, items }: { id: string; title: string; items: React.ReactNode[][] }) {
+  return (
+    <Section id={id} title={title}>
+      <RuleList as="ol">
+        {items.map(([head, body], i) => (
+          <RuleItem key={i} preset="numbered">
+            <Typography variant="data">{String(i + 1).padStart(2, '0')}</Typography>
+            <Typography variant="label">{head}</Typography>
+            <Typography variant="prose" color="text.secondary" sx={{ gridColumn: { xs: 2, md: 3 } }}>{body}</Typography>
+          </RuleItem>
+        ))}
+      </RuleList>
+    </Section>
+  );
+}
+
+/** Points in two columns: a bold head over its explanation. */
+export function Points({ items }: { items: React.ReactNode[][] }) {
+  return (
+    <Columns gap={4}>
+      {items.map(([head, body], i) => (
+        <Box key={i}>
+          <Typography variant="label">{head}</Typography>
+          <Typography variant="prose" color="text.secondary" sx={{ mt: 0.5 }}>{body}</Typography>
+        </Box>
+      ))}
+    </Columns>
+  );
+}
+
+/** A labelled passage of reading text: a running head over a paragraph. */
+export function Note({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <Box>
+      <Typography variant="eyebrow">{label}</Typography>
+      <Typography variant="prose" sx={{ mt: 1.5 }}>{children}</Typography>
+    </Box>
   );
 }
 

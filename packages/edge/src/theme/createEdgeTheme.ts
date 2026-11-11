@@ -62,6 +62,7 @@ function roleStyle(role: TextRole): CSSObject {
     ...(r.tracking && { letterSpacing: r.tracking }),
     ...(r.italic && { fontStyle: 'italic' }),
     ...(r.caps !== undefined && { textTransform: r.caps ? 'uppercase' : 'none' }),
+    ...(r.smallCaps && { fontVariantCaps: 'all-small-caps' }),
     ...(r.tabular && { fontVariantNumeric: 'tabular-nums lining-nums' }),
     ...(r.tone && { color: tones[r.tone] }),
   };
@@ -76,7 +77,7 @@ const roles = Object.keys(textRoles) as TextRole[];
 const variantMapping: Partial<Record<string, string>> = {
   hero: 'span', heroItalic: 'span', signoff: 'p', accentItalic: 'span', nav: 'span',
   poster: 'span', posterItalic: 'span', posterSection: 'span', posterSectionItalic: 'span', indexTitle: 'span',
-  figure: 'p', lead: 'p', prose: 'p', eyebrow: 'p', kicker: 'span', label: 'p', data: 'span', mono: 'code', caption: 'p', brand: 'span', byline: 'p', posterMinor: 'span',
+  figure: 'p', lead: 'p', prose: 'p', eyebrow: 'p', kicker: 'span', tab: 'span', label: 'p', data: 'span', mono: 'code', caption: 'p', brand: 'span', byline: 'p', posterMinor: 'span', smallCaps: 'span',
 };
 
 /** Palette for one mode, from tokens. */
@@ -120,6 +121,15 @@ export function createEdgeTheme(edge: EdgeName = 'orange'): Theme {
   const v = (path: string) => cssVar(path);
   const ring = `0 0 0 3px ${v('palette-background-default')}, 0 0 0 5px ${v('palette-primary-main')}`;
   const quick = `${motion.duration.quick}ms ${motion.ease.standard}`;
+
+  const navLink = {
+    display: 'inline-block',
+    color: v('palette-text-primary'),
+    textDecoration: 'none',
+    borderBottom: '2px solid transparent',
+    transition: `color ${quick}, border-color ${quick}`,
+    '&:hover, &:focus-visible, &[aria-current="page"]': { color: v('palette-primary-main'), borderColor: v('palette-primary-main') },
+  };
 
   return createTheme({
     cssVariables: { cssVarPrefix: CSS_VAR_PREFIX, colorSchemeSelector: `[${MODE_ATTRIBUTE}="%s"]` },
@@ -217,20 +227,10 @@ export function createEdgeTheme(edge: EdgeName = 'orange'): Theme {
             props: { underline: 'none', color: 'inherit' },
             style: { '&:hover, &:focus-visible': { color: v('palette-primary-main') } },
           },
-          // Section navigation: small letterspaced capitals with a bar under
-          // the current page.
-          {
-            props: { variant: 'nav' },
-            style: {
-              display: 'inline-block',
-              paddingBlock: 6,
-              color: v('palette-text-primary'),
-              textDecoration: 'none',
-              borderBottom: '2px solid transparent',
-              transition: `color ${quick}, border-color ${quick}`,
-              '&:hover, &:focus-visible, &[aria-current="page"]': { color: v('palette-primary-main'), borderColor: v('palette-primary-main') },
-            },
-          },
+          // Navigation (sections in the masthead, pages as tabs inside a
+          // section): a bar under the current page and under the hovered link.
+          { props: { variant: 'nav' }, style: { ...navLink, paddingBlock: 6 } },
+          { props: { variant: 'tab' }, style: { ...navLink, paddingBottom: 4 } },
         ],
       },
       MuiPaper: { styleOverrides: { root: { backgroundImage: 'none' } } },

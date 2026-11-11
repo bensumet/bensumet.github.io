@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, type SxProps, type Theme } from '@mui/material';
+import { Box, Typography, type SxProps, type Theme, type TypographyProps } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
 import { motion } from '@bensumet/edge';
 
@@ -12,7 +12,8 @@ const start = Array.from({ length: N }, (_, i) => (((i * 7) % 11) - 5) * 0.11);
 
 const reduced = () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
-export function StripHeadline({ text, sx }: { text: string; sx?: SxProps<Theme> }) {
+/** `variant` is the text role the headline is set in. */
+export function StripHeadline({ text, variant = 'hero', sx }: { text: string; variant?: TypographyProps['variant']; sx?: SxProps<Theme> }) {
   const still = reduced();
   const [phase, setPhase] = useState<'scattered' | 'settling' | 'settled'>(still ? 'settled' : 'scattered');
 
@@ -26,7 +27,7 @@ export function StripHeadline({ text, sx }: { text: string; sx?: SxProps<Theme> 
 
   const w = 100 / N;
   return (
-    <Box component="span"
+    <Typography variant={variant} component="span"
       sx={[{ position: 'relative', display: 'block' }, ...(Array.isArray(sx) ? sx : [sx])]}>
       <Box component="span" sx={visuallyHidden}>{text}</Box>
       <Box component="span" aria-hidden="true" sx={{ display: 'block', visibility: 'hidden' }}>{text}</Box>
@@ -49,6 +50,6 @@ export function StripHeadline({ text, sx }: { text: string; sx?: SxProps<Theme> 
           </Box>
         );
       })}
-    </Box>
+    </Typography>
   );
 }

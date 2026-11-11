@@ -1,6 +1,6 @@
-import { Box, Typography } from '@mui/material';
-import { Lead, typography } from '@bensumet/edge';
-import { Opener } from '../../components/Layout';
+import { Box } from '@mui/material';
+import { Lead } from '@bensumet/edge';
+import { Note, NumberedList, Opener } from '../../components/Layout';
 import { DemoFrame } from '../../components/DemoFrame';
 
 const decisions = [
@@ -27,29 +27,17 @@ export function AdminPortalStudy() {
       <DemoFrame src="admin-portal.html" title="Harbor & Pine Admin, the working mockup" height={760}
         note="The original mockup, with the product renamed. It designs the shell and navigation; the screens inside keep the current system’s design, so each page body here only describes what it holds. Try Preview as, Compact and Theme in the mockup controls, and Customize Sidebar at the bottom of the rail." />
 
-      <Box component="section" aria-labelledby="ap-decisions" sx={{ mt: 8 }}>
-        <Typography id="ap-decisions" variant="h3" component="h2" sx={{ mb: 3 }}>The decisions</Typography>
-        <Box component="ol" sx={{ m: 0, p: 0, listStyle: 'none', borderTop: 1, borderColor: 'text.primary' }}>
-          {decisions.map(([head, body], i) => (
-            <Box component="li" key={head} sx={{ display: 'grid', gridTemplateColumns: { xs: '2.5rem 1fr', md: '3rem 1fr 1.3fr' }, columnGap: 2, rowGap: 0.5, py: 2.5, borderBottom: 1, borderColor: 'divider' }}>
-              <Typography sx={{ color: 'primary.main', fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{String(i + 1).padStart(2, '0')}</Typography>
-              <Typography sx={{ fontWeight: 650 }}>{head}</Typography>
-              <Typography color="text.secondary" sx={{ gridColumn: { xs: 2, md: 3 }, fontFamily: typography.display, fontSize: '1.1rem', lineHeight: 1.5 }}>{body}</Typography>
-            </Box>
-          ))}
-        </Box>
-      </Box>
+      <NumberedList id="ap-decisions" title="The decisions" items={decisions} />
 
-      <Box component="section" sx={{ mt: 8 }}>
-        <Typography variant="eyebrow">From mockup to product</Typography>
-        <Typography sx={{ mt: 1.5, fontFamily: typography.display, fontSize: '1.15rem', lineHeight: 1.6, maxWidth: typography.measure }}>
+      <Box component="section" aria-label="From mockup to product" sx={{ mt: 8 }}>
+        <Note label="From mockup to product">
           The mockup is my design: I brought the requirements, the structure and the design calls, the AI
           assistant drafted options in code on the product&rsquo;s own theme, and we went round by round, with me choosing, tweaking and pushing
           back, until it was right.
           Because the mockup works, people could click through it and judge the real thing before anything was built. I then built the admin
           shell to the design on our own architecture, theme and component library, and the team built each page&rsquo;s content to the
           current system&rsquo;s design, wired to the real API.
-        </Typography>
+        </Note>
       </Box>
     </>
   );

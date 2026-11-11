@@ -1,6 +1,5 @@
-import { Box, Typography } from '@mui/material';
-import { Lead, typography } from '@bensumet/edge';
-import { Opener } from '../../components/Layout';
+import { Columns, Lead } from '@bensumet/edge';
+import { Note, NumberedList, Opener } from '../../components/Layout';
 import { DemoFrame } from '../../components/DemoFrame';
 
 const decisions = [
@@ -26,36 +25,19 @@ export function DeepSearchStudy() {
       <DemoFrame src="deep-search.html" title="Deep Search Filters, the working mockup"
         note="The original mockup, with the product renamed. Switch the four searches at the top; clicking a result shows where it would open." />
 
-      <Box component="section" aria-labelledby="decisions" sx={{ mt: 8 }}>
-        <Typography id="decisions" variant="h3" component="h2" sx={{ mb: 3 }}>The decisions</Typography>
-        <Box component="ol" sx={{ m: 0, p: 0, listStyle: 'none', borderTop: 1, borderColor: 'text.primary' }}>
-          {decisions.map(([head, body], i) => (
-            <Box component="li" key={head} sx={{ display: 'grid', gridTemplateColumns: { xs: '2.5rem 1fr', md: '3rem 1fr 1.3fr' }, columnGap: 2, rowGap: 0.5, py: 2.5, borderBottom: 1, borderColor: 'divider' }}>
-              <Typography sx={{ color: 'primary.main', fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{String(i + 1).padStart(2, '0')}</Typography>
-              <Typography sx={{ fontWeight: 650 }}>{head}</Typography>
-              <Typography color="text.secondary" sx={{ gridColumn: { xs: 2, md: 3 }, fontFamily: typography.display, fontSize: '1.1rem', lineHeight: 1.5 }}>{body}</Typography>
-            </Box>
-          ))}
-        </Box>
-      </Box>
+      <NumberedList id="decisions" title="The decisions" items={decisions} />
 
-      <Box component="section" sx={{ mt: 8, display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
-        <Box>
-          <Typography variant="eyebrow">Where it started</Typography>
-          <Typography sx={{ mt: 1.5, fontFamily: typography.display, fontSize: '1.15rem', lineHeight: 1.6, maxWidth: typography.measure }}>
+      <Columns as="section" aria-label="Background" gap={4} sx={{ mt: 8 }}>
+        <Note label="Where it started">
             The first version on the search results page was a row of chips for a few fixed categories; picking one filtered the results. It worked for
             simple searches and fell apart for mixed ones, because the chips never changed with the answer. I redesigned it around filter menus
             whose options come from the results themselves, and grouping chosen for the question each search was asking.
-          </Typography>
-        </Box>
-        <Box>
-          <Typography variant="eyebrow">How AI shaped it</Typography>
-          <Typography sx={{ mt: 1.5, fontFamily: typography.display, fontSize: '1.15rem', lineHeight: 1.6, maxWidth: typography.measure }}>
+        </Note>
+        <Note label="How AI shaped it">
             I used AI to work out how to design and group the information from what the search API actually returns, then prototyped each idea
             in code so the team could use it, not just look at it. We went through several rounds. The final version is the one shipping with the product.
-          </Typography>
-        </Box>
-      </Box>
+        </Note>
+      </Columns>
     </>
   );
 }

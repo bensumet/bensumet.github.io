@@ -1,4 +1,4 @@
-import { Box, Typography, type TypographyProps } from '@mui/material';
+import { Typography, type TypographyProps } from '@mui/material';
 
 /**
  * An opening paragraph set like the first lines of a book chapter: the `lead`
@@ -9,9 +9,7 @@ import { Box, Typography, type TypographyProps } from '@mui/material';
 export function Lead({ opening, children, sx, ...rest }: { opening: string; children: React.ReactNode } & TypographyProps) {
   return (
     <Typography variant="lead" sx={[{ hangingPunctuation: 'first' }, ...(Array.isArray(sx) ? sx : [sx])]} {...rest}>
-      <Box component="span" sx={{ fontVariantCaps: 'all-small-caps', letterSpacing: '0.06em', fontWeight: 500, color: 'primary.main' }}>
-        {opening}
-      </Box>{' '}
+      <Typography variant="smallCaps" color="primary">{opening}</Typography>{' '}
       {children}
     </Typography>
   );

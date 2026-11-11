@@ -11,10 +11,10 @@ import { Opener } from '../../components/Layout';
 
 function State({ name, children }: { name: string; children: React.ReactNode }) {
   return (
-    <Box sx={{ display: 'grid', gridTemplateColumns: '6.5rem 1fr', alignItems: 'center', gap: 1.5, py: 1.25, borderBottom: 1, borderColor: 'divider', minWidth: 0 }}>
+    <Columns template="6.5rem 1fr" gap={1.5} align="center" sx={{ py: 1.25, borderBottom: 1, borderColor: 'divider' }}>
       <Typography variant="body2" color="text.secondary">{name}</Typography>
-      <Box sx={{ minWidth: 0 }}>{children}</Box>
-    </Box>
+      <Box>{children}</Box>
+    </Columns>
   );
 }
 

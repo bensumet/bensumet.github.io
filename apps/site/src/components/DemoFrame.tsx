@@ -1,3 +1,4 @@
+// edge-allow-file edge-first: frames standalone demos that carry their own styles
 import { useEffect, useRef, useState } from 'react';
 import { Box, Link, Stack, Typography } from '@mui/material';
 

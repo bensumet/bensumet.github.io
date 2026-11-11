@@ -154,8 +154,8 @@ export const typography = {
  */
 export type TextRole =
   | 'poster' | 'posterItalic' | 'posterSection' | 'posterSectionItalic' | 'indexTitle' | 'figure'
-  | 'hero' | 'heroItalic' | 'signoff' | 'accentItalic' | 'posterMinor' | 'byline'
-  | 'lead' | 'prose' | 'eyebrow' | 'kicker' | 'nav' | 'label' | 'data' | 'mono' | 'caption' | 'brand';
+  | 'hero' | 'heroItalic' | 'signoff' | 'accentItalic' | 'posterMinor' | 'byline' | 'smallCaps'
+  | 'lead' | 'prose' | 'eyebrow' | 'kicker' | 'nav' | 'tab' | 'label' | 'data' | 'mono' | 'caption' | 'brand';
 
 export interface TextRoleSpec {
   family: keyof Pick<typeof typography, 'display' | 'poster' | 'body' | 'mono'>;
@@ -169,6 +169,8 @@ export interface TextRoleSpec {
   italic?: boolean;
   /** true sets capitals; false undoes capitals inherited from a caps line. */
   caps?: boolean;
+  /** True small caps from the font's own glyphs, not shrunken capitals. */
+  smallCaps?: boolean;
   /** Tabular, lining figures, for numbers compared in columns. */
   tabular?: boolean;
   /** Default text color: the main text, the muted text or the accent. */
@@ -187,14 +189,16 @@ export const textRoles: Record<TextRole, TextRoleSpec> = {
   posterSectionItalic: { family: 'display', size: 'clamp(1.5rem, 1rem + 2vw, 2.4rem)', leading: 1.05, weight: 400, italic: true, tone: 'accent', description: 'Italic counterpart of posterSection.' },
   posterMinor: { family: 'poster', size: { xs: '1.7rem', md: '2.3rem' }, leading: 0.92, weight: 850, stretch: 72, caps: true, description: 'A small poster title: a book or chapter opener inside a section.' },
   byline: { family: 'display', size: '1.3rem', leading: 1.3, italic: true, tone: 'accent', description: 'An italic name under or beside a title: an author, a publisher, the wordmark\'s surname.' },
+  smallCaps: { family: 'display', size: 'inherit', leading: 'inherit', weight: 500, tracking: '0.06em', smallCaps: true, description: 'A run of true small caps in Garamond: the opening words of a lead, abbreviations.' },
   indexTitle: { family: 'poster', size: { xs: '1.5rem', md: '1.9rem' }, leading: 1, weight: 750, stretch: 80, caps: true, description: 'Titles in a contents list.' },
   figure: { family: 'poster', size: { xs: '2.2rem', md: '3rem' }, leading: 0.9, weight: 850, stretch: 72, tabular: true, tone: 'accent', description: 'A headline number in a row of results.' },
   lead: { family: 'display', size: { xs: '1.2rem', md: '1.32rem' }, leading: 1.65, tone: 'text', description: 'Opening and featured paragraphs.' },
   prose: { family: 'display', size: '1.15rem', leading: 1.55, description: 'Reading text: explanations under a label, essays, captions with substance.' },
   eyebrow: { family: 'body', size: '0.7rem', leading: 1.4, weight: 600, tracking: '0.24em', caps: true, tone: 'muted', description: 'A small letterspaced label above a title or a value.' },
   nav: { family: 'body', size: '0.72rem', leading: 1.4, weight: 600, tracking: '0.18em', caps: true, description: 'Section links in the site navigation.' },
+  tab: { family: 'body', size: '1rem', leading: 1.5, weight: 600, description: 'Page links inside a section, set as tabs.' },
   kicker: { family: 'body', size: '0.62rem', leading: 1.4, weight: 600, tracking: '0.42em', caps: true, description: 'Widely spaced diagram labels and running heads.' },
-  label: { family: 'body', size: '1rem', leading: 1.5, weight: 650, description: 'The bold head of a point, a row or a card.' },
+  label: { family: 'body', size: '1rem', leading: 1.35, weight: 650, description: 'The bold head of a point, a row or a card.' },
   data: { family: 'body', size: '1rem', leading: 1.5, weight: 600, tabular: true, tone: 'accent', description: 'Numbers that line up: step numbers, counts.' },
   mono: { family: 'mono', size: '0.85rem', leading: 1.6, description: 'Code, file names and token names.' },
   caption: { family: 'body', size: '0.85rem', leading: 1.5, tone: 'muted', description: 'Notes under figures and small print.' },
@@ -218,6 +222,8 @@ export const layout = {
     numbered: { xs: '2.5rem 1fr', md: '3rem 1fr 1.3fr' },
     /** A contents page: number, title, note. */
     contents: { xs: '3rem 1fr', md: '4rem 1fr 1.2fr' },
+    /** A main column beside a supporting one, 7:5. */
+    wideNarrow: { xs: '1fr', md: '7fr 5fr' },
     /** A narrow note beside a wide figure. */
     narrowWide: { xs: '1fr', md: '1fr 2fr' },
   },

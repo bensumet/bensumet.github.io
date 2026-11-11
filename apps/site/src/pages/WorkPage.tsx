@@ -1,3 +1,4 @@
+// edge-allow-file edge-first: composes the site's Edge-built Opener, IndexList and CaseStudy
 import { IndexList, Opener } from '../components/Layout';
 import { href } from '../router';
 import { CaseStudy } from '../studies/work/CaseStudy';

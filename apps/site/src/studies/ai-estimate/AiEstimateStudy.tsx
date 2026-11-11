@@ -1,6 +1,5 @@
-import { Box, Typography } from '@mui/material';
-import { Lead, typography } from '@bensumet/edge';
-import { Opener } from '../../components/Layout';
+import { Lead, Section } from '@bensumet/edge';
+import { Opener, Points } from '../../components/Layout';
 import { DemoFrame } from '../../components/DemoFrame';
 
 const decisions = [
@@ -26,17 +25,9 @@ export function AiEstimateStudy() {
       <DemoFrame src="ai-estimate.html" title="AI estimated premium: header options, round by round" height={960}
         note="The original working file, newest round first, with the product renamed. The chosen option is at the top; scroll inside the frame, or open it full page." />
 
-      <Box component="section" aria-labelledby="est-decisions" sx={{ mt: 7 }}>
-        <Typography id="est-decisions" variant="h3" component="h2" sx={{ mb: 3 }}>What I decided, and why</Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
-          {decisions.map(([h, b]) => (
-            <Box key={h}>
-              <Typography sx={{ fontWeight: 650 }}>{h}</Typography>
-              <Typography sx={{ mt: 0.5, fontFamily: typography.display, fontSize: '1.12rem', lineHeight: 1.55, color: 'text.secondary' }}>{b}</Typography>
-            </Box>
-          ))}
-        </Box>
-      </Box>
+      <Section id="est-decisions" title="What I decided, and why">
+        <Points items={decisions} />
+      </Section>
     </>
   );
 }

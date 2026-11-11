@@ -1,6 +1,6 @@
 import { Box, Link, Typography } from '@mui/material';
-import { Lead, typography } from '@bensumet/edge';
-import { Opener } from '../components/Layout';
+import { Lead, RuleItem, RuleList, Section } from '@bensumet/edge';
+import { Opener, Points } from '../components/Layout';
 
 const facts: [string, React.ReactNode][] = [
   ['Now', 'Director, Product Engineering at Majesco. I lead the frontend for Immersive AI, manage a team of four engineers, and stay hands-on.'],
@@ -30,36 +30,28 @@ export default function AboutPage() {
           them, and lead the engineers who build them with me. When a problem is hard, I keep working until I find the actual cause rather than patch around it.
         </Lead>
       </Opener>
-      <Box component="dl" sx={{ m: 0, borderTop: 1, borderColor: 'text.primary' }}>
+      <RuleList as="dl">
         {facts.map(([k, v]) => (
-          <Box key={k} sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '12rem 1fr' }, gap: 1, py: 2.5, borderBottom: 1, borderColor: 'divider' }}>
-            <Box component="dt"><Typography variant="eyebrow">{k}</Typography></Box>
-            <Typography component="dd" sx={{ m: 0, fontFamily: typography.display, fontSize: '1.15rem', lineHeight: 1.55, maxWidth: typography.measure }}>{v}</Typography>
-          </Box>
+          <RuleItem as="div" key={k} preset="aside">
+            <Typography variant="eyebrow" component="dt">{k}</Typography>
+            <Typography variant="prose" component="dd">{v}</Typography>
+          </RuleItem>
         ))}
-      </Box>
-      <Box component="section" aria-labelledby="lead" sx={{ mt: 8 }}>
-        <Typography id="lead" variant="h3" component="h2" sx={{ mb: 2.5 }}>How I lead</Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
-          {lead.map(([h, b]) => (
-            <Box key={h}>
-              <Typography sx={{ fontWeight: 650 }}>{h}</Typography>
-              <Typography sx={{ mt: 0.5, fontFamily: typography.display, fontSize: '1.12rem', lineHeight: 1.55, color: 'text.secondary' }}>{b}</Typography>
-            </Box>
-          ))}
-        </Box>
-        <Box sx={{ mt: 5, borderTop: 1, borderColor: 'divider' }}>
+      </RuleList>
+      <Section id="lead" title="How I lead">
+        <Points items={lead} />
+        <RuleList as="div" sx={{ mt: 5, borderTopColor: 'divider' }}>
           {stories.map(([h, b]) => (
-            <Box key={h} component="article" sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '12rem 1fr' }, gap: 1, py: 3, borderBottom: 1, borderColor: 'divider' }}>
-              <Typography variant="h4" component="h3" sx={{ fontSize: '1.05rem', fontWeight: 650 }}>{h}</Typography>
-              <Typography sx={{ m: 0, fontFamily: typography.display, fontSize: '1.15rem', lineHeight: 1.6, maxWidth: typography.measure }}>{b}</Typography>
-            </Box>
+            <RuleItem key={h} as="article" preset="aside" space={3}>
+              <Typography variant="label" component="h3">{h}</Typography>
+              <Typography variant="prose">{b}</Typography>
+            </RuleItem>
           ))}
-        </Box>
-      </Box>
+        </RuleList>
+      </Section>
       <Box sx={{ mt: 6 }}>
         <Typography variant="eyebrow">Contact</Typography>
-        <Typography sx={{ mt: 1, fontSize: '1.1rem' }}>
+        <Typography sx={{ mt: 1 }}>
           <Link href="mailto:bensumet@gmail.com">bensumet@gmail.com</Link> · <Link href="https://www.linkedin.com/in/ben-viwatmanitsakul/">LinkedIn</Link> · <Link href="https://github.com/bensumet">GitHub</Link> · <Link href="https://github.com/bensumet/bensumet.github.io">View the code</Link>
         </Typography>
       </Box>

@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react';
 import { Box, Link, Stack, ToggleButton, ToggleButtonGroup, Tooltip, Typography } from '@mui/material';
-import { edgeColor, edgeLabel, edges, motion, typography, useEdgeSettings, type EdgeName } from '@bensumet/edge';
+import { edgeColor, edgeLabel, edges, useEdgeSettings, type EdgeName } from '@bensumet/edge';
 import { href } from '../router';
 import { revealFrom } from '../components/Motion';
 
@@ -47,9 +47,7 @@ export default function SystemPage({ path }: { path: string[] }) {
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'center', justifyContent: 'space-between', mb: 4, pb: 2, borderBottom: 1, borderColor: 'divider' }}>
         <Box>
           <Typography variant="eyebrow">Design system</Typography>
-          <Typography component="p" sx={{ fontFamily: typography.display, fontStyle: 'italic', fontSize: '1.15rem', mt: 0.5 }}>
-            Edge, the design system this site is built with.
-          </Typography>
+          <Typography variant="prose" sx={{ mt: 0.5 }}><i>Edge, the design system this site is built with.</i></Typography>
         </Box>
         <Stack direction="row" spacing={1} alignItems="center">
           <Typography variant="body2" color="text.secondary" id="accent-label">Accent</Typography>
@@ -60,10 +58,7 @@ export default function SystemPage({ path }: { path: string[] }) {
         <Stack component="ul" direction="row" spacing={3} sx={{ listStyle: 'none', m: 0, p: 0, whiteSpace: 'nowrap' }}>
           {tabs.map((t) => (
             <li key={t.id}>
-              <Link href={href('system', t.id)} underline="none" aria-current={t.id === tab.id ? 'page' : undefined}
-                sx={{ display: 'inline-block', fontWeight: 600, color: t.id === tab.id ? 'primary.main' : 'text.primary', borderBottom: 2, borderColor: t.id === tab.id ? 'primary.main' : 'transparent', pb: 0.5, transition: `color ${motion.duration.quick}ms, border-color ${motion.duration.quick}ms`, '&:hover, &:focus-visible': { color: 'primary.main', borderColor: 'primary.main' } }}>
-                {t.label}
-              </Link>
+              <Link variant="tab" href={href('system', t.id)} aria-current={t.id === tab.id ? 'page' : undefined}>{t.label}</Link>
             </li>
           ))}
         </Stack>
