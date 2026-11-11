@@ -1,5 +1,5 @@
 ```json
-{ "name": "Foundations", "kind": "global", "summary": "Rules every screen follows: color only from the theme, AA contrast, type voices, spacing, square corners, one primary action." }
+{ "name": "Foundations", "kind": "global", "summary": "Rules every screen follows: color from the theme's variables, AA contrast, type from text roles, grids from layout presets, square corners, one primary action." }
 ```
 
 # Foundations
@@ -7,7 +7,9 @@
 These apply to every screen built with Edge. Read them first.
 
 ## Color
-- Read every color from the theme (`primary.main`, `text.secondary`, `background.paper`, `palette.edge.*`). Never hard-code a hex value in a component.
+- Read every color from the theme (`primary.main`, `text.secondary`, `background.paper`, `edge.*`). Never hard-code a hex, `rgb()` or `hsl()` value in a component.
+- Both modes are CSS variables (`--edge-palette-*`) switched by the `data-edge-mode` attribute, so the page never re-renders to change mode. In a styled component or a theme callback, read `theme.vars.palette.*`, never `theme.palette.*` (fixed to one mode) or `alpha()` (baked in at build time). For a translucent color, use the channel: `rgba(${theme.vars.palette.primary.mainChannel} / 0.2)`.
+- To show both modes side by side, wrap each in `ModeScope`.
 - One accent per screen. The accent marks focus, selection and the single primary action. Everything else is neutral.
 - Status colors (`success`, `warning`, `error`, `info`) are for status only, never decoration.
 - Never use color as the only signal. Pair it with a word, an icon shape, or position.
@@ -18,6 +20,14 @@ These apply to every screen built with Edge. Read them first.
 - Pair a heavy poster line with a Garamond italic line for openers; don't stack two poster lines of the same weight.
 - Reading text: hold lines to about 66 characters (`measure`) with 1.65 leading.
 - Numbers in columns use tabular figures.
+- **Every piece of text is a text role.** Pick one with `<Typography variant="…">`: `prose` for reading text, `lead` for an opening paragraph, `label` for the bold head of a point, `eyebrow` for a running head, `data` and `metric` for numbers, `mono` for code, `caption` for small print, and the poster roles for titles. The full list, with what each is for, is in `tokens.json` under `font.role`.
+- A screen never sets `fontFamily`, `fontSize`, `lineHeight`, `letterSpacing` or `fontStretch`. If no role fits and the need repeats, add a role to `textRoles` in the tokens, so every screen gets it. A one-off specimen (showing the type itself) may set them with a written `edge-allow type-roles:` reason.
+- For emphasis inside a role, use `<strong>` (the label weight) or `<i>`; for a color, the Typography `color` prop.
+
+## Layout
+- Grids come from `Columns` with a named `preset` (`halves`, `thirds`, `quarters`, `aside`, `numbered`, `contents`, `wideNarrow`…). A screen never writes `gridTemplateColumns`. A one-off shape, like columns sized to a set of prints, goes in `Columns`' `template` prop, where it reads as one. If a template appears twice, make it a preset.
+- Sections are `Section` (it owns the space between sections and the heading); contents-style lists are `RuleList` and `RuleItem`; headline numbers are `StatGrid` and `Stat`; code is `CodeBlock`; tables outside MUI's Table are `DataTable`.
+- `sx` is for composition: the space between two blocks, a one-off position. If the same `sx` appears on two screens, it belongs in the theme or a primitive.
 
 ## Space and shape
 - Spacing comes from the 4px-based scale (`space`): 4, 8, 12, 16, 24, 32, 48, 64.

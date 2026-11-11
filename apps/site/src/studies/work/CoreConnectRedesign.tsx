@@ -4,7 +4,7 @@ import {
   TableBody, TableCell, TableHead, TableRow, Tabs, TextField, ToggleButton, ToggleButtonGroup, Typography,
 } from '@mui/material';
 import { visuallyHidden } from '@mui/utils';
-import { AiLabel, EdgeCard, SuggestionList, SummaryCard, typography } from '@bensumet/edge';
+import { AiLabel, Columns, EdgeCard, SuggestionList, SummaryCard } from '@bensumet/edge';
 
 import { useTween } from '../../components/Motion';
 
@@ -127,20 +127,20 @@ export function CoreConnectRedesign() {
       <Box role="status" aria-live="polite" sx={visuallyHidden}>{announce}</Box>
 
       {/* Quote header: who, what, the total and the next action stay in view. */}
-      <Box sx={{ px: { xs: 2, md: 3 }, pt: 3, pb: 2, display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr auto' }, gap: 3, alignItems: 'end', borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper' }}>
-        <Box sx={{ minWidth: 0 }}>
+      <Columns template={{ xs: '1fr', md: '1fr auto' }} align="end" sx={{ px: { xs: 2, md: 3 }, pt: 3, pb: 2, borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper' }}>
+        <Box>
           <Stack direction="row" spacing={1} alignItems="center" useFlexGap sx={{ flexWrap: 'wrap', mb: 1 }}>
             <Typography variant="body2" color="text.secondary">Quote QCA-2059637 · Homeowners HO-3</Typography>
             <Chip size="small" variant="outlined" color={bound ? 'success' : 'info'} label={bound ? 'Ready to bind' : 'Quoted'} />
           </Stack>
-          <Typography variant="h3" component="h3" sx={{ fontSize: { xs: '1.5rem', md: '1.85rem' } }}>June Alder</Typography>
+          <Typography variant="h3">June Alder</Typography>
           <Typography color="text.secondary">18 Wharf Street, Portland, ME · Nov 3, 2026 to Nov 3, 2027</Typography>
         </Box>
         <Box sx={{ textAlign: { md: 'right' } }}>
           <Typography variant="body2" color="text.secondary">Annual premium</Typography>
           <Stack direction="row" spacing={1.5} alignItems="center" justifyContent={{ md: 'flex-end' }}>
             {phase === 'repricing' && <CircularProgress size={18} aria-label="Repricing" />}
-            <Typography sx={{ fontFamily: typography.display, fontSize: { xs: '2.4rem', md: '3rem' }, lineHeight: 1.05, fontVariantNumeric: 'tabular-nums', opacity: phase === 'repricing' ? 0.45 : 1 }}>
+            <Typography variant="amount" sx={{ opacity: phase === 'repricing' ? 0.45 : 1 }}>
               {money(total)}
             </Typography>
           </Stack>
@@ -154,7 +154,7 @@ export function CoreConnectRedesign() {
             </Button>
           </Stack>
         </Box>
-      </Box>
+      </Columns>
 
       <Tabs value={tab} onChange={(_, v) => setTab(v)} variant="scrollable" allowScrollButtonsMobile aria-label="Quote steps"
         sx={{ px: { xs: 1, md: 2 }, borderBottom: 1, borderColor: 'divider', bgcolor: 'background.paper' }}>
@@ -165,9 +165,9 @@ export function CoreConnectRedesign() {
 
       <Box sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
         {tab === 'Premium' && (
-          <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', lg: 'minmax(0, 3fr) minmax(0, 2fr)' }, gap: 3, alignItems: 'start' }}>
+          <Columns template={{ xs: '1fr', lg: '3fr 2fr' }} align="start">
             <EdgeCard sx={{ p: { xs: 1.5, md: 3 }, minWidth: 0 }}>
-              <Typography variant="h4" component="h3" sx={{ fontSize: '1.3rem' }}>Premium</Typography>
+              <Typography variant="h4" component="h3">Premium</Typography>
               <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>Change a limit or the deductible and the quote reprices.</Typography>
               {phase === 'error' && (
                 <Alert severity="error" sx={{ mt: 2 }} action={<Button color="inherit" size="small" onClick={() => { setRating('up'); reprice(c, 'up'); }}>Try again</Button>}>
@@ -185,12 +185,12 @@ export function CoreConnectRedesign() {
                     {groupRows('Credits and discounts', p.credits, p.groups.credits)}
                     <TableRow>
                       <TableCell colSpan={2} sx={{ borderTop: 2, borderColor: 'text.primary', pt: 2 }}><Typography variant="h5" component="span">Annual premium</Typography></TableCell>
-                      <TableCell sx={{ ...num, borderTop: 2, borderColor: 'text.primary', pt: 2, fontWeight: 800, fontSize: '1.15rem' }}>{money(p.total)}</TableCell>
+                      <TableCell sx={{ ...num, borderTop: 2, borderColor: 'text.primary', pt: 2, fontWeight: 800 }}>{money(p.total)}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
               </Box>
-              <Typography variant="caption" color="text.secondary" component="p" sx={{ mt: 2, maxWidth: typography.measure }}>
+              <Typography variant="caption" sx={{ mt: 2 }}>
                 Coverage applies only where a premium or &ldquo;Included&rdquo; is shown, up to the limit listed, under the terms of the policy.
               </Typography>
             </EdgeCard>
@@ -213,19 +213,19 @@ export function CoreConnectRedesign() {
                 <SuggestionList suggestions={suggestions} onDecide={onDecide} />
               </Box>
             </Stack>
-          </Box>
+          </Columns>
         )}
 
         {tab === 'Insured' && (
           <EdgeCard sx={{ p: { xs: 2, md: 3 }, maxWidth: 760 }}>
-            <Typography variant="h4" component="h3" sx={{ fontSize: '1.3rem', mb: 2 }}>Insured</Typography>
-            <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 2 }}>
+            <Typography variant="h4" component="h3" sx={{ mb: 2 }}>Insured</Typography>
+            <Columns preset="halvesEarly" gap={2}>
               <TextField label="First name" defaultValue="June" />
               <TextField label="Last name" defaultValue="Alder" />
               <TextField label="Birth date" defaultValue="10/10/1980" helperText="MM/DD/YYYY" />
               <TextField label="Mobile phone" defaultValue="(555) 014-2290" />
               <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} error={!!emailError} helperText={emailError || 'Quote and policy documents go here.'} sx={{ gridColumn: { sm: '1 / -1' } }} />
-            </Box>
+            </Columns>
             <FormControlLabel sx={{ mt: 2 }} control={<Switch checked={c.paperless} onChange={(e) => change({ paperless: e.target.checked })} />}
               label="Go paperless: documents by email, $12 off the premium" />
           </EdgeCard>
@@ -233,7 +233,7 @@ export function CoreConnectRedesign() {
 
         {!redesigned.includes(tab) && (
           <EdgeCard sx={{ p: { xs: 2, md: 3 }, maxWidth: 760 }}>
-            <Typography variant="h4" component="h3" sx={{ fontSize: '1.3rem' }}>{tab}</Typography>
+            <Typography variant="h4" component="h3">{tab}</Typography>
             <Typography color="text.secondary" sx={{ mt: 1, mb: 2 }}>This step isn&rsquo;t part of the redesign. Insured and Premium are.</Typography>
             <Button variant="outlined" onClick={() => setTab('Premium')}>Go to Premium</Button>
           </EdgeCard>

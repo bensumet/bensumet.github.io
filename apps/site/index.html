@@ -9,7 +9,13 @@
     <script>
       // Set the remembered mode before the first paint, so the page never flashes the other one.
       (function () {
-        var m; try { m = localStorage.getItem('edge.color-mode'); } catch (e) {}
+        var m;
+        try {
+          m = localStorage.getItem('edge.color-mode');
+          // Carry over a choice saved under the earlier key (ink or paper).
+          var old = localStorage.getItem('edge.mode');
+          if (!m && old) { m = old === 'paper' ? 'light' : 'dark'; localStorage.setItem('edge.color-mode', m); localStorage.removeItem('edge.mode'); }
+        } catch (e) {}
         if (m === 'system') m = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
         document.documentElement.setAttribute('data-edge-mode', m === 'light' ? 'light' : 'dark');
       })();

@@ -1,6 +1,7 @@
 import { Fragment, useState } from 'react';
 import { Box, Button, ButtonBase, Collapse, Dialog, IconButton, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
-import { motion, typography } from '@bensumet/edge';
+import CloseIcon from '@mui/icons-material/Close';
+import { Columns, Measure, motion, Section } from '@bensumet/edge';
 import { art } from '../../data/craft';
 import { Crossfade } from '../../components/Motion';
 import { CoreConnectRedesign } from './CoreConnectRedesign';
@@ -67,7 +68,7 @@ function Pair({ p, onOpen }: { p: typeof pairs[number]; onOpen: (s: Screen) => v
   return (
     <Box component="figure" sx={{ m: 0, minWidth: 0 }}>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', justifyContent: 'space-between', gap: 1.5, mb: 1.5 }}>
-        <Typography variant="h4" component="h3" sx={{ fontSize: '1.25rem' }}>{p.title}</Typography>
+        <Typography variant="h4" component="h3">{p.title}</Typography>
         <ToggleButtonGroup exclusive size="small" value={view} onChange={(_, v) => v && setView(v)} aria-label={`${p.title}: original design or after the redesign`}>
           <ToggleButton value="design">Before: {p.year}</ToggleButton>
           <ToggleButton value="shipped">After: redesign</ToggleButton>
@@ -77,7 +78,7 @@ function Pair({ p, onOpen }: { p: typeof pairs[number]; onOpen: (s: Screen) => v
         { id: 'design', node: <Img s={p.design} onOpen={onOpen} /> },
         { id: 'shipped', node: <Img s={p.shipped} onOpen={onOpen} /> },
       ]} />
-      <Typography component="figcaption" color="text.secondary" sx={{ mt: 1.5, fontFamily: typography.display, fontSize: '1.08rem', lineHeight: 1.5, maxWidth: typography.measure }}>
+      <Typography variant="prose" component="figcaption" color="text.secondary" sx={{ mt: 1.5 }}>
         {p.body}
       </Typography>
     </Box>
@@ -93,10 +94,10 @@ export function CoreConnectScreens() {
     <>
       <Box component="section" aria-labelledby="cc-real" sx={{ mt: 8 }}>
         <Typography id="cc-real" variant="h3" component="h2" sx={{ mb: 1 }}>The product itself</Typography>
-        <Typography color="text.secondary" sx={{ mb: 3, maxWidth: typography.measure }}>
+        <Measure as={Typography} color="text.secondary" sx={{ mb: 3 }}>
           The product belongs to my employer, so I don&rsquo;t show its screens. Every screen here is a re-creation I drew from it: the same
           layouts, components and flows, with fictional companies and data and no product branding. Two are shown before and after the product&rsquo;s redesign.
-        </Typography>
+        </Measure>
         <Box component="figure" sx={{ m: 0, maxWidth: 880 }}>
           <Img s={hub} />
           <Typography component="figcaption" variant="body2" color="text.secondary" sx={{ mt: 1 }}>
@@ -120,49 +121,47 @@ export function CoreConnectScreens() {
           </Button>
         </Box>
         <Collapse in={more} id="cc-portal-list">
-        <Box component="ul" sx={{ listStyle: 'none', m: 0, p: 0, display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' }, gap: 3 }}>
+        <Columns as="ul" preset="halvesEarly" sx={{ listStyle: 'none', m: 0, p: 0 }}>
           {gallery.map((s) => (
             <Box component="li" key={s.src} sx={{ minWidth: 0 }}>
               <Img s={s} onOpen={setOpen} />
-              <Typography variant="body2" sx={{ mt: 1, fontWeight: 600 }}>{s.caption}</Typography>
+              <Typography variant="body2" sx={{ mt: 1 }}><strong>{s.caption}</strong></Typography>
             </Box>
           ))}
-        </Box>
+        </Columns>
         </Collapse>
       </Box>
 
-      <Box component="section" aria-labelledby="cc-themes" sx={{ mt: 7 }}>
-        <Typography id="cc-themes" variant="h3" component="h2" sx={{ mb: 1 }}>One product, each carrier&rsquo;s brand</Typography>
-        <Typography color="text.secondary" sx={{ mb: 3, maxWidth: typography.measure }}>
+      <Section id="cc-themes" title={<>One product, each carrier&rsquo;s brand</>} intro={<>
           A carrier sets its brand in the admin portal&rsquo;s theme editor: primary, accent and background colors, text on each, and the banner.
           The preview beside the fields is a sample policy page, so they see the result before saving. These are three of the themes that come with the product.
-        </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3, alignItems: 'start' }}>
-          <Box component="figure" sx={{ m: 0, minWidth: 0 }}>
+      </>}>
+        <Columns align="start">
+          <Box component="figure" sx={{ m: 0 }}>
             <Img s={{ src: cc('admin-theme-editor.jpg'), w: 1568, h: 668, alt: 'The admin theme editor: color fields with swatches on the left, a live theme preview of a policy page on the right.', caption: 'The admin theme editor' }} onOpen={setOpen} />
-            <Typography component="figcaption" variant="body2" sx={{ mt: 1, fontWeight: 600 }}>The theme editor in the admin portal</Typography>
+            <Typography component="figcaption" variant="body2" sx={{ mt: 1 }}><strong>The theme editor in the admin portal</strong></Typography>
           </Box>
-          <Box component="figure" sx={{ m: 0, minWidth: 0 }}>
+          <Box component="figure" sx={{ m: 0 }}>
             <Crossfade active={theme} views={themes.map((t) => ({ id: t.id, node: <Img s={t.s} /> }))} />
             <Box component="figcaption" sx={{ mt: 1, display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1.5 }}>
-              <Typography variant="body2" sx={{ fontWeight: 600 }}>The same preview in</Typography>
+              <Typography variant="body2"><strong>The same preview in</strong></Typography>
               <ToggleButtonGroup exclusive size="small" value={theme} onChange={(_, v) => v && setTheme(v)} aria-label="Theme shown in the preview">
                 {themes.map((t) => <ToggleButton key={t.id} value={t.id}>{t.label}</ToggleButton>)}
               </ToggleButtonGroup>
             </Box>
           </Box>
-        </Box>
-      </Box>
+        </Columns>
+      </Section>
 
       <Box component="section" aria-labelledby="cc-flow" sx={{ mt: 8 }}>
         <Typography id="cc-flow" variant="h3" component="h2" sx={{ mb: 1 }}>Redesigned in 2026, with AI</Typography>
-        <Typography color="text.secondary" sx={{ mb: 4, maxWidth: typography.measure }}>
+        <Measure as={Typography} color="text.secondary" sx={{ mb: 4 }}>
           Everything above I designed by hand, before AI tools. To see what AI changes in my process, I took one screen, the quote&rsquo;s
           Premium step, and redesigned it on Edge with AI coding assistants. I wrote the brief from the current screen, directed each pass
           and reviewed every change.
-        </Typography>
+        </Measure>
 
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 3, md: 5 }, mb: 5, maxWidth: 1080 }}>
+        <Columns gap={{ xs: 3, md: 5 }} sx={{ mb: 5, maxWidth: 1080 }}>
           <Box>
             <Typography variant="h5" component="h3" sx={{ mb: 1 }}>The problem</Typography>
             <Typography color="text.secondary">
@@ -178,21 +177,21 @@ export function CoreConnectScreens() {
               much?&rdquo; and &ldquo;can we bring it down?&rdquo; get answered during the call.
             </Typography>
           </Box>
-        </Box>
+        </Columns>
 
         <Typography variant="h5" component="h3" sx={{ mb: 2 }}>What&rsquo;s on the screen</Typography>
-        <Box component="dl" sx={{ m: 0, mb: 5, maxWidth: 1080, display: 'grid', gridTemplateColumns: { xs: '1fr', sm: 'minmax(0, 14rem) minmax(0, 1fr)' }, columnGap: 4, rowGap: { xs: 0.5, sm: 2 },
-          '& dt': { fontWeight: 700, mt: { xs: 1.5, sm: 0 } }, '& dd': { m: 0, color: 'text.secondary' } }}>
-          {screenParts.map(([t, d]) => <Fragment key={t}><dt>{t}</dt><dd>{d}</dd></Fragment>)}
-        </Box>
+        <Columns as="dl" template={{ xs: '1fr', sm: '14rem 1fr' }} gap={4} rowGap={{ xs: 0.5, sm: 2 }}
+          sx={{ m: 0, mb: 5, maxWidth: 1080, '& dt': { mt: { xs: 1.5, sm: 0 } }, '& dd': { m: 0, color: 'text.secondary' } }}>
+          {screenParts.map(([t, d]) => <Fragment key={t}><Typography variant="label" component="dt">{t}</Typography><dd>{d}</dd></Fragment>)}
+        </Columns>
 
         <Typography variant="h5" component="h3" sx={{ mb: 2 }}>Try it</Typography>
-        <Box component="ol" sx={{ m: 0, mb: 3, pl: 2.5, maxWidth: typography.measure, display: 'grid', gap: 1, color: 'text.secondary', '& b': { color: 'text.primary' } }}>
+        <Measure as="ol" sx={{ m: 0, mb: 3, pl: 2.5, display: 'grid', gap: 1, color: 'text.secondary', '& b': { color: 'text.primary' } }}>
           <li>Change the <b>Deductible</b> to $1,000. The total in the header and the comparison with the last version update.</li>
           <li>Accept <b>Add water backup</b>. The option row and its subtotal change; Undo takes it back.</li>
           <li>Open the <b>Insured</b> tab and turn <b>Go paperless</b> off, then return to Premium. The $12 paperless credit is gone.</li>
           <li>Set the demo&rsquo;s rating service to <b>Down</b> and change any limit. You get the error, your choices are kept, and Try again recovers.</li>
-        </Box>
+        </Measure>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
           <ToggleButtonGroup exclusive size="small" value={redo} onChange={(_, v) => v && setRedo(v)} aria-label="Premium step: current product or the 2026 AI redesign">
             <ToggleButton value="shipped">Before: current product</ToggleButton>
@@ -213,7 +212,7 @@ export function CoreConnectScreens() {
             <Box component="img" src={open.src} alt={open.alt} sx={{ display: 'block', width: '100%', height: 'auto', maxHeight: '86vh', objectFit: 'contain' }} />
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 2, px: 2, py: 1 }}>
               <Typography variant="body2" color="text.secondary">{open.caption ?? open.alt}</Typography>
-              <IconButton onClick={() => setOpen(null)} aria-label="Close" size="small" sx={{ fontSize: '1.1rem', lineHeight: 1 }}>&times;</IconButton>
+              <IconButton onClick={() => setOpen(null)} aria-label="Close" size="small"><CloseIcon fontSize="small" /></IconButton>
             </Box>
           </Box>
         )}

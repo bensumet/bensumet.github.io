@@ -1,5 +1,5 @@
 import { Box, Link, Typography } from '@mui/material';
-import { EdgeCard, Lead, typography } from '@bensumet/edge';
+import { Columns, EdgeCard, Lead, RuleItem, RuleList, Section, Stat, StatGrid } from '@bensumet/edge';
 import { Opener } from '../../components/Layout';
 import { href } from '../../router';
 
@@ -55,9 +55,8 @@ export function BuildLogStudy() {
         </Lead>
       </Opener>
 
-      <Box component="section" aria-labelledby="bl-split" sx={{ mb: 7 }}>
-        <Typography id="bl-split" variant="h3" component="h2" sx={{ mb: 3 }}>Who did what</Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 3 }}>
+      <Section id="bl-split" title="Who did what">
+        <Columns>
           <EdgeCard variant="outlined" sx={{ p: 3 }}>
             <Typography variant="eyebrow">Me</Typography>
             <Box component="ul" sx={{ pl: 2.5, mt: 1.5, mb: 0, '& li': { mb: 1.25 } }}>
@@ -70,38 +69,31 @@ export function BuildLogStudy() {
               {theirs.map((t) => <li key={t}>{t}</li>)}
             </Box>
           </EdgeCard>
-        </Box>
-      </Box>
+        </Columns>
+      </Section>
 
-      <Box component="section" aria-label="By the numbers" sx={{ mb: 7, display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 3, borderTop: 1, borderBottom: 1, borderColor: 'text.primary', py: 3 }}>
-        {numbers.map((n) => (
-          <Box key={n.label}>
-            <Typography sx={{ fontFamily: typography.poster, fontWeight: 800, fontSize: '2.6rem', lineHeight: 1, fontVariantNumeric: 'tabular-nums' }}>{n.value}</Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 0.75 }}>{n.label}</Typography>
-          </Box>
-        ))}
-      </Box>
+      <Section label="By the numbers">
+        <StatGrid>
+          {numbers.map((n) => <Stat key={n.label} figure={n.value} label={n.label} />)}
+        </StatGrid>
+      </Section>
 
-      <Box component="section" aria-labelledby="bl-gates" sx={{ mb: 7 }}>
-        <Typography id="bl-gates" variant="h3" component="h2" sx={{ mb: 1 }}>The gates every change goes through</Typography>
-        <Typography color="text.secondary" sx={{ mb: 3, maxWidth: typography.measure }}>
-          Writing code got fast. These are what make it safe to ship, and each one has earned its place on this site.
-        </Typography>
-        <Box component="ol" sx={{ listStyle: 'none', m: 0, p: 0, borderTop: 1, borderColor: 'text.primary' }}>
+      <Section id="bl-gates" title="The gates every change goes through" intro="Writing code got fast. These are what make it safe to ship, and each one has earned its place on this site.">
+        <RuleList as="ol">
           {gates.map((g, i) => (
-            <Box component="li" key={g.gate} sx={{ display: 'grid', gridTemplateColumns: { xs: '2.5rem 1fr', md: '2.5rem 12rem 1fr 1fr' }, gap: 2, py: 2, borderBottom: 1, borderColor: 'divider' }}>
-              <Typography color="text.secondary" sx={{ fontVariantNumeric: 'tabular-nums' }}>{String(i + 1).padStart(2, '0')}</Typography>
-              <Typography sx={{ fontWeight: 650 }}>{g.gate}</Typography>
+            <RuleItem key={g.gate} template={{ xs: '2.5rem 1fr', md: '2.5rem 12rem 1fr 1fr' }} space={2}>
+              <Typography variant="data" color="text.secondary">{String(i + 1).padStart(2, '0')}</Typography>
+              <Typography variant="label">{g.gate}</Typography>
               <Typography color="text.secondary" sx={{ gridColumn: { xs: '2', md: 'auto' } }}>{g.checks}</Typography>
               <Typography sx={{ gridColumn: { xs: '2', md: 'auto' } }}>
-                {g.caught ? <><Box component="span" sx={{ fontWeight: 600 }}>Caught: </Box>{g.caught}</> : <Box component="span" sx={{ color: 'text.secondary' }}>Nothing yet. It runs on every change.</Box>}
+                {g.caught ? <><strong>Caught: </strong>{g.caught}</> : <Typography component="span" variant="inherit" color="text.secondary">Nothing yet. It runs on every change.</Typography>}
               </Typography>
-            </Box>
+            </RuleItem>
           ))}
-        </Box>
-      </Box>
+        </RuleList>
+      </Section>
 
-      <Box component="section" aria-labelledby="bl-history" sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: 4 }}>
+      <Columns as="section" aria-labelledby="bl-history" gap={4} sx={{ mt: 8 }}>
         <Box>
           <Typography id="bl-history" variant="h3" component="h2" sx={{ mb: 2 }}>The history</Typography>
           <Box component="ol" sx={{ pl: 2.5, m: 0, '& li': { mb: 1 } }}>
@@ -113,13 +105,13 @@ export function BuildLogStudy() {
         </Box>
         <Box>
           <Typography variant="eyebrow">What I took from it</Typography>
-          <Typography sx={{ mt: 1, fontFamily: typography.display, fontSize: '1.2rem', lineHeight: 1.6, maxWidth: typography.measure }}>
+          <Typography variant="lead" sx={{ mt: 1 }}>
             The assistant is fastest when the standards are written down and tested, and slowest when they live only in my head. Most of my time
             went into deciding, reviewing and correcting, which is where I want it. More on that in{' '}
             <Link href={href('ai', 'process')}>How I work with AI</Link> and the <Link href={href('system', 'evals')}>Evaluations</Link>.
           </Typography>
         </Box>
-      </Box>
+      </Columns>
     </>
   );
 }

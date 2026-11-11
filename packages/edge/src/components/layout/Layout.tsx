@@ -1,6 +1,7 @@
 import { forwardRef, type ReactNode } from 'react';
 import { Typography } from '@mui/material';
 import { styled, type Theme } from '@mui/material/styles';
+import rootShouldForwardProp from '@mui/material/styles/rootShouldForwardProp';
 import { layout, typography, type ColumnPreset } from '../../tokens/tokens';
 
 /**
@@ -21,6 +22,9 @@ function responsive(theme: Theme, value: Responsive | Template, css: (v: number 
   if (typeof value !== 'object') return css(value);
   return Object.assign({}, ...BREAKS.filter((b) => value[b] !== undefined).map((b) => (b === 'xs' ? css(value[b]!) : { [theme.breakpoints.up(b)]: css(value[b]!) })));
 }
+
+/** Forwards what MUI forwards (never `as`, `sx` or `theme`), minus this component's own props. */
+const forwardExcept = (...own: string[]) => (prop: PropertyKey) => rootShouldForwardProp(prop as string) && !own.includes(prop as string);
 
 /** Merges style objects, combining (not replacing) the same media query from each. */
 function merge(...styles: (object | false | undefined)[]) {
@@ -59,7 +63,7 @@ export interface ColumnsProps {
 /** A responsive grid, from a named preset. Children never overflow their column. */
 export const Columns = styled('div', {
   name: 'EdgeColumns', slot: 'Root',
-  shouldForwardProp: (p) => !['preset', 'count', 'template', 'gap', 'rowGap', 'baseline', 'align'].includes(p as string),
+  shouldForwardProp: forwardExcept('preset', 'count', 'template', 'gap', 'rowGap', 'baseline', 'align'),
 })<ColumnsProps>(({ theme, preset = 'halves', count, template, gap = 3, rowGap, baseline, align }) => merge(
   { display: 'grid' },
   responsive(theme, template ?? (count ? { xs: 'repeat(2, 1fr)', md: `repeat(${count}, 1fr)` } : layout.columns[preset]), (v) => ({ gridTemplateColumns: v })),
@@ -115,25 +119,27 @@ export const RuleList = styled('ul', { name: 'EdgeRuleList', slot: 'Root' })(({ 
 export interface RuleItemProps {
   /** Lay the item's children out on a column preset. */
   preset?: ColumnPreset;
+  /** A one-off template instead of a preset. */
+  template?: Template;
   /** Vertical padding, in theme units. */
   space?: Responsive;
 }
 
 export const RuleItem = styled('li', {
   name: 'EdgeRuleItem', slot: 'Root',
-  shouldForwardProp: (p) => p !== 'preset' && p !== 'space',
-})<RuleItemProps>(({ theme, preset, space = 2.5 }) => merge(
+  shouldForwardProp: forwardExcept('preset', 'space', 'template'),
+})<RuleItemProps>(({ theme, preset, template, space = 2.5 }) => merge(
   { borderBottom: `1px solid ${theme.vars.palette.divider}` },
   responsive(theme, space, (v) => ({ paddingBlock: theme.spacing(v as number) })),
-  preset && { display: 'grid', columnGap: theme.spacing(2), rowGap: theme.spacing(0.5), '& > *': { minWidth: 0 } },
-  preset && responsive(theme, layout.columns[preset], (v) => ({ gridTemplateColumns: v })),
+  !!(preset || template) && { display: 'grid', columnGap: theme.spacing(2), rowGap: theme.spacing(0.5), '& > *': { minWidth: 0 } },
+  !!(preset || template) && responsive(theme, template ?? layout.columns[preset!], (v) => ({ gridTemplateColumns: v })),
 ));
 
 // ----- Stats ---------------------------------------------------------------
 
 export const StatGrid = styled('div', {
   name: 'EdgeStatGrid', slot: 'Root',
-  shouldForwardProp: (p) => p !== 'count',
+  shouldForwardProp: forwardExcept('count'),
 })<{ count?: number }>(({ theme, count = 4 }) => ({
   display: 'grid',
   gridTemplateColumns: 'repeat(2, 1fr)',
@@ -220,7 +226,7 @@ const TableScroll = styled('div', { name: 'EdgeDataTable', slot: 'Root' })(({ th
 
 const Table = styled('table', {
   name: 'EdgeDataTable', slot: 'Table',
-  shouldForwardProp: (p) => !['dense', 'interactive', 'minWidth'].includes(p as string),
+  shouldForwardProp: forwardExcept('dense', 'interactive', 'minWidth'),
 })<{ dense?: boolean; interactive?: boolean; minWidth: number }>(({ theme, dense, interactive, minWidth }) => ({
   width: '100%',
   minWidth,

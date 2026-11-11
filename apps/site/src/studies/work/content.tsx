@@ -1,10 +1,21 @@
 import { Box, Link, Typography } from '@mui/material';
-import { motion, typography } from '@bensumet/edge';
+import { styled } from '@mui/material/styles';
+import { Columns, Measure, motion } from '@bensumet/edge';
 import { href } from '../../router';
 import { art } from '../../data/craft';
 import type { CaseStudyContent } from './CaseStudy';
 import { ArchitectureSketch, PrinciplesFlow, SystemMap } from './diagrams';
 import { CoreConnectScreens } from './CoreConnectScreens';
+
+/** A mockup's thumbnail on white, as it was designed; it lifts a little on hover. */
+const MockupThumb = styled('span')(({ theme }) => ({
+  display: 'block',
+  overflow: 'hidden',
+  border: `1px solid ${theme.vars.palette.divider}`,
+  backgroundColor: theme.vars.palette.common.white,
+  '& img': { display: 'block', width: '100%', height: 'auto', transition: `transform ${motion.duration.base}ms ${motion.ease.enter}`, [motion.reduced]: { transition: 'none' } },
+  'a:hover & img, a:focus-visible & img': { transform: 'translateY(-3px)', [motion.reduced]: { transform: 'none' } },
+}));
 
 // Facts come only from Ben's resume. Items still waiting on Ben are left out.
 
@@ -81,11 +92,11 @@ export const immersive: CaseStudyContent = {
   codeVisual: <ArchitectureSketch />,
   showcase: (
     <Box component="section" aria-labelledby="mockups" sx={{ mt: 6 }}>
-      <Typography id="mockups" component="h2" sx={{ fontWeight: 700, fontSize: '1.05rem' }}>Four of my mockups for this platform</Typography>
-      <Typography color="text.secondary" sx={{ mt: 0.5, mb: 2, maxWidth: typography.measure }}>
+      <Typography id="mockups" variant="label" component="h2">Four of my mockups for this platform</Typography>
+      <Measure as={Typography} color="text.secondary" sx={{ mt: 0.5, mb: 2 }}>
         Designed with an AI assistant and shown as they were made, with the product renamed. Each one runs; open it to use it.
-      </Typography>
-      <Box component="ul" sx={{ m: 0, p: 0, listStyle: 'none', display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: { xs: 1.5, md: 2 } }}>
+      </Measure>
+      <Columns as="ul" preset="quarters" gap={{ xs: 1.5, md: 2 }} sx={{ m: 0, p: 0, listStyle: 'none' }}>
         {[
           ['deep-search', 'AI search whose filters adapt to what came back'],
           ['ai-estimate', 'An AI premium estimate that can’t pass for a rated price'],
@@ -93,15 +104,13 @@ export const immersive: CaseStudyContent = {
           ['palette', 'Status colors measured on the product’s screens'],
         ].map(([slug, text]) => (
           <li key={slug}>
-            <Link href={href('ai', slug)} underline="none" color="inherit" sx={{ display: 'block', '&:hover .t, &:focus-visible .t': { color: 'primary.main' }, '& img': { transition: `transform ${motion.duration.base}ms ${motion.ease.enter}` }, '&:hover img, &:focus-visible img': { transform: 'translateY(-3px)' }, [motion.reduced]: { '& img': { transition: 'none' }, '&:hover img, &:focus-visible img': { transform: 'none' } } }}>
-              <Box sx={{ border: 1, borderColor: 'divider', overflow: 'hidden', bgcolor: 'common.white' }}>
-                <Box component="img" src={art(`work/immersive/${slug}.jpg`)} alt="" width={800} height={600} loading="lazy" sx={{ display: 'block', width: '100%', height: 'auto' }} />
-              </Box>
-              <Typography className="t" variant="body2" sx={{ mt: 1, fontWeight: 600, transition: `color ${motion.duration.quick}ms` }}>{text}</Typography>
+            <Link href={href('ai', slug)} underline="none" color="inherit" sx={{ display: 'block' }}>
+              <MockupThumb><img src={art(`work/immersive/${slug}.jpg`)} alt="" width={800} height={600} loading="lazy" /></MockupThumb>
+              <Typography variant="body2" sx={{ mt: 1 }}><strong>{text}</strong></Typography>
             </Link>
           </li>
         ))}
-      </Box>
+      </Columns>
     </Box>
   ),
   decisions: [

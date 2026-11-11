@@ -10,13 +10,13 @@ import { AiLabel } from '@bensumet/edge';
 import { StreamingText } from '@bensumet/edge';
 import { SuggestionList } from '@bensumet/edge';
 import { SummaryCard } from '@bensumet/edge';
-import { typography } from '@bensumet/edge';
+import { Measure } from '@bensumet/edge';
 
 function Pattern({ id, title, principle, children }: { id: string; title: string; principle: string; children: React.ReactNode }) {
   return (
     <section aria-labelledby={id}>
       <Typography id={id} variant="h3" component="h2" sx={{ mb: 1 }}>{title}</Typography>
-      <Typography color="text.secondary" sx={{ mb: 2.5, maxWidth: typography.measure }}>{principle}</Typography>
+      <Measure as={Typography} color="text.secondary" sx={{ mb: 2.5 }}>{principle}</Measure>
       {children}
     </section>
   );
@@ -50,7 +50,7 @@ function CaptionEditor() {
             <Stack component="ul" spacing={1.25} sx={{ listStyle: 'none', m: 0, p: 0 }}>
               {commits.map(([sha, msg]) => (
                 <li key={sha}>
-                  <Typography variant="body2" sx={{ fontFamily: typography.mono, color: 'text.secondary' }}>{sha}</Typography>
+                  <Typography variant="mono" color="text.secondary">{sha}</Typography>
                   <Typography variant="body2">{msg}</Typography>
                 </li>
               ))}

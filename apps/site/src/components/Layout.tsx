@@ -65,18 +65,17 @@ export function NumberedList({ id, title, items }: { id: string; title: string; 
   );
 }
 
-/** Points in two columns: a bold head over its explanation. */
-export function Points({ items }: { items: React.ReactNode[][] }) {
-  return (
-    <Columns gap={4}>
-      {items.map(([head, body], i) => (
-        <Box key={i}>
-          <Typography variant="label">{head}</Typography>
-          <Typography variant="prose" color="text.secondary" sx={{ mt: 0.5 }}>{body}</Typography>
-        </Box>
-      ))}
-    </Columns>
-  );
+/** Points: a bold head over its explanation. Two columns by default; `stacked` sets them as one list. */
+export function Points({ items, stacked }: { items: React.ReactNode[][]; stacked?: boolean }) {
+  const points = items.map(([head, body], i) => (
+    <Box key={i} component={stacked ? 'li' : 'div'}>
+      <Typography variant="label">{head}</Typography>
+      <Typography variant="prose" color="text.secondary" sx={{ mt: 0.5 }}>{body}</Typography>
+    </Box>
+  ));
+  return stacked
+    ? <Stack component="ul" spacing={2.5} sx={{ listStyle: 'none', m: 0, p: 0 }}>{points}</Stack>
+    : <Columns gap={4}>{points}</Columns>;
 }
 
 /** A labelled passage of reading text: a running head over a paragraph. */

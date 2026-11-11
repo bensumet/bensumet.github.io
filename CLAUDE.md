@@ -11,9 +11,11 @@ This is Ben Viwatmanitsakul's portfolio. Every screen is built with **Edge**, th
 
 ## Rules that are easy to get wrong
 
-- Read every color from the theme (`primary.main`, `text.secondary`, `background.paper`, `edge.*`). Never write a hex, `rgb()` or `hsl()` value in a component.
+- Read every color from the theme (`primary.main`, `text.secondary`, `background.paper`, `edge.*`). Never write a hex, `rgb()` or `hsl()` value in a component. In `styled()` and theme callbacks, use `theme.vars.palette.*`, not `theme.palette.*` or `alpha()`: both modes are CSS variables.
+- Text is a text role: `<Typography variant="prose">`, `label`, `eyebrow`, `lead`, `mono`… Never set `fontFamily`, `fontSize`, `lineHeight` or `letterSpacing` on a screen. Missing a role? Add it to `textRoles` in `packages/edge/src/tokens/tokens.ts`.
+- Grids are `<Columns preset="…">`; sections are `<Section>`; contents lists are `RuleList`/`RuleItem`. Never write `gridTemplateColumns` on a screen.
+- Keep `sx` for spacing between blocks. A look that repeats belongs in the theme (`createEdgeTheme.ts`) or an Edge primitive, not in page `sx`.
 - Corners are square. Don't set `borderRadius`.
-- Fonts come from `typography` in `@bensumet/edge`; don't write font names.
 - One filled (`variant="contained"`) button per view.
 - Every input has a visible `label`. Errors are written as a sentence in `helperText`, directly under the field.
 - Mark AI-written content with `AiLabel` until a person edits or accepts it; cite sources with `SummaryCard`; put suggestions in `SuggestionList`; add `FeedbackBar` under AI output.
@@ -25,7 +27,7 @@ This is Ben Viwatmanitsakul's portfolio. Every screen is built with **Edge**, th
 
 ```bash
 node packages/edge/scripts/check-ui.mjs path/to/Screen.tsx   # rules check
-npm run typecheck && npm test                               # types, contrast, rules coverage, accessibility
+npm run typecheck && npm test                               # types, contrast, rules coverage, accessibility, and the rules check on every screen
 ```
 
 Every change, whoever or whatever wrote it, is tested and reviewed by Ben before it ships.

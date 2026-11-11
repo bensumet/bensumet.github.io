@@ -1,6 +1,7 @@
-import { Box, Typography } from '@mui/material';
-import { ArrowRule, Lead, Tag, typography } from '@bensumet/edge';
-import { Opener } from '../../components/Layout';
+import { Box, Stack, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { ArrowRule, Columns, Lead, Measure, Section, Stat, StatGrid, Tag } from '@bensumet/edge';
+import { NumberedList, Opener, Points } from '../../components/Layout';
 
 export interface Fact { label: string; value: string }
 export interface Point { head: string; body: string }
@@ -30,35 +31,38 @@ export interface CaseStudyContent {
 }
 
 /** The branching rule from the Space and Place books: one line splits to Design and Code. */
+const Branch = styled('div')(({ theme }) => {
+  const line = theme.vars.palette.edge.line;
+  const stroke = (left: string, top: number, height: number) => ({ position: 'absolute' as const, left, top, height, width: 1, backgroundColor: line });
+  return {
+    display: 'none',
+    position: 'relative',
+    height: 64,
+    marginBlock: theme.spacing(4),
+    [theme.breakpoints.up('md')]: { display: 'block' },
+    '& .trunk': stroke('50%', 0, 24),
+    '& .bar': { position: 'absolute', left: '25%', right: '25%', top: 24, height: 1, backgroundColor: line },
+    '& .twig': stroke('0', 24, 16),
+    '& .label': { position: 'absolute', top: 44, transform: 'translateX(-50%)' },
+  };
+});
+
 function BranchRule() {
   return (
-    <Box aria-hidden="true" sx={{ position: 'relative', height: 64, my: 4, display: { xs: 'none', md: 'block' } }}>
-      <Box sx={{ position: 'absolute', left: '50%', top: 0, height: 24, width: '1px', bgcolor: 'edge.line' }} />
-      <Box sx={{ position: 'absolute', left: '25%', right: '25%', top: 24, height: '1px', bgcolor: 'edge.line' }} />
-      {['25%', '75%'].map((l) => <Box key={l} sx={{ position: 'absolute', left: l, top: 24, height: 16, width: '1px', bgcolor: 'edge.line' }} />)}
+    <Branch aria-hidden="true">
+      <span className="trunk" />
+      <span className="bar" />
       {[['25%', 'Design'], ['75%', 'Code']].map(([l, t]) => (
-        <Typography key={t} sx={{ position: 'absolute', left: l, top: 44, transform: 'translateX(-50%)', fontSize: '0.62rem', fontWeight: 600, letterSpacing: '0.42em', textTransform: 'uppercase' }}>{t}</Typography>
+        <span key={t}>
+          <span className="twig" style={{ left: l }} />
+          <Typography variant="kicker" className="label" style={{ left: l }}>{t}</Typography>
+        </span>
       ))}
-    </Box>
+    </Branch>
   );
 }
 
-function Points({ items }: { items: Point[] }) {
-  return (
-    <Box component="ul" sx={{ listStyle: 'none', m: 0, p: 0, display: 'grid', gap: 2.5 }}>
-      {items.map((p) => (
-        <Box component="li" key={p.head}>
-          <Typography sx={{ fontWeight: 650 }}>{p.head}</Typography>
-          <Typography sx={{ mt: 0.5, fontFamily: typography.display, fontSize: '1.12rem', lineHeight: 1.55, color: 'text.secondary' }}>{p.body}</Typography>
-        </Box>
-      ))}
-    </Box>
-  );
-}
-
-function H2({ children, id }: { children: React.ReactNode; id: string }) {
-  return <Typography id={id} variant="h3" component="h2" sx={{ mb: 2.5 }}>{children}</Typography>;
-}
+const points = (items: Point[]) => items.map((p) => [p.head, p.body]);
 
 export function CaseStudy({ c }: { c: CaseStudyContent }) {
   return (
@@ -67,82 +71,62 @@ export function CaseStudy({ c }: { c: CaseStudyContent }) {
         <Lead opening={c.leadOpening}>{c.lead}</Lead>
       </Opener>
 
-      <Box component="dl" sx={{ m: 0, display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: `repeat(${c.header.length}, 1fr)` }, gap: 3, py: 3, borderTop: 1, borderBottom: 1, borderColor: 'text.primary' }}>
+      <Columns as="dl" template={{ xs: '1fr', sm: '1fr 1fr', md: `repeat(${c.header.length}, 1fr)` }} sx={{ m: 0, py: 3, borderTop: 1, borderBottom: 1, borderColor: 'text.primary' }}>
         {c.header.map((f) => (
-          <Box key={f.label} sx={{ minWidth: 0 }}>
-            <Box component="dt"><Typography variant="eyebrow">{f.label}</Typography></Box>
-            <Typography component="dd" sx={{ m: 0, mt: 0.75, fontSize: '0.95rem' }}>{f.value}</Typography>
-          </Box>
+          <div key={f.label}>
+            <Typography variant="eyebrow" component="dt">{f.label}</Typography>
+            <Typography variant="body2" component="dd" sx={{ mt: 0.75 }}>{f.value}</Typography>
+          </div>
         ))}
-      </Box>
+      </Columns>
 
       {c.showcase}
 
-      <Box component="section" aria-labelledby="problem" sx={{ mt: 7 }}>
-        <H2 id="problem">The problem</H2>
-        <Typography sx={{ fontFamily: typography.display, fontSize: '1.25rem', lineHeight: 1.6, maxWidth: typography.measure }}>{c.problem}</Typography>
-      </Box>
+      <Section id="problem" title="The problem">
+        <Typography variant="lead">{c.problem}</Typography>
+      </Section>
 
       {c.team && (
-        <Box component="section" aria-labelledby="team" sx={{ mt: 7 }}>
-          <H2 id="team">How I lead the team</H2>
-          <Typography sx={{ fontFamily: typography.display, fontSize: '1.25rem', lineHeight: 1.6, maxWidth: typography.measure }}>{c.team}</Typography>
-        </Box>
+        <Section id="team" title="How I lead the team">
+          <Typography variant="lead">{c.team}</Typography>
+        </Section>
       )}
 
       <BranchRule />
-      <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' }, gap: { xs: 6, md: 6 }, mt: { xs: 7, md: 0 } }}>
-        <Box component="section" aria-labelledby="design" sx={{ minWidth: 0 }}>
+      <Columns gap={6} sx={{ mt: { xs: 7, md: 0 } }}>
+        <Box component="section" aria-labelledby="design">
           <Stack2 tag="Design" />
-          <H2 id="design">How it looks and works</H2>
-          <Points items={c.design} />
+          <Typography id="design" variant="h3" component="h2" sx={{ mb: 2.5 }}>How it looks and works</Typography>
+          <Points stacked items={points(c.design)} />
         </Box>
-        <Box component="section" aria-labelledby="code" sx={{ minWidth: 0 }}>
+        <Box component="section" aria-labelledby="code">
           <Stack2 tag="Code" />
-          <H2 id="code">How it&rsquo;s built</H2>
-          <Points items={c.code} />
+          <Typography id="code" variant="h3" component="h2" sx={{ mb: 2.5 }}>How it&rsquo;s built</Typography>
+          <Points stacked items={points(c.code)} />
         </Box>
-      </Box>
+      </Columns>
       {(c.designVisual || c.codeVisual) && (
-        <Box sx={{ mt: 6, display: 'grid', gap: 4 }}>
+        <Stack spacing={4} sx={{ mt: 6 }}>
           {c.designVisual}
           {c.codeVisual}
-        </Box>
+        </Stack>
       )}
 
       {c.extra}
 
-      <Box component="section" aria-labelledby="decisions" sx={{ mt: 8 }}>
-        <H2 id="decisions">Key decisions</H2>
-        <Box component="ol" sx={{ m: 0, p: 0, listStyle: 'none', borderTop: 1, borderColor: 'text.primary' }}>
-          {c.decisions.map((d, i) => (
-            <Box component="li" key={d.head} sx={{ display: 'grid', gridTemplateColumns: { xs: '2.5rem 1fr', md: '3rem 1fr 1.3fr' }, columnGap: 2, rowGap: 0.5, py: 2.5, borderBottom: 1, borderColor: 'divider' }}>
-              <Typography sx={{ color: 'primary.main', fontWeight: 600, fontVariantNumeric: 'tabular-nums' }}>{String(i + 1).padStart(2, '0')}</Typography>
-              <Typography sx={{ fontWeight: 650 }}>{d.head}</Typography>
-              <Typography color="text.secondary" sx={{ gridColumn: { xs: 2, md: 3 }, fontFamily: typography.display, fontSize: '1.1rem', lineHeight: 1.5 }}>{d.body}</Typography>
-            </Box>
-          ))}
-        </Box>
-      </Box>
+      <NumberedList id="decisions" title="Key decisions" items={points(c.decisions)} />
 
-      <Box component="section" aria-labelledby="result" sx={{ mt: 8 }}>
-        <H2 id="result">The result</H2>
-        <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr 1fr', md: `repeat(${c.results.length % 4 === 0 ? 4 : 3}, 1fr)` }, gap: 0, borderTop: 1, borderColor: 'text.primary' }}>
-          {c.results.map((s) => (
-            <Box key={s.label} sx={{ py: 3, pr: 2, borderBottom: 1, borderColor: 'divider', minWidth: 0 }}>
-              <Typography sx={{ fontFamily: typography.poster, fontStretch: '72%', fontWeight: 850, fontSize: { xs: '2.2rem', md: '3rem' }, lineHeight: 0.9, color: 'primary.main', fontVariantNumeric: 'tabular-nums' }}>{s.figure}</Typography>
-              <Typography sx={{ mt: 1, fontSize: '0.95rem' }}>{s.label}</Typography>
-            </Box>
-          ))}
-        </Box>
-        {c.resultNote && <Typography color="text.secondary" sx={{ mt: 2, maxWidth: typography.measure }}>{c.resultNote}</Typography>}
-      </Box>
+      <Section id="result" title="The result">
+        <StatGrid count={c.results.length % 4 === 0 ? 4 : 3}>
+          {c.results.map((s) => <Stat key={s.label} figure={s.figure} label={s.label} />)}
+        </StatGrid>
+        {c.resultNote && <Measure as={Typography} color="text.secondary" sx={{ mt: 2 }}>{c.resultNote}</Measure>}
+      </Section>
 
       {c.differently && (
-        <Box component="section" aria-labelledby="differently" sx={{ mt: 8 }}>
-          <H2 id="differently">What I&rsquo;d do differently</H2>
-          <Typography sx={{ fontFamily: typography.display, fontSize: '1.2rem', lineHeight: 1.6, maxWidth: typography.measure }}>{c.differently}</Typography>
-        </Box>
+        <Section id="differently" title={<>What I&rsquo;d do differently</>}>
+          <Typography variant="lead">{c.differently}</Typography>
+        </Section>
       )}
     </>
   );
@@ -150,9 +134,9 @@ export function CaseStudy({ c }: { c: CaseStudyContent }) {
 
 function Stack2({ tag }: { tag: string }) {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
+    <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 1.5 }}>
       <Tag>{tag}</Tag>
       <ArrowRule sx={{ flex: 1, maxWidth: 120 }} />
-    </Box>
+    </Stack>
   );
 }
