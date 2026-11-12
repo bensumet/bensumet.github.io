@@ -6,7 +6,8 @@
 
 - [Edge for agents](edge/llms.txt): tokens, contrast data and component rules for building UI with Edge
 - [Rules index](edge/rules/index.json): every component's rules file, as data
-- MCP server: `node --experimental-strip-types packages/edge/mcp/server.mjs` in the repo, with tools `get_tokens`, `get_component_guidance` and `check_contrast`
+- MCP server: install `@bensumet/edge` from GitHub Packages and run `npx edge-mcp`, with tools `get_tokens`, `get_component_guidance` and `check_contrast`
+- [Source](https://github.com/bensumet/edge-design-system): Edge's package, with its rules, tests and changelog
 
 ## Sections
 

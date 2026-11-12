@@ -15,6 +15,7 @@ const files = [
   { file: 'tokens.css', what: 'The same tokens as CSS custom properties, for pages outside React.' },
   { file: 'contrast.json', what: 'Every text, control and accent pair the UI relies on, with its measured contrast ratio.' },
   { file: 'rules/index.json', what: 'The rules files as data: name, kind and a one-line summary each.' },
+  { file: '@bensumet/edge', href: 'https://github.com/bensumet/edge-design-system', what: 'The package itself, on GitHub Packages: components, theme, rules, the rules check and the MCP server, with its tests and changelog.' },
 ];
 
 const mcpTools = [
@@ -23,10 +24,10 @@ const mcpTools = [
   { name: 'check_contrast', what: 'The WCAG ratio between two colors, as hex or tokens like ink.text, and whether it passes for text, large text or a control.' },
 ];
 
-const connect = `claude mcp add edge -- node --experimental-strip-types \\
-  --no-warnings packages/edge/mcp/server.mjs`;
+const connect = `npm install @bensumet/edge
+claude mcp add edge -- npx edge-mcp`;
 
-// Captured from packages/edge/mcp/demo.mjs; the same calls run in the test suite.
+// Captured from Edge's mcp/demo.mjs; the same calls run in Edge's test suite.
 const exchange = `> check_contrast
   { "foreground": "#9AA0A6", "background": "#FFFFFF" }
 
@@ -112,7 +113,7 @@ export default function AgentsPage() {
           <Box>
             <Typography variant="eyebrow">Connect it</Typography>
             <Measure as={Typography} sx={{ mt: 1, mb: 1.5 }}>
-              The repo&rsquo;s <code>.mcp.json</code> registers it for Claude Code when you open the repo. Anywhere else, one command:
+              It ships with the package. This site&rsquo;s repo registers it in <code>.mcp.json</code>; in another project, install Edge and add it:
             </Measure>
             <CodeBlock label="Command to connect the server">{connect}</CodeBlock>
           </Box>

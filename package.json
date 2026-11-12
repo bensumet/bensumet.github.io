@@ -4,14 +4,13 @@
   "version": "0.1.0",
   "description": "Ben Viwatmanitsakul's portfolio, built on Edge, the design system it documents.",
   "workspaces": [
-    "packages/*",
     "apps/*"
   ],
   "scripts": {
     "dev": "npm run dev -w @bensumet/site",
     "build": "npm run build -w @bensumet/site",
-    "test": "npm test -w @bensumet/edge && npm test -w @bensumet/site",
-    "typecheck": "tsc -p packages/edge && tsc -p apps/site"
+    "test": "npm test -w @bensumet/site",
+    "typecheck": "tsc -p apps/site"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.5.0",

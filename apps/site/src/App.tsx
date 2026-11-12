@@ -106,6 +106,7 @@ export default function App() {
           <Stack direction="row" useFlexGap sx={{ mt: 2, flexWrap: 'wrap', columnGap: 3, rowGap: 1 }}>
             <Link href="https://github.com/bensumet">GitHub</Link>
             <Link href="https://github.com/bensumet/bensumet.github.io">View the code</Link>
+            <Link href="https://github.com/bensumet/edge-design-system">Edge on GitHub</Link>
             <Link href="https://www.linkedin.com/in/ben-viwatmanitsakul/">LinkedIn</Link>
             <Link href="mailto:bensumet@gmail.com">bensumet@gmail.com</Link>
           </Stack>
