@@ -3,7 +3,7 @@
 import { Box, Typography } from '@mui/material';
 import { Columns } from '@bensumet/edge';
 
-function Node({ title, note, strong }: { title: string; note?: string; strong?: boolean }) {
+export function Node({ title, note, strong }: { title: string; note?: string; strong?: boolean }) {
   return (
     <Box sx={{ border: 1, borderColor: strong ? 'primary.main' : 'divider', bgcolor: strong ? 'action.selected' : 'background.paper', p: 1.75, minWidth: 0 }}>
       <Typography variant="body2" color="text.primary"><strong>{title}</strong></Typography>
@@ -12,11 +12,11 @@ function Node({ title, note, strong }: { title: string; note?: string; strong?: 
   );
 }
 
-function Down() {
+export function Down() {
   return <Box aria-hidden="true" sx={{ mx: 'auto', width: '1px', height: 22, bgcolor: 'edge.line', position: 'relative', '&::after': { content: '""', position: 'absolute', left: -4, bottom: -1, borderTop: '6px solid', borderTopColor: 'edge.line', borderLeft: '4.5px solid transparent', borderRight: '4.5px solid transparent' } }} />;
 }
 
-function Figure({ label, caption, children }: { label: string; caption: string; children: React.ReactNode }) {
+export function Figure({ label, caption, children }: { label: string; caption: string; children: React.ReactNode }) {
   return (
     <Box component="figure" sx={{ m: 0, p: { xs: 2, md: 3.5 }, bgcolor: 'edge.tint', border: 1, borderColor: 'divider' }}>
       <Typography variant="eyebrow">{label}</Typography>
