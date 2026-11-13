@@ -85,7 +85,7 @@ const ways = [
   ['Invitation bar', 'On the Summary page after sign-in: Yes, Remind Me Later, or No'],
   ['Key documents', 'The Go Paperless switch on the Summary page'],
   ['Documents tab', 'The same switch, where every document is listed'],
-  ['Email invitation', 'A ZIP code identifies the account, so no sign-in is needed'],
+  ['Email invitation', 'A ZIP code confirms the policy, so no sign-in or account is needed'],
 ];
 
 function WaysIn() {

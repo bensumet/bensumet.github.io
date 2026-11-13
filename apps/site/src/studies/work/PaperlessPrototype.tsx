@@ -61,10 +61,9 @@ function PaperlessSwitch({ on, onChange }: { on: boolean; onChange: (next: boole
 }
 
 /** The insured portal: Summary with the invitation bar and Key Documents, and the Documents tab. */
-function Portal({ announce }: { announce: (s: string) => void }) {
+function Portal({ announce, on, setOn }: { announce: (s: string) => void; on: boolean; setOn: (on: boolean) => void }) {
   const [tab, setTab] = useState<'summary' | 'documents'>('summary');
   const [invite, setInvite] = useState(true);
-  const [on, setOn] = useState(false);
   const [dialog, setDialog] = useState<null | 'agree' | 'unenroll'>(null);
   const [notice, setNotice] = useState<null | 'enrolled' | 'unenrolled'>(null);
   const tabs = useId();
@@ -169,7 +168,7 @@ function Portal({ announce }: { announce: (s: string) => void }) {
 }
 
 /** The email path: a link in the invitation email, a ZIP code instead of a password, then the same agreement. */
-function EmailPath({ announce }: { announce: (s: string) => void }) {
+function EmailPath({ announce, onEnrolled, toPortal }: { announce: (s: string) => void; onEnrolled: () => void; toPortal: () => void }) {
   const [step, setStep] = useState<'inbox' | 'verify' | 'done'>('inbox');
   const [zip, setZip] = useState('');
   const [error, setError] = useState('');
@@ -178,7 +177,7 @@ function EmailPath({ announce }: { announce: (s: string) => void }) {
     e.preventDefault();
     if (!/^\d{5}$/.test(zip)) { setError('Enter the 5-digit ZIP code on your policy.'); return; }
     if (zip !== policyZip) { setError('We couldn’t find a policy with that ZIP code. Check the ZIP code on your policy documents and try again.'); return; }
-    setError(''); setStep('done'); announce('Enrolled in Paperless Service.');
+    setError(''); setStep('done'); onEnrolled(); announce('Enrolled in Paperless Service.');
   };
 
   if (step === 'inbox') {
@@ -194,16 +193,21 @@ function EmailPath({ announce }: { announce: (s: string) => void }) {
   if (step === 'done') {
     return (
       <Box sx={{ p: 2 }}>
-        <Alert severity="success">You&rsquo;ve successfully enrolled in our Paperless Service.</Alert>
-        <Typography variant="body2" sx={{ mt: 1.5 }}>If you haven&rsquo;t created an account yet, you can register for an account here.</Typography>
-        <Button variant="text" sx={{ mt: 1.5 }} onClick={() => { setStep('inbox'); setZip(''); }}>Start over</Button>
+        <Alert severity="success">You&rsquo;re enrolled in Paperless Service. We&rsquo;ll email you each time a new document is ready.</Alert>
+        <Typography variant="body2" sx={{ mt: 1.5 }}>
+          Your documents are in the insured portal. Sign in to view and download them. No account yet? You can create one from the sign-in page.
+        </Typography>
+        <Stack direction="row" useFlexGap sx={{ flexWrap: 'wrap', gap: 1, mt: 2 }}>
+          <Button variant="outlined" onClick={toPortal}>Go to the insured portal</Button>
+          <Button variant="text" onClick={() => { setStep('inbox'); setZip(''); }}>Start over</Button>
+        </Stack>
       </Box>
     );
   }
   return (
     <Box component="form" noValidate onSubmit={submit} sx={{ p: 2 }}>
       <Typography variant="label" component="p">Enroll in Paperless Service</Typography>
-      <Typography variant="body2" sx={{ mt: 1.5 }}>First, help us identify your account.</Typography>
+      <Typography variant="body2" sx={{ mt: 1.5 }}>First, confirm this is your policy. You don&rsquo;t need to sign in.</Typography>
       <TextField label="ZIP code" value={zip} onChange={(e) => setZip(e.target.value)} error={!!error}
         helperText={error || 'Enter the 5-digit ZIP code on your policy. For this demo: 04101.'}
         slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 5, autoComplete: 'postal-code' } }} size="small" sx={{ mt: 1.5, mb: 2, maxWidth: 320 }} fullWidth />
@@ -219,6 +223,8 @@ export function PaperlessPrototype() {
   const [path, setPath] = useState<'portal' | 'email'>('portal');
   const [key, setKey] = useState(0);
   const [live, setLive] = useState('');
+  const [on, setOn] = useState(false);
+  const reset = () => { setKey((k) => k + 1); setOn(false); setLive('Demo reset.'); };
   return (
     <Box component="figure" sx={{ m: 0 }}>
       <Stack direction="row" useFlexGap sx={{ flexWrap: 'wrap', alignItems: 'center', gap: 1.5, mb: 1.5 }}>
@@ -226,15 +232,17 @@ export function PaperlessPrototype() {
           <ToggleButton value="portal">In the portal</ToggleButton>
           <ToggleButton value="email">From the email invitation</ToggleButton>
         </ToggleButtonGroup>
-        <Button size="small" variant="text" onClick={() => { setKey((k) => k + 1); setLive('Demo reset.'); }}>Reset the demo</Button>
+        <Button size="small" variant="text" onClick={reset}>Reset the demo</Button>
       </Stack>
       <Box sx={{ border: 1, borderColor: 'divider', bgcolor: 'background.paper' }}>
-        {path === 'portal' ? <Portal key={`p${key}`} announce={setLive} /> : <EmailPath key={`e${key}`} announce={setLive} />}
+        {path === 'portal'
+          ? <Portal key={`p${key}`} announce={setLive} on={on} setOn={setOn} />
+          : <EmailPath key={`e${key}`} announce={setLive} onEnrolled={() => setOn(true)} toPortal={() => setPath('portal')} />}
       </Box>
       <Box role="status" aria-live="polite" sx={visuallyHidden}>{live}</Box>
       <Typography variant="body2" component="figcaption" color="text.secondary" sx={{ mt: 1.5 }}>
-        A working re-creation of my 2024 prototype: the same steps, buttons and wording, with a fictional insurer and policy. The email text,
-        the opt-out notice and the ZIP code errors are written for this demo.
+        A working re-creation of my 2024 prototype: the same steps, buttons and wording, with a fictional insurer and policy. The email, the
+        opt-out notice, the ZIP code errors and the message after enrolling from the email are written for this demo.
       </Typography>
     </Box>
   );
