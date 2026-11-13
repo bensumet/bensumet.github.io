@@ -5,6 +5,7 @@ import { Columns, Measure, motion, Section } from '@bensumet/edge';
 import { art } from '../../data/craft';
 import { Crossfade } from '../../components/Motion';
 import { CoreConnectRedesign } from './CoreConnectRedesign';
+import { CoreConnectProcess } from './CoreConnectProcess';
 
 const cc = (f: string) => art(`work/coreconnect/${f}`);
 
@@ -152,6 +153,8 @@ export function CoreConnectScreens() {
           </Box>
         </Columns>
       </Section>
+
+      <CoreConnectProcess />
 
       <Box component="section" aria-labelledby="cc-flow" sx={{ mt: 8 }}>
         <Typography id="cc-flow" variant="h3" component="h2" sx={{ mb: 1 }}>Redesigned in 2026, with AI</Typography>
