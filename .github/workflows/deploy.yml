@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  packages: read
   pages: write
   id-token: write
 
@@ -24,10 +25,15 @@ jobs:
         with:
           node-version: 22
           cache: npm
+          registry-url: https://npm.pkg.github.com
+          scope: '@bensumet'
       - run: npm ci
+        env:
+          # Edge is installed from GitHub Packages; this repo has read access in the package's settings.
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Type check
         run: npm run typecheck
-      - name: Tests (contrast on every token pair, rules coverage, accessibility on every page)
+      - name: Tests (accessibility on every page, Edge's rules check on every screen)
         run: npm test
       - name: Build
         run: npm run build
